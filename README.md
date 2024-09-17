@@ -4,7 +4,7 @@ Este proyecto está creado con inteligencia artificial por nuestra compañía [v
 
 ---
 
-###Tecnologias usadas
+### Tecnologias usadas
 
 ### Activar entorno de desarrollo
 
