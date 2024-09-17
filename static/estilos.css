@@ -1,0 +1,854 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
+
+body {
+    font-family: 'Roboto', Arial, sans-serif;
+    background-color: #f0f2f5;
+    margin: 0;
+    padding: 0;
+}
+
+/* Estilos para la barra superior y el menú */
+.topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #2e3b4e;
+    color: #fff;
+    padding: 10px 20px;
+    position: fixed;
+    width: 100%;
+    top: 0;
+    z-index: 1000;
+}
+
+.topbar .logo {
+    font-size: 18px;
+    font-weight: bold;
+    margin-left: 20px;
+}
+
+.topbar-menu {
+    display: flex;
+    align-items: center;
+    margin-right: 140px; /* Ajusta este valor según tus necesidades */
+}
+
+.topbar-menu a {
+    color: #fff;
+    margin: 0 10px;
+    text-decoration: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+.topbar-menu a:hover {
+    background-color: #3b82f6;
+}
+
+.topbar-menu a.active {
+    font-weight: bold;
+}
+
+/* Contenedor principal para páginas internas */
+.container {
+    max-width: 600px;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    margin: 100px auto;
+    box-sizing: border-box;
+}
+
+/* Estilos del título y separador */
+h1 {
+    color: #252d63;
+    font-weight: 700;
+    font-size: 24px;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.separator {
+    width: 100%;
+    height: 4px;
+    background-color: #3b82f6;
+    margin: 20px 0;
+    border-radius: 2px;
+}
+
+/* Estilos para el formulario */
+.form-group {
+    margin-bottom: 20px;
+}
+
+label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 500;
+    color: #1e293b;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+input, textarea, select {
+    width: 100%;
+    padding: 12px;
+    box-sizing: border-box;
+    border: 1px solid #d1d5db;
+    border-radius: 5px;
+    background-color: #f9fafb;
+    font-size: 16px;
+    color: #374151;
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+input:focus, textarea:focus, select:focus {
+    border-color: #3b82f6;
+    box-shadow: 0 0 5px rgba(59, 130, 246, 0.3);
+    outline: none;
+}
+
+.submit-button {
+    width: 100%;
+    padding: 12px;
+    background-color: #28a745;
+    border: none;
+    color: white;
+    border-radius: 50px; /* Bordes más redondeados */
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    transition: background-color 0.3s, box-shadow 0.3s;
+    margin-top: 20px;
+}
+
+.submit-button:hover {
+    background-color: #218838;
+    box-shadow: 0 5px 15px rgba(33, 136, 56, 0.2);
+}
+
+.navigation-buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+.navigation-buttons .submit-button {
+    width: 48%;
+}
+
+/* Estilos adicionales */
+input[type="checkbox"] {
+    transform: scale(1.2);
+    margin-right: 10px;
+}
+
+/* CSS adicional para Thanks */
+.thanks-container {
+    text-align: center;
+    margin-top: 150px;
+}
+
+.thanks-container h1 {
+    font-size: 24px;
+    color: #1e293b;
+    margin-bottom: 20px;
+    font-weight: 700;
+}
+
+.thanks-container p {
+    font-size: 18px;
+    color: #666;
+    margin-bottom: 30px;
+}
+
+.thanks-container .separator {
+    width: 100%;
+    height: 4px;
+    background-color: #3b82f6;
+    margin-bottom: 30px;
+    border-radius: 2px;
+}
+
+.check-icon {
+    font-size: 100px;
+    color: #28a745;
+    animation: fadeIn 1s ease-in-out;
+}
+
+/* Animación para el icono de check */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.8);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* Estilos para la tabla de resultados */
+.toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.search-box {
+    width: 300px;
+    padding: 10px;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    background-color: #f9fafb;
+    font-size: 16px;
+    color: #374151;
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.search-box:focus {
+    border-color: #3b82f6;
+    box-shadow: 0 0 5px rgba(59, 130, 246, 0.3);
+    outline: none;
+}
+
+.export-buttons button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    background-color: #3b82f6;
+    color: white;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 600;
+    transition: background-color 0.3s, box-shadow 0.3s;
+    margin-left: 10px;
+}
+
+.export-buttons button:hover {
+    background-color: #005bb5;
+    box-shadow: 0 5px 15px rgba(0, 91, 181, 0.2);
+}
+
+.table-container {
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+thead {
+    background-color: #2e3b4e; /* Cambia este valor al color que desees */
+    color: white;
+}
+
+th, td {
+    padding: 12px 15px;
+    border: 1px solid #d1d5db;
+    text-align: center;
+    vertical-align: middle; /* Añade esta línea para centrar verticalmente */
+    font-size: 13px; /* Añade esta línea para ajustar el tamaño de la fuente */
+}
+
+th {
+    background-color: #3c5171; /* Cambia este valor al color que desees encabezado tabla */ 
+    color: #ffffff;
+}
+
+th input[type="checkbox"], td input[type="checkbox"] {
+    margin: 0;
+}
+
+tbody tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+tbody tr:hover {
+    background-color: #f1f1f1;
+}
+
+a {
+    color: #3b82f6;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+.page-btn {
+    margin: 0 5px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    background-color: #007bff;
+    color: #ffffff;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.page-btn:hover {
+    background-color: #0056b3;
+}
+
+input[type="checkbox"] {
+    transform: scale(1.2);
+    margin-right: 10px;
+}
+
+/* Estilo para la página de Login */
+body.login-page {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.login-container {
+    display: flex;
+    width: 800px;
+    height: 500px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.welcome-section {
+    background-color: #2e3b4e;
+    color: #fff;
+    padding: 40px;
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.welcome-section .icon {
+    font-size: 50px;
+    margin-bottom: 20px;
+    align-self: flex-start;
+}
+
+.welcome-section h1 {
+    margin: 0;
+    font-size: 30px;
+    color: #fff;
+    text-align: left;
+}
+
+.welcome-section p {
+    margin-top: 20px;
+    font-size: 18px;
+    color: #fff;
+    line-height: 1.6;
+    text-align: left;
+}
+
+.login-section {
+    background-color: #ffffff;
+    padding: 40px;
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.login-section h2 {
+    margin: 0;
+    font-size: 24px;
+    color: #333;
+}
+
+form {
+    width: 100%;
+}
+
+.input-group {
+    margin-top: 20px;
+    position: relative;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+    color: #333;
+}
+
+.actions {
+    margin-top: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 14px;
+    color: #666;
+}
+
+.actions a {
+    text-decoration: none;
+    color: #0073e6;
+}
+
+button {
+    margin-top: 20px;
+    width: 100%;
+    padding: 15px;
+    background-color: #0073e6;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: #005bb5;
+}
+
+/* Estilos adicionales para botones y paginación */
+.actions .btn {
+    margin-left: 10px;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.actions .export-button {
+    background-color: #007bff;
+    color: #fff;
+    font-size: 14px; /* Aquí puedes cambiar el tamaño de la fuente */
+}
+
+.actions .export-button.xls {
+    background-color: #6c757d;
+    font-size: 14px; /* Aquí puedes cambiar el tamaño de la fuente */
+}
+
+.actions .export-button:hover {
+    background-color: #0056b3;
+}
+
+.actions .export-button.xls:hover {
+    background-color: #545b62;
+}
+
+/* Estilos para la tabla de resultados */
+.table-container {
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    border: none;
+}
+
+thead {
+    background-color: #2e3b4e; /* Cambia este valor al color que desees */
+    color: white;
+}
+
+th, td {
+    padding: 12px 15px;
+    border: none; /* Eliminar el borde de las celdas */
+    text-align: center;
+    vertical-align: middle; /* Centrar verticalmente */
+    font-size: 13px; /* Ajustar el tamaño de la fuente */
+}
+
+th {
+    background-color: #3c5171; /* Cambia este valor al color que desees encabezado tabla */ 
+    color: #ffffff;
+}
+
+th input[type="checkbox"], td input[type="checkbox"] {
+    margin: 0;
+}
+
+tbody tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+tbody tr:hover {
+    background-color: #f1f1f1;
+}
+
+a {
+    color: #3b82f6;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+.actions {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.actions .search-input {
+    flex-grow: 1;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin-right: 5px;
+    max-width: 60%;
+}
+
+.actions select {
+    width: auto;
+    padding: 5px 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin-right: 5px; /* Aquí puedes cambiar el margen derecho */
+    max-width: 150px;
+}
+
+.actions .export-button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 8px; /* Aquí puedes cambiar el tamaño de la fuente */
+    margin: 0 1px; /* Ajusta el margen izquierdo y derecho aquí */
+    max-width: 130px;
+}
+
+.actions .export-button.xls {
+    background-color: #28a745;
+    font-size: 14px; /* Aquí puedes cambiar el tamaño de la fuente */
+}
+
+.actions .export-button:last-child {
+    margin-right: 0;
+}
+
+.download-button.rounded-icon {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 5px 15px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 12px;
+    transition: background-color 0.3s, box-shadow 0.3s;
+    display: flex;
+    align-items: center; /* Asegura que el botón esté alineado verticalmente */
+    justify-content: center;
+}
+
+.download-button.rounded-icon i {
+    margin-right: 5px;
+}
+
+.download-button.rounded-icon:hover {
+    background-color: #0056b3;
+    box-shadow: 0 5px 15px rgba(0, 91, 181, 0.2);
+}
+
+.sort-indicator {
+    display: inline-block;
+    width: 0;
+    height: 0;
+    margin-left: 5px;
+    vertical-align: middle;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+}
+
+th.asc .sort-indicator {
+    border-top: 5px solid white;
+}
+
+th.desc .sort-indicator {
+    border-bottom: 5px solid white;
+}
+
+.footer-simple {
+    background-color: #f0f0f0; /* Fondo claro */
+    color: #333; /* Texto oscuro */
+    padding: 20px;
+    text-align: center;
+    width: 100%;
+}
+
+.footer-simple .footer-content {
+    max-width: 1000px;
+    margin: 0 auto;
+    font-size: 14px;
+}
+
+.fixed-table th, .fixed-table td {
+    --col-checkbox-width: 40px;
+    --col-fecha-width: 70px;   /* Nueva columna 'Fecha' */
+    --col-nombre-width: 70px;
+    --col-apellido-width: 70px;
+    --col-telefono-width: 70px;
+    --col-pais-width: 20px;
+    --col-probabilidad-width: 0px;
+    --col-reporte-width: 40px;   /* Cambio de 'reporte' a 'perfilamiento' */
+}
+
+.fixed-table .col-checkbox { width: var(--col-checkbox-width); }
+.fixed-table .col-fecha { width: var(--col-fecha-width); }    /* Nueva columna 'Fecha' */
+.fixed-table .col-nombre { width: var(--col-nombre-width); }
+.fixed-table .col-apellido { width: var(--col-apellido-width); }
+.fixed-table .col-telefono { width: var(--col-telefono-width); }
+.fixed-table .col-pais { width: var(--col-pais-width); }
+.fixed-table .col-probabilidad { width: var(--col-probabilidad-width); }
+.fixed-table .col-reporte { width: var(--col-reporte-width); }    /* Cambio de 'reporte' a 'perfilamiento' */
+
+/* Estilo para el pie de página */
+.footer-simple {
+    background-color: #f0f0f0; /* Fondo claro */
+    color: #333; /* Texto oscuro */
+    padding: 20px;
+    text-align: center;
+    width: 100%;
+}
+
+.footer-simple .footer-content {
+    max-width: 1000px;
+    margin: 0 auto;
+    font-size: 14px;
+}
+
+/* Estilos para la barra superior y el menú */
+.topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #2e3b4e;
+    color: #fff;
+    padding: 10px 20px;
+    position: fixed;
+    width: 100%;
+    top: 0;
+    z-index: 1000;
+}
+
+.topbar .logo {
+    font-size: 18px;
+    font-weight: bold;
+    margin-left: 20px;
+}
+
+.topbar-menu {
+    display: flex;
+    align-items: center;
+    margin-right: 20px; /* Aquí puedes ajustar la distancia a la margen derecha */
+}
+
+/* Añadir esta clase para ajustar la distancia a la margen derecha */
+.menu-adjustable {
+    margin-right: 140px; /* Ajusta este valor según tus necesidades */
+}
+
+.topbar-menu a {
+    color: #fff;
+    margin: 0 10px;
+    text-decoration: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+.topbar-menu a:hover {
+    background-color: #3b82f6;
+}
+
+.topbar-menu a.active {
+    font-weight: bold;
+}
+
+/* Eliminar sombreado en los checkboxes */
+input[type="checkbox"]:focus {
+    outline: none;
+    box-shadow: none;
+}
+.thanks-container {
+    background: #fff;
+    padding: 40px;
+    max-width: 600px;
+    margin: 50px auto;
+    text-align: center;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+    border-radius: 10px;
+    position: relative;
+}
+.thanks-container h1 {
+    font-size: 2.5em;
+    margin-bottom: 20px;
+    color: #333;
+}
+.thanks-container p {
+    font-size: 1em; /* 16px */
+    color: #666;
+    line-height: 1.5;
+}
+.check-icon {
+    font-size: 5em;
+    color: #4CAF50;
+    margin-bottom: 20px;
+}
+.download-button {
+    display: inline-block;
+    margin-top: 20px;
+    padding: 15px 30px;
+    font-size: 1.125em; /* 18px */
+    color: #fff;
+    background-color: #007BFF;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+.download-button:hover {
+    background-color: #0056b3;
+    transform: translateY(-3px);
+}
+.footer-simple {
+    text-align: center;
+    padding: 20px 0;
+    background-color: #f8f9fa;
+    color: #6c757d;
+}
+.footer-content {
+    font-size: 0.875em; /* 14px */
+}
+.separator {
+    height: 2px;
+    background-color: #007BFF;
+    width: 50px;
+    margin: 20px auto;
+    border-radius: 1px;
+}
+/* Estilos para los indicadores de ordenación */
+.sort-indicator {
+    display: inline-block;
+    width: 0;
+    height: 0;
+    margin-left: 5px;
+    vertical-align: middle;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+}
+
+th.asc .sort-indicator {
+    border-bottom: 5px solid white; /* Triángulo apuntando hacia arriba */
+    border-top: none; /* Remueve el triángulo hacia abajo */
+}
+
+th.desc .sort-indicator {
+    border-top: 5px solid white; /* Triángulo apuntando hacia abajo */
+    border-bottom: none; /* Remueve el triángulo hacia arriba */
+}
+
+th.sortable .sort-indicator.default {
+    opacity: 0.2;
+    border-top: none; /* Remueve el triángulo hacia abajo */
+    border-bottom: 5px solid white; /* Triángulo apuntando hacia arriba por defecto */
+}
+/* Ajuste del tamaño de la fuente de los títulos de la tabla */
+th {
+    font-size: 12px; /* Ajusta este valor al tamaño deseado */
+    padding: px 0px; /* Ajusta este valor para cambiar los márgenes (padding) */
+}
+
+/* Ajuste específico del padding de los títulos de la tabla */
+th.sortable {
+    padding: 5px 5px; /* Ajusta los valores de padding según sea necesario */
+}
+/* Ajustar altura de los encabezados de la tabla */
+th {
+    height: 40px; /* Puedes ajustar este valor según tu preferencia */
+    line-height: 40px; /* Asegura que el texto esté centrado verticalmente */
+}
+
+
+.page-number {
+    margin: 0 5px;
+    padding: 10px;
+    cursor: pointer;
+    color: #007bff;
+    font-size: 14px; /* Ajusta el tamaño de la fuente aquí */
+}
+
+.page-number.active {
+    font-weight: bold;
+    color: #333;
+}
+
+.page-number:hover {
+    color: #0056b3;
+}
+
+.page-number.disabled {
+    pointer-events: none;
+    color: #aaa;
+}
+
+.progress-container {
+    background-color: #f3f3f3;
+    border-radius: 5px;
+    overflow: hidden;
+    margin: 20px 0;
+    height: 10px; /* Puedes ajustar la altura según tu preferencia */
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    position: relative;
+    width: 100%;
+}
+
+.progress-bar {
+    height: 100%;
+    background-color: #007bff;
+    width: 0%;
+    transition: width 0.4s ease;
+}
+
+.progress-label {
+    position: absolute;
+    left: 10px; /* Alineado a la izquierda */
+    top: 50%;
+    transform: translateY(-50%);
+    font-weight: bold;
+    color: #000;
+}
+
+
+@media print {
+    body {
+        width: 210mm; /* Ancho de una página A4 */
+        margin: 0;
+        padding: 0;
+    }
+    .container {
+        width: 100%;
+        max-width: 100%;
+        margin: 0;
+        padding: 20px;
+    }
+    /* Ajusta cualquier otro estilo que necesite ser modificado para el PDF */
+}

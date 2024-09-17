@@ -1,0 +1,1534 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalle del Resultado</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --icon-color: #bdbdbd;
+            --icon-size: 18px;
+            --icon-margin: 40px;
+            --block-spacing: 20px;
+            --table-margin: 40px;
+            --separator-color: #3b82f6;
+            --separator-width: 600px;
+            --separator-height: 4px;
+            --header-color: #2e3b4e;
+            --table-header-bg: #979797;
+            --table-header-color: #fff;
+            --table-bg: #f9f9f9;
+            --button-bg: #3b82f6;
+            --button-hover-bg: #0056b3;
+            --probability-bg: #ffeb3b;
+        }
+
+        body {
+            font-family: 'Roboto', Arial, sans-serif;
+            background-color: #f0f2f5;
+            margin: 0;
+            padding: 0;
+        }
+
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #2e3b4e;
+            color: #fff;
+            padding: 10px 20px;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .topbar .logo {
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .topbar-menu {
+            display: flex;
+            align-items: center;
+            margin-right: 140px;
+            padding-bottom: 0px;
+        }
+
+        .topbar-menu a {
+            color: #fff;
+            margin: 0 10px;
+            text-decoration: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        .topbar-menu a:hover {
+            background-color: #3b82f6;
+        }
+
+        .topbar-menu a.active {
+            font-weight: bold;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: calc(var(--block-spacing) + 80px) auto var(--block-spacing);
+            background-color: #fff;
+            padding: 60px;
+            border-radius: 12px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: var(--block-spacing);
+        }
+
+        .header h1 {
+            font-size: 32px;
+            margin: 0;
+            color: var(--header-color);
+        }
+
+        .separator {
+            width: var(--separator-width);
+            height: var(--separator-height);
+            background-color: var(--separator-color);
+            margin: 20px auto;
+            border-radius: 2px;
+        }
+
+        .personal-details {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            margin-top: 20px;
+            background-color: #f9f9f9;
+            padding-top: 30px;
+            padding-bottom: 10px;
+            padding-left: 60px;
+            padding-right: 40px;
+            border-radius: 12px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            position: relative;
+        }
+
+        .personal-details div {
+            flex: 1 1 45%;
+            margin-bottom: 15px;
+            position: relative;
+        }
+
+        .personal-details label {
+            font-weight: bold;
+            color: var(--header-color);
+        }
+
+        .personal-details span {
+            display: block;
+            color: #555;
+        }
+
+        .edit-button {
+            display: none;
+            position: absolute;
+            right: 10px;
+            top: 10px;
+            background-color: #b9b9b9;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            padding-left: 10px;
+            padding-right: 10px;
+            padding-top: 3px;
+            padding-bottom: 3px;
+            margin-right: 40px;
+        }
+
+        .personal-details div:hover .edit-button {
+            display: block;
+        }
+        .buttons {
+            position: relative;
+            left: -25px;
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 20px;
+            height: 18px;
+        }
+
+        .buttons a, .buttons button {
+            background-color: var(--button-bg);
+            color: #fff;
+            border: none;
+            padding: 12px 20px;
+            margin-left: 10px;
+            border-radius: 25px;
+            text-decoration: none;
+            font-size: 12px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .buttons a:hover, .buttons button:hover {
+            background-color: var(--button-hover-bg);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .buttons a:active, .buttons button:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Estilos específicos para el botón de eliminar */
+        .buttons .delete-button {
+            background-color: rgb(212, 0, 0);
+            color: #fff;
+            border: none;
+            padding: 12px 20px;
+            margin-left: 10px;
+            border-radius: 25px;
+            text-decoration: none;
+            font-size: 12px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .buttons .delete-button:hover {
+            background-color: darkred;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            font-size: 0.9em; /* Ajustar el tamaño de fuente */
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: var(--table-header-bg);
+            color: var(--table-header-color);
+            font-weight: bold;
+            padding-left: 40px;
+            padding-right: 40px;
+            padding-top: 20px;
+            padding-bottom: 20px;
+            white-space: nowrap;  /* Agregar esta línea */
+        }
+
+        td {
+            padding-left: 40px;
+            padding-right: 40px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .footer-simple {
+            background-color: #f0f0f0;
+            color: #333;
+            padding: 20px;
+            text-align: center;
+            width: 100%;
+        }
+
+        .footer-simple .footer-content {
+            max-width: 1000px;
+            margin: 0 auto;
+            font-size: 14px;
+        }
+
+        .content-margins {
+            margin-left: 20px;
+            margin-right: 20px;
+        }
+
+        h2 {
+            color: #252d63;
+            font-weight: 700;
+            margin-top: var(--block-spacing);
+            display: flex;
+            align-items: center;
+        }
+
+        h2 i {
+            margin-right: var(--icon-margin);
+            font-size: var(--icon-size);
+            color: var(--icon-color);
+        }
+
+        .probability {
+            background-color: var(--probability-bg);
+            font-weight: bold;
+            font-size: 1.4em;
+            text-align: center;
+            padding: 15px;
+            border-radius: 12px;
+            margin: 40px auto;  /* Añadir margin: auto; */
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            width: 600px;
+            margin-bottom: 15px;
+            margin-top: 50px;
+        }
+
+        .suggestion {
+            margin-bottom: var(--block-spacing);
+        }
+
+        .suggestion h3 {
+            color: #333;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            margin-top: 0;
+            font-size: 18px;
+            margin-left: 40px;
+            margin-right: 40px;
+        }
+
+        .suggestion h3 i {
+            margin-right: var(--icon-margin);
+            font-size: var(--icon-size);
+            color: var(--icon-color);
+            margin-left: 40px;
+            margin-right: 40px;
+        }
+
+        .suggestion p {
+            margin: 10px 0;
+            background-color: #f9f9f9;
+            padding: 55px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            font-size: 0.9em; /* Ajustar el tamaño de fuente */
+        }
+
+        .probability-bar {
+            width: 630px;
+            height: 20px;
+            background-color: rgb(193, 0, 0);
+            margin: 10px auto;
+            border-radius: 2px;
+            overflow: hidden;
+            position: relative;
+            margin-bottom: 80px;
+        }
+
+        .probability-bar-inner {
+            height: 100%;
+            background-color: rgb(0, 182, 0);
+            width: 0;
+        }
+
+        .analysis-item {
+            display: flex;
+            align-items: center;
+            padding: 20px;
+            background: #fff;
+            margin-bottom: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .analysis-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .analysis-status {
+            font-weight: bold;
+            color: rgb(0, 173, 0);
+            margin-right: 20px;
+            min-width: 80px;
+            text-align: center;
+            padding: 8px;
+            border-radius: 8px;
+            background-color: #e8f5e9;
+        }
+
+        .analysis-status.neutro {
+            color: #ff9800;
+            background-color: #fff3e0;
+        }
+
+        .analysis-status.negativo {
+            color: #f44336;
+            background-color: #ffebee;
+        }
+
+        .analysis-chart {
+            width: 80px;
+            height: 80px;
+            position: relative;
+            margin-right: 20px;
+        }
+
+        .analysis-info {
+            flex: 1;
+        }
+
+        .analysis-info strong {
+            display: block;
+            font-size: 20px;
+            color: #2e3b4e;
+            margin-bottom: 5px;
+        }
+
+        .analysis-info p {
+            margin: 5px 0;
+            color: #555;
+            font-size: 0.9em; /* Ajustar el tamaño de fuente */
+        }
+
+        .analysis-info strong.score {
+            font-size: 20px;
+            color: #2e3b4e;
+            text-align: right;
+            margin-top: 10px;
+        }
+
+        .circle {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            background: conic-gradient(rgb(0, 173, 0) 0% 75%, lightgray 75% 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: #2e3b4e;
+            font-size: 18px;
+            position: relative;
+        }
+
+        .circle.neutro {
+            background: conic-gradient(#ff9800 0% 60%, lightgray 60% 100%);
+        }
+
+        .circle.negativo {
+            background: conic-gradient(#f44336 0% 30%, lightgray 30% 100%);
+        }
+
+        .circle::before {
+            content: "";
+            display: block;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: #fff;
+            position: absolute;
+            z-index: 1;
+        }
+
+        .circle > span {
+            position: relative;
+            z-index: 2;
+            color: #2e3b4e;
+            font-size: 22px;
+        }
+
+        .result-box {
+            padding: 10px;
+            border-radius: 8px;
+            margin-top: 10px;
+            text-align: center;
+            font-weight: bold;
+            color: #fff;
+            width: 230px;
+        }
+
+        .result-box.positivo {
+            background-color: rgb(3, 156, 3);
+        }
+
+        .result-box.neutro {
+            background-color: #ff9800;
+        }
+
+        .result-box.negativo {
+            background-color: #f44336;
+        }
+
+        .result-box {
+            padding: 10px;
+            border-radius: 8px;
+            margin-top: -40px;
+            text-align: center;
+            font-weight: bold;
+            color: #fff;
+            font-size: 9.5pt;
+            display: inline-block; /* Esto permite el alineamiento a la derecha */
+        }
+
+        .result-box.positivo {
+            background-color: rgb(0, 160, 0);
+        }
+
+        .result-box.neutro {
+            background-color: #ff9800;
+        }
+
+        .result-box.negativo {
+            background-color: #f44336;
+        }
+
+        .result-container {
+            text-align: right; /* Esto alinea el contenido dentro del contenedor a la derecha */
+        }
+
+        .dialog-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .dialog-overlay.active {
+            display: flex;
+        }
+
+        .dialog {
+            background: rgb(255, 255, 255);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            width: 400px;
+            max-width: 100%;
+        }
+
+        .dialog h3 {
+            margin-top: 0;
+            font-size: 20px;
+        }
+
+        .dialog label {
+            display: block;
+            margin: 15px 0 5px;
+        }
+
+        .dialog input {
+            width: 375px;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            justify-content: center;
+
+        }
+
+        .dialog .dialog-buttons {
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .dialog .dialog-buttons button {
+            background-color: var(--button-bg);
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            margin-left: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .dialog .dialog-buttons button:hover {
+            background-color: var(--button-hover-bg);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .chart-container {
+            position: relative;
+            height: 400px;
+            margin-top: 60px; /* Agregar esta línea para margen superior */
+            margin-bottom: 60px; /* Agregar esta línea para margen inferior */
+        }
+
+        /* Overlay de procesamiento */
+     
+        .processing-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+
+        .processing-box {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            width: 400px;
+            height: 200px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .processing-box .status-text {
+            margin-bottom: 20px;
+            font-size: 14px;
+            font-weight: bold;
+            color: #8c8c8c;
+        }
+
+        .processing-box .progress-bar {
+            width: 100%;
+            background-color: #e0e0e0;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        .processing-box .progress {
+            background-color: #3b82f6;
+            height: 10px;
+            width: 0;
+            transition: width 0.4s ease;
+        }
+
+        .processing-box .animation {
+            margin-top: 20px;
+        }
+        
+
+        
+    </style>
+</head>
+<body>
+    <div class="topbar">
+        <div class="logo">VisaParaTurista.com</div>
+        <div class="topbar-menu menu-adjustable">
+            <a href="/" class="">Formulario</a>
+            <a href="/results" class="">Ver Resultados</a>
+            
+                <a href="/logout" class="">Logout</a>
+            
+            
+            
+            
+        </div>
+    </div>
+    <div class="container">
+        <div class="header content-margins">
+            <h1>Detalle del Perfilamiento</h1>
+            <div class="separator"></div>
+        </div>
+        <h2><i class="fa fa-user"></i> 1. Datos personales</h2>
+
+        <div class="personal-details content-margins">
+            <div>
+                <label>Nombre:</label>
+                <span id="nombre-span">617 test</span>
+                <button class="edit-button" onclick="openDialog('nombre', '617 test')">Editar</button>
+            </div>
+            <div>
+                <label>Apellidos:</label>
+                <span id="apellidos-span">Celis</span>
+                <button class="edit-button" onclick="openDialog('apellidos', 'Celis')">Editar</button>
+            </div>
+            <div>
+                <label>Fecha:</label>
+                <span id="fecha-span">2024-07-30</span>
+                <button class="edit-button" onclick="openDialog('fecha', '2024-07-30')">Editar</button>
+            </div>
+            <div>
+                <label>Email:</label>
+                <span id="email-span">virtualcelis@gmail.com</span>
+                <button class="edit-button" onclick="openDialog('email', 'virtualcelis@gmail.com')">Editar</button>
+            </div>
+            <div>
+                <label>Teléfono:</label>
+                <span id="telefono-span">3147003114</span>
+                <button class="edit-button" onclick="openDialog('telefono', '3147003114')">Editar</button>
+            </div>
+            <div>
+                <label>Nacionalidad:</label>
+                <span id="nacionalidad-span">Colombia</span>
+                <button class="edit-button" onclick="openDialog('nacionalidad', 'Colombia')">Editar</button>
+            </div>
+        </div>
+
+      
+        <div class="buttons">
+            <a href="/download/617%20test_Celis.pdf">Descargar PDF</a>
+            <button type="button" onclick="document.getElementById('regenerar-form').submit();">Regenerar</button>
+            <button class="delete-button" onclick="openDeleteDialog()">Eliminar</button>
+        </div>
+        
+        
+
+        <!-- Dialogo de confirmación para eliminar -->
+        <div class="dialog-overlay" id="delete-dialog-overlay">
+            <div class="dialog">
+                <h3>Confirma la eliminación</h3>
+                <form id="delete-form">
+                    <label for="confirm-delete">Escribe "DELETE" para confirmar:</label>
+                    <input type="text" id="confirm-delete" name="confirm-delete" required>
+                    <input type="hidden" id="delete-id" name="id" value="78">
+                    <div class="dialog-buttons">
+                        <button type="button" onclick="closeDeleteDialog()">Cancelar</button>
+                        <button type="submit">Eliminar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+
+       <!-- Overlay de procesamiento -->
+       <div class="processing-overlay" id="processing-overlay">
+        <div class="processing-box">
+            <div class="status-text" id="message-overlay"></div>
+            <div class="progress-bar">
+                <div class="progress" id="progress-regenerar-bar"></div>
+            </div>
+            <div class="animation">
+                <i class="fas fa-spinner fa-spin"></i>
+            </div>
+        </div>
+    </div>
+    
+        
+        <h2><i class="fa fa-map-marker-alt"></i> 2. Información demográfica y familiar</h2>
+        <table class="other-info">
+            <tr>
+                <th>Pregunta</th>
+                <th>Respuesta</th>
+                <th>Calificación IA</th>
+            </tr>
+            <tr>
+                <td>País de Residencia</td>
+                <td>Colombia</td>
+                <td>7.25</td>
+            </tr>
+            <tr>
+                <td>Edad</td>
+                <td>45</td>
+                <td>7.5</td>
+            </tr>
+            <tr>
+                <td>Estado Civil</td>
+                <td>Casado</td>
+                <td>7.50</td>
+            </tr>
+            <tr>
+                <td>¿Cuántos hijos tienes?</td>
+                <td>1</td>
+                <td>7.25</td>
+            </tr>
+            <tr>
+                <td>¿Con quién comparte su vivienda actualmente?</td>
+                <td>Con pareja</td>
+                <td>7.50</td>
+            </tr>
+        </table>
+        <div class="result-container">
+            <div id="result-info-table" class="result-box"></div>
+        </div>
+        
+        <h2><i class="fa fa-briefcase"></i> 3. Educación y empleo</h2>
+        <table class="other-info">
+            <tr>
+                <th>Pregunta</th>
+                <th>Respuesta</th>
+                <th>Calificación IA</th>
+            </tr>
+            <tr>
+                <td>Profesión u ocupación</td>
+                <td>abogado</td>
+                <td>8.75</td>
+            </tr>
+            <tr>
+                <td>¿Cuál es su nivel de educación?</td>
+                <td>Secundaria</td>
+                <td>5.50</td>
+            </tr>
+            <tr>
+                <td>¿Cuánto tiempo lleva trabajando en su empleo actual?</td>
+                <td>Menos de 1 año</td>
+                <td>4.50</td>
+            </tr>
+        </table>
+        <div class="result-container">
+            <div id="result-education-table" class="result-box"></div>
+        </div>
+        
+        <h2><i class="fa fa-home"></i> 4. Propiedades y activos</h2>
+        <table class="other-info">
+            <tr>
+                <th>Pregunta</th>
+                <th>Respuesta</th>
+                <th>Calificación IA</th>
+            </tr>
+            <tr>
+                <td>¿Es propietario o socio de alguna empresa?</td>
+                <td>No</td>
+                <td>5.5</td>
+            </tr>
+            <tr>
+                <td>Ingresos mensuales aproximados en dólares americanos</td>
+                <td>45</td>
+                <td>3.00</td>
+            </tr>
+            <tr>
+                <td>¿Paga impuestos y no participa en programas de asistencia social?</td>
+                <td>Si</td>
+                <td>8.75</td>
+            </tr>
+            <tr>
+                <td>¿Posee propiedades inmobiliarias y/o vehículos en su país de residencia?</td>
+                <td>casa</td>
+                <td>7.50</td>
+            </tr>
+        </table>
+        <div class="result-container">
+            <div id="result-assets-table" class="result-box"></div>
+        </div>
+        
+        <h2><i class="fa fa-plane"></i> 5. Antecedentes y experiencia de viaje</h2>
+        <table class="other-info">
+            <tr>
+                <th>Pregunta</th>
+                <th>Respuesta</th>
+                <th>Calificación IA</th>
+            </tr>
+            <tr>
+                <td>¿En los últimos 5 años, a qué países ha viajado?</td>
+                <td>Colombia</td>
+                <td>4.50</td>
+            </tr>
+            <tr>
+                <td>¿Tiene familiares que residan en los Estados Unidos?</td>
+                <td>Si</td>
+                <td>6.75</td>
+            </tr>
+            <tr>
+                <td>¿Tiene familiares que cuenten con una visa de turismo a EE.UU.?</td>
+                <td>No</td>
+                <td>5.00</td>
+            </tr>
+            <tr>
+                <td>¿Le ha sido negada una visa de turismo para EE.UU. anteriormente?</td>
+                <td>Si</td>
+                <td>4.00</td>
+            </tr>
+        </table>
+        <div class="result-container">
+            <div id="result-background-table" class="result-box"></div>
+        </div>
+        
+        <h2><i class="fa fa-lock"></i> 6. Criterios de elegibilidad</h2>
+        <table class="other-info">
+            <tr>
+                <th>Pregunta</th>
+                <th>Respuesta</th>
+                <th>Calificación IA</th>
+            </tr>
+            <tr>
+                <td>¿Tiene antecedentes judiciales o ha estado en procesos de embargo?</td>
+                <td>No</td>
+                <td>10.00</td>
+            </tr>
+            <tr>
+                <td>¿Padece alguna enfermedad crónica o preexistente de base?</td>
+                <td>Si</td>
+                <td>3.00</td>
+            </tr>
+            <tr>
+                <td>¿Tiene algún tipo de visa o permiso de residencia vigente para otro país?</td>
+                <td>No</td>
+                <td>6.50</td>
+            </tr>
+            <tr>
+                <td>¿Ha tenido problemas o dificultades con las autoridades migratorias?</td>
+                <td>No</td>
+                <td>10</td>
+            </tr>
+            <tr>
+                <td>¿Cuál es su nacionalidad?</td>
+                <td>Colombia</td>
+                <td>6.50</td>
+            </tr>
+            <tr>
+                <td>Calificación del evaluador</td>
+                <td>N/A</td>
+                <td>8</td>
+            </tr>
+        </table>
+        <div class="result-container">
+            <div id="result-confidential-table" class="result-box"></div>
+        </div>
+
+        <div class="probability">
+            <strong>Probabilidad de aprobación de visa</strong>
+            <strong>63.47%</strong>
+        </div>
+        <div class="probability-bar">
+            <div class="probability-bar-inner"></div>
+        </div>
+        
+        <div class="suggestions content-margins">
+            <h2 style="margin-bottom: 60px;"><i class="fa fa-lightbulb"></i> 7. Sugerencias para mejorar su perfil</h2>
+            <div class="suggestion">
+                <h3><i class="fa fa-check-circle"></i> Sugerencia 1</h3>
+                <p>Para mejorar su perfil en la solicitud de visa de turismo a EE.UU., es crucial centrarse en aumentar sus ingresos mensuales aproximados. La capacidad económica es un elemento vital que los oficiales de visas evaluán para determinar la viabilidad de su viaje y permanencia en Estados Unidos sin incurrir en dificultades financieras o la necesidad de buscar empleo ilegal. Considere buscar oportunidades de empleo mejor remuneradas o realizar trabajos adicionales para aumentar su ingreso mensual. Adicionalmente, podría ser útil presentar un plan financiero detallado que muestre cómo piensa solventar su viaje y estadía en EE.UU., esto puede ayudar a fortalecer su solicitud y mostrar a los oficiales consulares que tiene los medios necesarios para viajar y regresar a su país.</p>
+            </div>
+            <div class="suggestion">
+                <h3><i class="fa fa-check-circle"></i> Sugerencia 2</h3>
+                <p>Para fortalecer su solicitud de visa de turismo a EE.UU., le recomendaría enfocarse en demostrar vínculos fuertes con su país de residencia que aseguren su retorno tras el viaje. Dado que ha reportado pocos viajes internacionales en el pasado, extender su historial de viajes a otros países podría ser beneficioso. Esto no solo enriquece su perfil, sino que también proporciona evidencia adicional de que ha cumplido con las leyes de inmigración en diversas jurisdicciones y regresado a su país posteriormente, fortaleciendo así la percepción de que no tiene intenciones de permanecer en EE.UU. más allá de lo permitido por su visa. Busque oportunidades para viajar más, incluso si son destinos cercanos, lo que podría ayudar considerablemente a demostrar su estabilidad y confiabilidad como viajero internacional.</p>
+            </div>
+            <div class="suggestion">
+                <h3><i class="fa fa-check-circle"></i> Sugerencia 3</h3>
+                <p>Considerando los elementos más críticos de su solicitud, otra área clave para mejorar es el tiempo de empleo en su puesto actual, dado que un tiempo de empleo corto puede proyectar una imagen de inestabilidad laboral. Este aspecto es fundamental, ya que los oficiales consulares valoran altamente la estabilidad económica y profesional de los solicitantes para asegurarse que tienen razones suficientes para regresar a su país tras visitar los Estados Unidos. Le aconsejaría buscar maneras de fortalecer su historial laboral actual, como solicitar una carta de empleo detallada que describa sus responsabilidades y la importancia de su rol dentro de la empresa, lo cual podría compensar la corta duración en su trabajo actual. Además, puede explorar la posibilidad de obtener recomendaciones de supervisores u otros socios profesionales que acrediten su compromiso y estabilidad en el trabajo, lo que puede contribuir significativamente a mejorar la percepción de su perfil profesional.</p>
+            </div>
+        </div>
+
+        <div class="analysis-container">
+            <h2><i class="fa fa-chart-pie"></i> 8. Criterios de análisis</h2>
+            
+            <div class="analysis-item">
+                <div class="analysis-status" id="status-info"></div>
+                <div class="analysis-chart">
+                    <div class="circle" id="circle-info"></div>
+                </div>
+                <div class="analysis-info">
+                    <strong>Información demográfica y familiar</strong>
+                    <p style="font-size: 0.9em;">Información básica y familiar del solicitante que puede influir en la decisión de otorgar la visa.</p>
+                    <strong class="score" id="score-info"></strong>
+                </div>
+            </div>
+        
+            <div class="analysis-item">
+                <div class="analysis-status" id="status-education"></div>
+                <div class="analysis-chart">
+                    <div class="circle" id="circle-education"></div>
+                </div>
+                <div class="analysis-info">
+                    <strong>Educación y empleo</strong>
+                    <p style="font-size: 0.9em;">Datos relacionados con la educación y empleo del solicitante, que pueden indicar estabilidad laboral y capacidad para mantenerse durante el viaje.</p>
+                    <strong class="score" id="score-education"></strong>
+                </div>
+            </div>
+        
+            <div class="analysis-item">
+                <div class="analysis-status" id="status-assets"></div>
+                <div class="analysis-chart">
+                    <div class="circle" id="circle-assets"></div>
+                </div>
+                <div class="analysis-info">
+                    <strong>Propiedades y activos</strong>
+                    <p style="font-size: 0.9em;">Información sobre propiedades, vehículos e ingresos mensuales del solicitante, lo que puede reflejar solidez económica y vínculos con el país de residencia.</p>
+                    <strong class="score" id="score-assets"></strong>
+                </div>
+            </div>
+        
+            <div class="analysis-item">
+                <div class="analysis-status" id="status-background"></div>
+                <div class="analysis-chart">
+                    <div class="circle neutro" id="circle-background"></div>
+                </div>
+                <div class="analysis-info">
+                    <strong>Antecedentes y experiencia de viaje</strong>
+                    <p style="font-size: 0.9em;">Puntos enfocados en la experiencia de viajes internacionales previos y antecedentes legales del solicitante, para evaluar el riesgo de incumplimiento de las regulaciones migratorias y posibles problemas durante su estancia en el país.</p>
+                    <strong class="score" id="score-background"></strong>
+                </div>
+            </div>
+        
+            <div class="analysis-item">
+                <div class="analysis-status" id="status-confidential"></div>
+                <div class="analysis-chart">
+                    <div class="circle neutro" id="circle-confidential"></div>
+                </div>
+                <div class="analysis-info">
+                    <strong>Criterios confidenciales</strong>
+                    <p style="font-size: 0.9em;">Criterios y datos adicionales que nuestro sistema de evaluación considera que las autoridades migratorias pueden tener en cuenta al evaluar la solicitud de visa, pero que no se revelan públicamente.</p>
+                    <strong class="score" id="score-confidential"></strong>
+                </div>
+            </div>
+        </div>
+        
+        <h2><i class="fa fa-chart-pie"></i> 9. Gráfico de Resultados</h2>
+        <div class="chart-container content-margins">
+            <canvas id="radarChart"></canvas>
+        </div>
+
+        
+
+    <footer class="footer-simple">
+        <div class="footer-content">
+            &copy; 2024 VisaParaTurista.com. Todos los derechos reservados.
+        </div>
+    </footer>
+
+    <div class="dialog-overlay" id="dialog-overlay">
+        <div class="dialog">
+            <h3>Editar <span id="dialog-title"></span></h3>
+            <form id="edit-form">
+                <label for="edit-value">Nuevo valor:</label>
+                <input type="text" id="edit-value" name="value" required>
+                <input type="hidden" id="edit-field" name="field">
+                <input type="hidden" id="edit-id" name="id" value="78">
+                <div class="dialog-buttons">
+                    <button type="button" onclick="closeDialog()">Cancelar</button>
+                    <button type="submit">Guardar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <form id="regenerar-form" action="/regenerar/78" method="post" style="display: none;">
+        <input type="hidden" name="id" value="78">
+        <input type="hidden" name="nombre" value="617 test">
+        <input type="hidden" name="apellidos" value="Celis">
+        <input type="hidden" name="email" value="virtualcelis@gmail.com">
+        <input type="hidden" name="telefono" value="3147003114">
+        <input type="hidden" name="pais_residencia" value="Colombia">
+        <input type="hidden" name="fecha" value="2024-07-30">
+        <input type="hidden" name="edad" value="45">
+        <input type="hidden" name="estado_civil" value="Casado">
+        <input type="hidden" name="hijos" value="1">
+        <input type="hidden" name="vivienda" value="Con pareja">
+        <input type="hidden" name="profesion" value="abogado">
+        <input type="hidden" name="nivel_educacion" value="Secundaria">
+        <input type="hidden" name="tiempo_empleo" value="Menos de 1 año">
+        <input type="hidden" name="propietario" value="No">
+        <input type="hidden" name="ingresos" value="45">
+        <input type="hidden" name="impuestos" value="Si">
+        <input type="hidden" name="propiedades" value="casa">
+        <input type="hidden" name="viajes" value="Colombia">
+        <input type="hidden" name="familiares_eeuu" value="Si">
+        <input type="hidden" name="familiares_visa" value="No">
+        <input type="hidden" name="visa_negada" value="Si">
+        <input type="hidden" name="antecedentes" value="No">
+        <input type="hidden" name="enfermedades" value="Si">
+        <input type="hidden" name="visa_otra" value="No">
+        <input type="hidden" name="problemas_migratorios" value="No">
+        <input type="hidden" name="nacionalidad" value="Colombia">
+        <input type="hidden" name="calificacion" value="8">
+    </form>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.socket.io/4.0.0/socket.io.min.js"></script>
+
+    
+    <script>
+        // Funciones para abrir y cerrar diálogos
+        function openDialog(field, value) {
+            document.getElementById('dialog-title').innerText = field.charAt(0).toUpperCase() + field.slice(1);
+            document.getElementById('edit-value').value = value;
+            document.getElementById('edit-field').value = field;
+            document.getElementById('dialog-overlay').classList.add('active');
+        }
+
+        function closeDialog() {
+            document.getElementById('dialog-overlay').classList.remove('active');
+        }
+
+        // Manejo del formulario de edición
+        document.getElementById('edit-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            var formData = new FormData(event.target);
+
+            fetch('/update', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    document.getElementById(formData.get('field') + '-span').innerText = formData.get('value');
+                    closeDialog();
+                } else {
+                    alert('Error al actualizar el campo');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Error al actualizar el campo');
+            });
+        });
+
+        // Funciones para abrir y cerrar el diálogo de eliminación
+        function openDeleteDialog() {
+            document.getElementById('delete-dialog-overlay').classList.add('active');
+        }
+
+        function closeDeleteDialog() {
+            document.getElementById('delete-dialog-overlay').classList.remove('active');
+        }
+
+        // Manejo del formulario de eliminación
+        document.getElementById('delete-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            var confirmDelete = document.getElementById('confirm-delete').value;
+            if (confirmDelete === 'DELETE') {
+                var formData = new FormData(event.target);
+                fetch('/delete', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        window.location.href = '/results';
+                    } else {
+                        alert('Error al eliminar el registro');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Error al eliminar el registro');
+                });
+            } else {
+                alert('Por favor, escribe "DELETE" para confirmar.');
+            }
+        });
+
+        // Eliminar un registro con confirmación
+        function deleteRecord(recordId) {
+            const confirmDelete = prompt("Type 'DELETE' to confirm the deletion:");
+
+            if (confirmDelete !== 'DELETE') {
+                alert("Deletion not confirmed.");
+                return;
+            }
+
+            fetch('/delete', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    id: recordId,
+                    'confirm-delete': confirmDelete
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert("Record deleted successfully.");
+                    // Optionally, refresh the page or update the UI
+                } else {
+                    alert("Failed to delete record: " + data.message);
+                }
+            })
+            .catch(error => {
+                console.error("Error:", error);
+            });
+        }
+
+        // Inicialización de gráficos y actualización de la UI al cargar la página
+        document.addEventListener('DOMContentLoaded', function() {
+            var probability = 63.47;
+            var probabilityBarInner = document.querySelector('.probability-bar-inner');
+            probabilityBarInner.style.width = probability + '%';
+
+            function calculateAverage(scores) {
+                for (var i = 0; i < scores.length; i++) {
+                    if (isNaN(scores[i])) {
+                        return NaN;
+                    }
+                }
+                var sum = scores.reduce((a, b) => a + b, 0);
+                return (sum / scores.length).toFixed(2);
+            }
+
+            function calculateTableAverage(scores) {
+                scores = scores.map(val => parseFloat(val));
+                for (var i = 0; i < scores.length; i++) {
+                    if (isNaN(scores[i])) {
+                        return NaN;
+                    }
+                }
+                var sum = scores.reduce((a, b) => a + b, 0);
+                return (sum / scores.length).toFixed(2);
+            }
+
+            function updateStatusAndCircle(score, elementId, statusId) {
+                if (isNaN(score) || score === null) {
+                    document.getElementById(elementId).innerHTML = `<span>N/A</span>`;
+                    document.getElementById(statusId).innerText = 'N/A';
+                    document.getElementById(statusId).className = 'analysis-status';
+                    document.getElementById(elementId).className = 'circle';
+                    document.getElementById(elementId).style.background = 'conic-gradient(lightgray 0% 360deg)';
+                    return;
+                }
+
+                var status = 'POSITIVO';
+                var className = 'positivo';
+                if (score < 3) {
+                    status = 'NEGATIVO';
+                    className = 'negativo';
+                } else if (score < 6.5) {
+                    status = 'NEUTRO';
+                    className = 'neutro';
+                }
+
+                var degree = (score / 10) * 360;
+                var background = `conic-gradient(green 0% ${degree}deg, lightgray ${degree}deg 360deg)`;
+                if (className === 'neutro') {
+                    background = `conic-gradient(#ff9800 0% ${degree}deg, lightgray ${degree}deg 360deg)`;
+                } else if (className === 'negativo') {
+                    background = `conic-gradient(#f44336 0% ${degree}deg, lightgray ${degree}deg 360deg)`;
+                }
+
+                document.getElementById(elementId).innerHTML = `<span>${score}</span>`;
+                document.getElementById(statusId).innerText = status;
+                document.getElementById(statusId).className = `analysis-status ${className}`;
+                document.getElementById(elementId).className = `circle ${className}`;
+                document.getElementById(elementId).style.background = background;
+            }
+
+            function updateResultBox(score, elementId) {
+                if (isNaN(score)) {
+                    document.getElementById(elementId).innerText = 'Resultado: N/A';
+                    document.getElementById(elementId).className = 'result-box negativo';
+                    return;
+                }
+
+                var status = 'POSITIVO';
+                var className = 'positivo';
+                if (score < 3) {
+                    status = 'NEGATIVO';
+                    className = 'negativo';
+                } else if (score < 6.5) {
+                    status = 'NEUTRO';
+                    className = 'neutro';
+                }
+
+                document.getElementById(elementId).innerText = `Resultado: ${score} - ${status}`;
+                document.getElementById(elementId).className = `result-box ${className}`;
+            }
+
+            var demographyScores = [
+                parseFloat("7.25"),
+                parseFloat("7.5"),
+                parseFloat("7.50"),
+                parseFloat("7.25"),
+                parseFloat("7.50")
+            ].map(val => isNaN(val) ? NaN : val);
+
+            var educationScores = [
+                parseFloat("8.75"),
+                parseFloat("5.50"),
+                parseFloat("4.50")
+            ].map(val => isNaN(val) ? NaN : val);
+
+            var assetsScores = [
+                parseFloat("5.5"),
+                parseFloat("3.00"),
+                parseFloat("8.75"),
+                parseFloat("7.50")
+            ].map(val => isNaN(val) ? NaN : val);
+
+            var backgroundScores = [
+                parseFloat("4.50"),
+                parseFloat("6.75"),
+                parseFloat("5.00"),
+                parseFloat("4.00"),
+                parseFloat("10"),
+                parseFloat("6.50"),
+                parseFloat("3.00"),
+                parseFloat("10.00")
+            ].map(val => isNaN(val) ? NaN : val);
+
+            var confidentialScores = [
+                parseFloat("6.50"),
+                parseFloat("8")
+            ].map(val => isNaN(val) ? NaN : val);
+
+            var averageDemography = calculateAverage(demographyScores);
+            var averageEducation = calculateAverage(educationScores);
+            var averageAssets = calculateAverage(assetsScores);
+            var averageBackground = calculateAverage(backgroundScores);
+            var averageConfidential = calculateAverage(confidentialScores);
+
+            var demographyTableScores = [
+                "7.25",
+                "7.5",
+                "7.50",
+                "7.25",
+                "7.50"
+            ];
+
+            var educationTableScores = [
+                "8.75",
+                "5.50",
+                "4.50"
+            ];
+
+            var assetsTableScores = [
+                "5.5",
+                "3.00",
+                "8.75",
+                "7.50"
+            ];
+
+            var backgroundTableScores = [
+                "4.50",
+                "6.75",
+                "5.00",
+                "4.00"
+            ];
+
+            var confidentialTableScores = [
+                "10.00",
+                "3.00",
+                "6.50",
+                "10",
+                "6.50",
+                "8"
+            ];
+
+            var averageDemographyTable = calculateTableAverage(demographyTableScores);
+            var averageEducationTable = calculateTableAverage(educationTableScores);
+            var averageAssetsTable = calculateTableAverage(assetsTableScores);
+            var averageBackgroundTable = calculateTableAverage(backgroundTableScores);
+            var averageConfidentialTable = calculateTableAverage(confidentialTableScores);
+
+            updateStatusAndCircle(averageDemography, 'circle-info', 'status-info');
+            updateStatusAndCircle(averageEducation, 'circle-education', 'status-education');
+            updateStatusAndCircle(averageAssets, 'circle-assets', 'status-assets');
+            updateStatusAndCircle(averageBackground, 'circle-background', 'status-background');
+            updateStatusAndCircle(averageConfidential, 'circle-confidential', 'status-confidential');
+
+            updateResultBox(averageDemographyTable, 'result-info-table');
+            updateResultBox(averageEducationTable, 'result-education-table');
+            updateResultBox(averageAssetsTable, 'result-assets-table');
+            updateResultBox(averageBackgroundTable, 'result-background-table');
+            updateResultBox(averageConfidentialTable, 'result-confidential-table');
+
+            document.getElementById('score-info').innerText = averageDemography;
+            document.getElementById('score-education').innerText = averageEducation;
+            document.getElementById('score-assets').innerText = averageAssets;
+            document.getElementById('score-background').innerText = averageBackground;
+            document.getElementById('score-confidential').innerText = averageConfidential;
+
+            // Radar Chart
+            const ctx = document.getElementById('radarChart').getContext('2d');
+            const data = {
+                labels: ['Información demográfica y familiar', 'Educación y empleo', 'Propiedades y activos', 'Antecedentes y experiencia de viaje', 'Criterios confidenciales'],
+                datasets: [{
+                    data: [averageDemography, averageEducation, averageAssets, averageBackground, averageConfidential],
+                    backgroundColor: 'rgba(41, 128, 185, 0.2)',
+                    borderColor: 'rgba(41, 128, 185, 1)',
+                    borderWidth: 3,
+                    pointBackgroundColor: 'rgba(41, 128, 185, 1)',
+                    pointBorderColor: '#fff',
+                    pointHoverBackgroundColor: '#fff',
+                    pointHoverBorderColor: 'rgba(41, 128, 185, 1)'
+                }]
+            };
+            const config = {
+                type: 'radar',
+                data: data,
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        r: {
+                            min: 0,
+                            max: 10,
+                            angleLines: {
+                                color: 'rgba(0, 0, 0, 0.2)',
+                                lineWidth: 2
+                            },
+                            grid: {
+                                color: 'rgba(0, 0, 0, 0.1)',
+                                lineWidth: 2
+                            },
+                            pointLabels: {
+                                color: '#34495e',
+                                font: {
+                                    size: 14,
+                                    weight: 'bold'
+                                }
+                            },
+                            ticks: {
+                                backdropColor: 'rgba(255, 255, 255, 0.2)',
+                                color: '#34495e',
+                                beginAtZero: true,
+                                stepSize: 2,
+                                showLabelBackdrop: false
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                            titleColor: '#ecf0f1',
+                            bodyColor: '#ecf0f1',
+                            borderColor: 'rgba(41, 128, 185, 1)',
+                            borderWidth: 1
+                        }
+                    }
+                }
+            };
+
+            new Chart(ctx, config);
+        });
+
+ 
+// Conectar con el servidor Flask-SocketIO una vez al cargar la página
+const socket = io();
+
+// Función para el efecto de escritura
+function typeWriter(text, element, delay, callback) {
+    let i = 0;
+    element.textContent = '';
+    
+    function type() {
+        if (i < text.length) {
+            element.textContent += text.charAt(i);
+            i++;
+            setTimeout(type, delay);
+        } else if (callback) {
+            setTimeout(callback, 5000); // Espera 5 segundos antes de reiniciar el texto
+        }
+    }
+    type();
+}
+
+// Función para animar el texto
+function animateText() {
+    const progressText = document.getElementById('message-overlay');
+    typeWriter('Re-procesando datos con IA.', progressText, 100, () => {
+        progressText.style.transition = 'opacity 0.5s';
+        progressText.style.opacity = 0;
+        setTimeout(() => {
+            progressText.style.opacity = 1;
+            animateText();
+        }, 500);
+    });
+}
+
+// Escuchar eventos de progreso emitidos desde el servidor para regenerar
+socket.on('progressregenerar', function (data) {
+    const progressBar = document.getElementById('progress-regenerar-bar');
+    const { progressregenerar } = data;
+
+    progressBar.style.width = progressregenerar + '%'; // Actualizar la barra de progreso
+
+    // Mostrar el progreso en la consola (opcional para depuración)
+    console.log(`Progreso: ${progressregenerar}%`);
+
+    // Ocultar el overlay cuando el progreso llegue al 100%
+    if (progressregenerar >= 100) {
+        document.getElementById('processing-overlay').style.display = 'none';
+    }
+});
+
+document.querySelector('.buttons button[type="button"]').addEventListener('click', function(event) {
+    event.preventDefault();
+
+    const processingOverlay = document.getElementById('processing-overlay');
+    const progressBar = document.getElementById('progress-regenerar-bar');
+    
+    processingOverlay.style.display = 'flex';  // Mostrar la caja flotante
+    animateText();  // Iniciar la animación del texto
+
+    // Iniciar la barra de progreso
+    let progress = 0;
+    const progressInterval = setInterval(() => {
+        progress += 2; // Incremento para completar en 40 segundos
+        progressBar.style.width = progress + '%';
+        
+        if (progress >= 100) {
+            clearInterval(progressInterval);
+            processingOverlay.style.display = 'none'; // Ocultar el overlay cuando se completa
+        }
+    }, 1000);
+
+    const form = document.getElementById('regenerar-form');
+    const formData = new FormData(form); // Crear FormData del formulario
+
+    // Enviar el formulario a través de AJAX para evitar recarga de página
+    $.ajax({
+        url: form.action, // URL de acción del formulario
+        method: form.method, // Método del formulario (POST en este caso)
+        data: formData,
+        processData: false,
+        contentType: false,
+        success: function(response) {
+            console.log('Formulario enviado correctamente:', response);
+            if (response.redirect_url) {
+                window.location.href = response.redirect_url;
+            }
+        },
+        error: function(error) {
+            console.error('Error al enviar el formulario:', error);
+        }
+    });
+});
+
+function closeDeleteDialog() {
+    document.getElementById('delete-dialog-overlay').classList.remove('active');
+}
+
+const puppeteer = require('puppeteer');
+
+async function generatePDF(url, outputPath) {
+    const browser = await puppeteer.launch();
+    const page = await browser.newPage();
+    await page.goto(url, { waitUntil: 'networkidle2' });
+    await page.pdf({ path: outputPath, format: 'A4' });
+    await browser.close();
+}
+
+const url = process.argv[2];
+const outputPath = process.argv[3];
+
+generatePDF(url, outputPath).catch(error => {
+    console.error(error);
+    process.exit(1);
+});
+
+</script>
+</body>
+</html>

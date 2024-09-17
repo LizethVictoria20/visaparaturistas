@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="es" class="login-page">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Página de Login</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='estilos.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body class="login-page">
+    <div class="login-container">
+        <div class="welcome-section">
+            <i class="fas fa-user-circle icon"></i>
+            <h1>Bienvenido al sistema de análisis de perfil de VisaParaTurista.com</h1>
+            <p>Ingrese sus datos para ingresar</p>
+        </div>
+        <div class="login-section">
+            <h2>User Login</h2>
+            <form action="{{ url_for('login') }}" method="post">
+                <div class="input-group">
+                    <input type="text" placeholder="Username" name="username" required>
+                </div>
+                <div class="input-group">
+                    <input type="password" placeholder="Password" name="password" required>
+                </div>
+                <div class="actions">
+                    <label>
+                        <input type="checkbox"> Remember
+                    </label>
+                    <a href="#">Forgot password?</a>
+                </div>
+                <button type="submit">Login</button>
+            </form>
+        </div>
+    </div>
+    <script src="{{ url_for('static', filename='scripts.js') }}"></script>
+</body>
+</html>

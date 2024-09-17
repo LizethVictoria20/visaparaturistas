@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "flask": "^0.2.10",
+    "puppeteer": "^22.15.0"
+  }
+}

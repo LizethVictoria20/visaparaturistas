@@ -1,0 +1,996 @@
+<!doctype html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Estudio de Perfil para Solicitantes de Visa de Turismo a E.E.U.U.</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
+    
+        /* Variables CSS */
+        :root {
+            --form-spacing: 13px;
+            --container-height: 560px;
+            --container-width: 700px;
+            --container-margin-top: 95px;
+            --container-margin-bottom: 60px;
+            --container-padding-sides: 60px;
+            --buttons-position-x: 60px;
+            --buttons-position-y: 35px;
+            --progress-form-spacing: 50px;
+            --rating-gap: 15px;
+        }
+    
+        /* Estilo del cuerpo */
+        body {
+            font-family: 'Roboto', Arial, sans-serif;
+            background-color: #f7f9fc;
+            margin: 0;
+            padding: 0;
+        }
+    
+        /* Barra superior */
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #2e3b4e;
+            color: #fff;
+            padding: 10px 20px;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+        }
+    
+        .topbar .logo {
+            font-size: 18px;
+            font-weight: bold;
+            margin-left: 20px;
+        }
+    
+        .topbar-menu {
+            display: flex;
+            align-items: center;
+            margin-right: 140px;
+        }
+    
+        .topbar-menu a {
+            color: #fff;
+            margin: 0 10px;
+            text-decoration: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+    
+        .topbar-menu a:hover {
+            background-color: #3b82f6;
+        }
+    
+        .topbar-menu a.active {
+            font-weight: bold;
+        }
+    
+        /* Contenedor principal */
+        .container {
+            max-width: var(--container-width);
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px var(--container-padding-sides);
+            margin: var(--container-margin-top) auto var(--container-margin-bottom) auto;
+            box-sizing: border-box;
+            overflow: hidden;
+            min-height: var(--container-height);
+            position: relative;
+        }
+    
+        h1 {
+            color: #252d63;
+            font-weight: 700;
+            font-size: 24px;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+    
+        .subtitle {
+            color: #7a7a7a;
+            font-size: 16px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+    
+        /* Contenedor de progreso */
+        .progress-container {
+            margin-bottom: var(--progress-form-spacing);
+        }
+    
+        .progress-label {
+            text-align: left;
+            color: #7a7a7a;
+            font-size: 14px;
+            margin-bottom: 5px;
+        }
+    
+        .progress-bar {
+            background-color: #e0e0e0;
+            border-radius: 5px;
+            height: 5px;
+            overflow: hidden;
+        }
+    
+        .progress {
+            background-color: #673ab7;
+            height: 100%;
+            width: 0;
+            transition: width 0.4s ease;
+        }
+    
+        /* Formulario */
+        form {
+            text-align: left;
+        }
+    
+        .form-section {
+            display: none;
+            height: calc(var(--container-height) - 100px);
+            overflow: auto;
+        }
+    
+        .form-section.active {
+            display: block;
+        }
+    
+        .form-group {
+            margin-bottom: var(--form-spacing);
+            position: relative;
+        }
+    
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 400;
+            color: #333;
+        }
+    
+        label i {
+            color: #cccccc;
+            margin-right: 10px;
+        }
+    
+        input, textarea, select {
+            width: 100%;
+            padding: 10px;
+            box-sizing: border-box;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #f9fafb;
+            font-size: 14px;
+            color: #333;
+        }
+    
+        input::placeholder {
+            color: #cccccc;
+        }
+    
+        select option[value=""][disabled] {
+            display: none;
+        }
+    
+        select:invalid {
+            color: #cccccc;
+        }
+    
+        .form-group-row {
+            display: flex;
+            gap: 10px;
+        }
+    
+        .form-group-row .form-group {
+            flex: 1;
+        }
+    
+        /* Botones de navegación */
+        .navigation-buttons {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            position: absolute;
+            bottom: var(--buttons-position-y);
+            right: var(--buttons-position-x);
+        }
+    
+        .navigation-buttons button {
+            min-width: 120px;
+        }
+    
+        .submit-button {
+            padding: 8px 20px;
+            border: none;
+            color: white;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background-color 0.3s, box-shadow 0.3s;
+        }
+    
+        .submit-button-prev, .submit-button-next {
+            background-color: #3b82f6;
+        }
+    
+        .submit-button-prev:hover, .submit-button-next:hover {
+            background-color: #005bb5;
+            box-shadow: 0 5px 15px rgba(0, 91, 181, 0.2);
+        }
+    
+        .submit-button-submit {
+            background-color: #28a745;
+        }
+    
+        .submit-button-submit:hover {
+            background-color: #218838;
+            box-shadow: 0 5px 15px rgba(33, 136, 56, 0.2);
+        }
+    
+        /* Pie de página */
+        .footer-simple {
+            background-color: #f0f0f0;
+            color: #333;
+            padding: 20px;
+            text-align: center;
+            width: 100%;
+        }
+    
+        .footer-content {
+            font-size: 14px;
+        }
+    
+        /* Sistema de calificación */
+        .rating {
+            display: flex;
+            flex-direction: row-reverse;
+            justify-content: left;
+            gap: var(--rating-gap);
+        }
+    
+        .rating input {
+            display: none;
+        }
+    
+        .rating label {
+            cursor: pointer;
+            color: #ccc;
+        }
+    
+        .rating label:before {
+            content: '★';
+            font-size: 24px;
+        }
+    
+        .rating input:checked ~ label,
+        .rating label:hover,
+        .rating label:hover ~ label {
+            color: gold;
+        }
+    
+        /* Mensajes de error flotantes */
+        .error-message {
+            display: none;
+            color: white;
+            font-size: 12px;
+            position: absolute;
+            top: 40px;
+            left: 10px;
+            background-color: #a94442;
+            padding: 5px;
+            border-radius: 3px;
+            border: 1px solid #a94442;
+            white-space: nowrap;
+            padding-right: 20px;
+            z-index: 1000;
+        }
+    
+        .error-arrow {
+            position: absolute;
+            top: -10px;
+            left: 10px;
+            width: 0;
+            height: 0;
+            border-left: 10px solid transparent;
+            border-right: 10px solid transparent;
+            border-bottom: 10px solid #a94442;
+        }
+    
+    
+    
+        /* Flash messages */
+        .flashes {
+            list-style-type: none;
+            padding: 0;
+            margin: 20px 0;
+        }
+    
+        .flash {
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            font-size: 14px;
+            color: white;
+        }
+    
+        .flash.success {
+            background-color: #28a745;
+        }
+    
+        .flash.error {
+            background-color: #dc3545;
+        }
+    
+        .flash.info {
+            background-color: #17a2b8;
+        }
+    
+        .flash.warning {
+            background-color: #ffc107;
+        }
+    
+        /* Overlay de procesamiento */
+        .processing-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+    
+        .processing-box {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            width: 400px;
+            height: 200px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+    
+        .processing-box .status-text {
+            margin-bottom: 20px;
+            font-size: 14px;
+            font-weight: bold;
+            color: #8c8c8c;
+        }
+    
+        .processing-box .progress-bar {
+            width: 100%;
+            background-color: #e0e0e0;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+    
+        .processing-box .progress {
+            background-color: #3b82f6;
+            height: 20px;
+            width: 0;
+            transition: width 0.4s ease;
+        }
+    
+        .processing-box .animation {
+            margin-top: 20px;
+        }
+    </style>
+    
+    <div class="topbar">
+        <div class="logo">VisaParaTurista.com</div>
+        <div class="topbar-menu menu-adjustable">
+            <a href="/" class="{% if request.path == '/' %}active{% endif %}">Formulario</a>
+            <a href="/results" class="{% if request.path == '/results' %}active{% endif %}">Ver Resultados</a>
+            {% if current_user.is_authenticated %}
+                <a href="{{ url_for('logout') }}" class="{% if request.path == url_for('logout') %}active{% endif %}">Logout</a>
+            {% else %}
+                <a href="{{ url_for('login') }}" class="{% if request.path == url_for('login') %}active{% endif %}">Login</a>
+            {% endif %}
+            {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <ul class="flashes">
+                    {% for category, message in messages %}
+                        <li class="flash {{ category }}">{{ message }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+            {% endwith %}
+        </div>
+    </div>
+
+    <!-- Contenedor principal -->
+    <div class="container">
+        <h1>Estudio de perfil para solicitantes de visa de turismo a E.E.U.U</h1>
+        <div class="subtitle">Formulario de captura de datos para el análisis.</div>
+        
+        <!-- Contenedor de progreso -->
+        <div class="progress-container">
+            <div class="progress-label">Nivel de progreso</div>
+            <div class="progress-bar" id="progress-bar">
+                <div class="progress"></div>
+            </div>
+        </div>
+
+        <!-- Formulario -->
+        <form id="cuestionario-form" action="/" method="post" autocomplete="off" novalidate>
+            <!-- Primera Sección -->
+            <div class="form-section active">
+                <div class="form-group-row">
+                    <div class="form-group">
+                        <label for="fecha"><i class="fas fa-calendar"></i> 1. Fecha:</label>
+                        <input type="text" id="fecha" name="fecha" placeholder="Ingrese la fecha" readonly>
+                        <div class="error-message">
+                            <div class="error-arrow"></div>Error en la fecha
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="pais_residencia"><i class="fas fa-globe"></i> 2. País de Residencia:</label>
+                        <input type="text" id="pais_residencia" name="pais_residencia" list="paises" placeholder="Ingrese su país de residencia">
+                        <datalist id="paises">
+                            <!-- List of countries -->
+                        </datalist>
+                        <div class="error-message">
+                            <div class="error-arrow"></div>Error en el país de residencia
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="nombre"><i class="fas fa-user"></i> 3. Nombre:</label>
+                    <input type="text" id="nombre" name="nombre" placeholder="Ingrese su nombre">
+                    <div class="error-message">
+                        <div class="error-arrow"></div>Error en el nombre
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="apellidos"><i class="fas fa-user"></i> 4. Apellidos:</label>
+                    <input type="text" id="apellidos" name="apellidos" placeholder="Ingrese sus apellidos">
+                    <div class="error-message">
+                        <div class="error-arrow"></div>Error en los apellidos
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="email"><i class="fas fa-envelope"></i> 5. Email:</label>
+                    <input type="email" id="email" name="email" placeholder="Ingrese su email">
+                    <div class="error-message">
+                        <div class="error-arrow"></div>Error en el email
+                    </div>
+                </div>
+                <div class="form-group-row">
+                    <div class="form-group">
+                        <label for="telefono"><i class="fas fa-phone"></i> 6. Teléfono:</label>
+                        <input type="text" id="telefono" name="telefono" placeholder="Ingrese su teléfono">
+                        <div class="error-message">
+                            <div class="error-arrow"></div>Error en el teléfono
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="edad"><i class="fas fa-calendar"></i> 7. Edad:</label>
+                        <input type="number" id="edad" name="edad" placeholder="Ingrese su edad">
+                        <div class="error-message">
+                            <div class="error-arrow"></div>Error en la edad
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Segunda Sección -->
+            <div class="form-section">
+                <div class="form-group-row">
+                    <div class="form-group">
+                        <label for="estado_civil"><i class="fas fa-heart"></i> 8. Estado civil:</label>
+                        <select id="estado_civil" name="estado_civil" required>
+                            <option value="" disabled selected>Seleccione su estado civil</option>
+                            <option value="Soltero">Soltero</option>
+                            <option value="Casado">Casado</option>
+                            <option value="Divorciado">Divorciado</option>
+                            <option value="Viudo">Viudo</option>
+                            <option value="Union Libre">Union Libre / Convivencia</option>
+                        </select>
+                        <div class="error-message">
+                            <div class="error-arrow"></div>Error en el estado civil
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="hijos"><i class="fas fa-child"></i> 9. ¿Cuántos hijos tienes?</label>
+                        <select id="hijos" name="hijos" required>
+                            <option value="" disabled selected>Seleccione cantidad de hijos</option>
+                            <option value="0">0 Hijos</option>
+                            <option value="1">1 Hijo</option>
+                            <option value="2">2 Hijos</option>
+                            <option value="3">Más de 3 hijos</option>
+                        </select>
+                        <div class="error-message">
+                            <div class="error-arrow"></div>Error en la cantidad de hijos
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="vivienda"><i class="fas fa-home"></i> 10. ¿Con quién comparte su vivienda actualmente?</label>
+                    <select id="vivienda" name="vivienda" required>
+                        <option value="" disabled selected>Seleccione con quién vive</option>
+                        <option value="Solo">Solo</option>
+                        <option value="Con pareja">Con pareja</option>
+                        <option value="Con familiares">Con familiares (padres, hermanos, etc.)</option>
+                        <option value="Con amigos">Con amigos u otros compañeros de cuarto</option>
+                    </select>
+                    <div class="error-message">
+                        <div class="error-arrow"></div>Error en con quién vive
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="profesion"><i class="fas fa-briefcase"></i> 11. Profesión u ocupación:</label>
+                    <input type="text" id="profesion" name="profesion" placeholder="Ingrese su profesión u ocupación">
+                    <div class="error-message">
+                        <div class="error-arrow"></div>Error en la profesión
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="nivel_educacion"><i class="fas fa-graduation-cap"></i> 12. ¿Cuál es su nivel de educación?</label>
+                    <select id="nivel_educacion" name="nivel_educacion" required>
+                        <option value="" disabled selected>Seleccione su nivel de educación</option>
+                        <option value="Ninguno">Ninguno</option>
+                        <option value="Primaria">Primaria</option>
+                        <option value="Secundaria">Secundaria</option>
+                        <option value="Bachillerato">Bachillerato</option>
+                        <option value="Técnico">Técnico</option>
+                        <option value="Profesional">Profesional</option>
+                        <option value="Profesional">Especialista - Postgrado</option>
+                        <option value="Maestría">Maestría  - Postgrado</option>
+                        <option value="Doctorado">Doctorado  - Postgrado</option>
+                    </select>
+                    <div class="error-message">
+                        <div class="error-arrow"></div>Error en el nivel de educación
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="tiempo_empleo"><i class="fas fa-clock"></i> 13. ¿Cuánto tiempo lleva trabajando en su empleo actual?</label>
+                    <select id="tiempo_empleo" name="tiempo_empleo" required>
+                        <option value="" disabled selected>Seleccione su tiempo en empleo actual</option>
+                        <option value="Menos de 1 año">Menos de 1 año</option>
+                        <option value="1-2 años">1-2 años</option>
+                        <option value="2-5 años">2-5 años</option>
+                        <option value="5-10 años">5-10 años</option>
+                        <option value="Más de 10 años">Más de 10 años</option>
+                    </select>
+                    <div class="error-message">
+                        <div class="error-arrow"></div>Error en el tiempo de empleo
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tercera Sección -->
+            <div class="form-section">
+                <div class="form-group">
+                    <label for="propietario"><i class="fas fa-building"></i> 14. ¿Es propietario o socio de alguna empresa?</label>
+                    <select id="propietario" name="propietario" required>
+                        <option value="" disabled selected>Seleccione si es propietario o socio</option>
+                        <option value="Si">Si</option>
+                        <option value="No">No</option>
+                    </select>
+                    <div class="error-message">
+                        <div class="error-arrow"></div>Error en propietario o socio
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="ingresos"><i class="fas fa-dollar-sign"></i> 15. Ingresos mensuales aproximados en dólares americanos:</label>
+                    <input type="number" id="ingresos" name="ingresos" placeholder="Ingrese su ingreso mensual aproximado" required>
+                    <div class="error-message">
+                        <div class="error-arrow"></div>Error en los ingresos
+                    </div>
+                </div>                
+                <div class="form-group">
+                    <label for="impuestos"><i class="fas fa-file-invoice-dollar"></i> 16. ¿Paga impuestos y no participa en programas de asistencia social?</label>
+                    <select id="impuestos" name="impuestos" required>
+                        <option value="" disabled selected>Seleccione si paga impuestos</option>
+                        <option value="Si">Si</option>
+                        <option value="No">No</option>
+                    </select>
+                    <div class="error-message">
+                        <div class="error-arrow"></div>Error en los impuestos
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="propiedades"><i class="fas fa-home"></i> 17. ¿Posee propiedades inmobiliarias y/o vehículos en su país de residencia?</label>
+                    <input type="text" id="propiedades" name="propiedades" placeholder="Describa sus propiedades y/o vehículos" required>
+                    <div class="error-message">
+                        <div class="error-arrow"></div>Error en propiedades
+                    </div>
+                </div>                
+                <div class="form-group">
+                    <label for="viajes"><i class="fas fa-plane"></i> 18. ¿En los ultimos 5 años ha que paises ha viajado?</label>
+                    <input type="text" id="viajes" name="viajes" placeholder="Ingrese la cantidad de países">
+                    <div class="error-message">
+                        <div class="error-arrow"></div>Error en viajes al extranjero
+                    </div>
+                </div>
+            </div>
+
+            <!-- Cuarta Sección -->
+            <div class="form-section">
+                <div class="form-group">
+                    <label for="familiares_eeuu"><i class="fas fa-users"></i> 19. ¿Tiene familiares que residan en los Estados Unidos?</label>
+                    <select id="familiares_eeuu" name="familiares_eeuu" required>
+                        <option value="" disabled selected>Seleccione si tiene familiares en EE.UU.</option>
+                        <option value="No">No</option>
+                        <option value="Si">Si - Status regular</option>
+                        <option value="Si">Si - Status irregular</option>
+                    </select>
+                    <div class="error-message">
+                        <div class="error-arrow"></div>Error en familiares en EE.UU.
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="familiares_visa"><i class="fas fa-id-card"></i> 20. ¿Tiene familiares que cuenten con una visa de turismo a EE.UU.?</label>
+                    <select id="familiares_visa" name="familiares_visa" required>
+                        <option value="" disabled selected>Seleccione si tienen visa de turismo</option>
+                        <option value="Si">Si</option>
+                        <option value="No">No</option>
+                    </select>
+                    <div class="error-message">
+                        <div class="error-arrow"></div>Error en familiares con visa
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="visa_negada"><i class="fas fa-times-circle"></i> 21. ¿Le ha sido negada una visa de turismo para EE.UU. anteriormente?</label>
+                    <select id="visa_negada" name="visa_negada" required>
+                        <option value="" disabled selected>Seleccione si le han negado la visa</option>
+                        <option value="No">No</option>
+                        <option value="Si">Si, 1 vez</option>
+                        <option value="Si">Si, más de 1 vez</option>
+                        <option value="Si">Si, más de 3 veces</option>
+                    </select>
+                    <div class="error-message">
+                        <div class="error-arrow"></div>Error en visa negada
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="antecedentes"><i class="fas fa-gavel"></i> 22. ¿Tiene antecedentes judiciales o ha estado en procesos de embargo?</label>
+                    <select id="antecedentes" name="antecedentes" required>
+                        <option value="" disabled selected>Seleccione si tiene antecedentes</option>
+                        <option value="Si">Si</option>
+                        <option value="No">No</option>
+                    </select>
+                    <div class="error-message">
+                        <div class="error-arrow"></div>Error en antecedentes judiciales
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="enfermedades"><i class="fas fa-notes-medical"></i> 23. ¿Padece alguna enfermedad crónica o preexistente de base?</label>
+                    <select id="enfermedades" name="enfermedades" required>
+                        <option value="" disabled selected>Seleccione si padece enfermedades</option>
+                        <option value="Si">Si</option>
+                        <option value="No">No</option>
+                    </select>
+                    <div class="error-message">
+                        <div class="error-arrow"></div>Error en enfermedades crónicas
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quinta Sección -->
+            <div class="form-section">
+                <div class="form-group">
+                    <label for="visa_otra"><i class="fas fa-passport"></i> 24. ¿Tiene algún tipo de visa o permiso de residencia vigente para otro país?</label>
+                    <select id="visa_otra" name="visa_otra" required>
+                        <option value="" disabled selected>Seleccione si tiene otra visa</option>
+                        <option value="Si">Si</option>
+                        <option value="No">No</option>
+                    </select>
+                    <div class="error-message">
+                        <div class="error-arrow"></div>Error en visa o permiso de residencia
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="problemas_migratorios"><i class="fas fa-user-check"></i> 25. ¿Ha tenido problemas o dificultades con las autoridades migratorias?</label>
+                    <select id="problemas_migratorios" name="problemas_migratorios" required>
+                        <option value="" disabled selected>Seleccione si ha tenido problemas</option>
+                        <option value="Si">Si</option>
+                        <option value="No">No</option>
+                    </select>
+                    <div class="error-message">
+                        <div class="error-arrow"></div>Error en problemas migratorios
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="nacionalidad"><i class="fas fa-flag"></i> 26. ¿Cuál es su nacionalidad?</label>
+                    <input type="text" id="nacionalidad" name="nacionalidad" list="nacionalidades" placeholder="Ingrese su nacionalidad">
+                    <datalist id="nacionalidades">
+                        <!-- List of countries -->
+                    </datalist>
+                    <div class="error-message">
+                        <div class="error-arrow"></div>Error en la nacionalidad
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="calificacion"><i class="fas fa-star"></i> 27. Calificación del evaluador:</label>
+                    <div class="rating">
+                        <input type="radio" id="star10" name="calificacion" value="10"><label for="star10"></label>
+                        <input type="radio" id="star9" name="calificacion" value="9"><label for="star9"></label>
+                        <input type="radio" id="star8" name="calificacion" value="8"><label for="star8"></label>
+                        <input type="radio" id="star7" name="calificacion" value="7"><label for="star7"></label>
+                        <input type="radio" id="star6" name="calificacion" value="6"><label for="star6"></label>
+                        <input type="radio" id="star5" name="calificacion" value="5"><label for="star5"></label>
+                        <input type="radio" id="star4" name="calificacion" value="4"><label for="star4"></label>
+                        <input type="radio" id="star3" name="calificacion" value="3"><label for="star3"></label>
+                        <input type="radio" id="star2" name="calificacion" value="2"><label for="star2"></label>
+                        <input type="radio" id="star1" name="calificacion" value="1"><label for="star1"></label>
+                    </div>
+                    <div class="error-message">
+                        <div class="error-arrow"></div>Error en la calificación
+                    </div>
+                </div>
+            </div>
+
+            <!-- Botones de navegación -->
+            <div class="navigation-buttons">
+                <button type="button" id="prev-btn" class="submit-button submit-button-prev" onclick="showPrevSection()">Anterior</button>
+                <button type="button" id="next-btn" class="submit-button submit-button-next" onclick="validateSection()">Siguiente</button>
+                <button type="submit" id="submit-btn" class="submit-button submit-button-submit" style="display: none;">Enviar</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Pie de página -->
+    <footer class="footer-simple">
+        <div class="footer-content">
+            &copy; 2024 VisaParaTurista.com. Todos los derechos reservados.
+        </div>
+    </footer>
+
+    <!-- Overlay de procesamiento -->
+    <div class="processing-overlay" id="processing-overlay">
+        <div class="processing-box">
+            <div class="status-text">Procesando datos con inteligencia Artificial</div>
+            <div class="progress-bar">
+                <div class="progress" id="progress"></div>
+            </div>
+            <div class="animation">
+                <i class="fas fa-spinner fa-spin"></i>
+            </div>
+        </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+    
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    // Variables globales y selección de elementos
+    const sections = document.querySelectorAll('.form-section');
+    const nextBtn = document.getElementById('next-btn');
+    const prevBtn = document.getElementById('prev-btn');
+    const submitBtn = document.getElementById('submit-btn');
+    const progress = document.querySelector('.progress');
+    const form = document.getElementById('cuestionario-form');
+    let currentSectionIndex = 0;
+
+    // Función para actualizar la visibilidad de las secciones
+    function updateSectionVisibility() {
+        sections.forEach((section, index) => {
+            section.classList.toggle('active', index === currentSectionIndex);
+        });
+        prevBtn.style.display = currentSectionIndex > 0 ? 'inline-block' : 'none';
+        nextBtn.style.display = currentSectionIndex < sections.length - 1 ? 'inline-block' : 'none';
+        submitBtn.style.display = currentSectionIndex === sections.length - 1 ? 'inline-block' : 'none';
+        progress.style.width = ((currentSectionIndex + 1) / sections.length) * 100 + '%';
+    }
+
+    // Función para ir a la siguiente sección
+    function nextSection() {
+        if (currentSectionIndex < sections.length - 1) {
+            currentSectionIndex++;
+            updateSectionVisibility();
+        }
+    }
+
+    // Función para ir a la sección anterior
+    function prevSection() {
+        if (currentSectionIndex > 0) {
+            currentSectionIndex--;
+            updateSectionVisibility();
+        }
+    }
+
+    // Evento para el botón siguiente
+    nextBtn.addEventListener('click', function () {
+        if (validateSection()) {
+            nextSection();
+        }
+    });
+
+    // Evento para el botón anterior
+    prevBtn.addEventListener('click', function () {
+        prevSection();
+    });
+
+    // Evento para el botón de envío
+    submitBtn.addEventListener('click', function (event) {
+        if (!validateSection()) {
+            event.preventDefault();
+            alert("Completa todos los campos para procesar el perfilamiento.");
+        }
+    });
+
+    // Inicialización de la visibilidad de las secciones
+    updateSectionVisibility();
+
+    // Inicialización del datepicker
+    $("#fecha").datepicker({ dateFormat: 'yy-mm-dd' });
+
+   // Lista de países
+    const countries = [
+        "Alemania", "Andorra", "Argentina", "Australia", "Austria", 
+        "Bahamas", "Barbados", "Bélgica", "Belice", "Bolivia", 
+        "Brasil", "Bulgaria", "Canadá", "Chile", "China", 
+        "Colombia", "Costa Rica", "Croacia", "Cuba", "Dinamarca", 
+        "Dominica", "Ecuador", "El Salvador", "España", "Estados Unidos", 
+        "Estonia", "Filipinas", "Finlandia", "Francia", "Grecia", 
+        "Guatemala", "Guyana", "Haití", "Honduras", "Hungría", 
+        "India", "Indonesia", "Irlanda", "Islandia", "Israel", 
+        "Italia", "Jamaica", "Japón", "Letonia", "Lituania", 
+        "Luxemburgo", "Malasia", "Malta", "México", "Mónaco", 
+        "Nueva Zelanda", "Noruega", "Panamá", "Paraguay", "Perú", 
+        "Polonia", "Portugal", "Reino Unido", "República Checa", "República Dominicana", 
+        "Rumania", "Rusia", "San Cristóbal y Nieves", "San Marino", "San Vicente y las Granadinas", 
+        "Santa Lucía", "Singapur", "Sudáfrica", "Suecia", "Suiza", 
+        "Trinidad y Tobago", "Turquía", "Uruguay", "Venezuela", "Vietnam"
+    ];
+
+    // Población de datalist de países
+    const datalistPaises = document.getElementById('paises');
+    const datalistNacionalidades = document.getElementById('nacionalidades');
+
+    countries.forEach(country => {
+        const option = document.createElement('option');
+        option.value = country;
+        datalistPaises.appendChild(option);
+        const option2 = document.createElement('option');
+        option2.value = country;
+        datalistNacionalidades.appendChild(option2);
+    });
+
+    // Ocultar mensajes de error al enfocar en un campo de entrada
+    const inputs = document.querySelectorAll('input, select, textarea');
+    inputs.forEach(input => {
+        input.addEventListener('focus', function() {
+            hideAllErrors();
+        });
+    });
+});
+
+// Validación de la sección actual
+function validateSection() {
+    const currentSection = document.querySelector('.form-section.active');
+    const inputs = currentSection.querySelectorAll('input, select, textarea');
+    let valid = true;
+
+    inputs.forEach(input => {
+        if (!input.value.trim() || (input.tagName === 'SELECT' && !input.value)) {
+            showError(input);
+            valid = false;
+        } else {
+            hideError(input);
+        }
+    });
+
+    return valid;
+}
+
+// Mostrar mensaje de error
+function showError(input) {
+    const errorMessage = input.parentElement.querySelector('.error-message');
+    if (errorMessage) {
+        errorMessage.style.display = 'block';
+    }
+}
+
+// Ocultar mensaje de error
+function hideError(input) {
+    const errorMessage = input.parentElement.querySelector('.error-message');
+    if (errorMessage) {
+        errorMessage.style.display = 'none';
+    }
+}
+
+// Ocultar todos los mensajes de error
+function hideAllErrors() {
+    const errorMessages = document.querySelectorAll('.error-message');
+    errorMessages.forEach(errorMessage => {
+        errorMessage.style.display = 'none';
+    });
+}
+
+// Función para cerrar mensajes de error
+function closeError(button, event) {
+    event.preventDefault();
+    button.parentElement.style.display = 'none';
+}
+
+// Evento de envío del formulario con visualización de progreso
+document.addEventListener('DOMContentLoaded', function () {
+            const form = document.getElementById('cuestionario-form');
+            const processingOverlay = document.getElementById('processing-overlay');
+            const progressBar = document.getElementById('progress');
+            const progressText = document.querySelector('.status-text');
+
+            // Conectar con el servidor Flask-SocketIO
+            const socket = io();
+
+            // Escuchar eventos de progreso emitidos desde el servidor
+            socket.on('progress', function (data) {
+                const { message, progress } = data;
+                progressBar.style.width = progress + '%'; // Actualizar la barra de progreso
+                progressText.textContent = message; // Actualizar el texto del estado
+
+                // Mostrar el progreso en la consola (opcional para depuración)
+                console.log(`Progreso: ${progress}%, Mensaje: ${message}`);
+
+                // Ocultar el overlay cuando el progreso llegue al 100%
+                if (progress >= 100) {
+                    clearInterval(checkProgressInterval);
+                    processingOverlay.style.display = 'none';
+                }
+            });
+
+            form.addEventListener('submit', function (event) {
+                event.preventDefault();  // Evitar el envío inmediato del formulario
+                processingOverlay.style.display = 'flex';  // Mostrar la caja flotante
+
+                const formData = new FormData(form); // Crear FormData del formulario
+
+                // Enviar el formulario a través de AJAX para evitar recarga de página
+                $.ajax({
+                    url: form.action, // URL de acción del formulario
+                    method: form.method, // Método del formulario (POST en este caso)
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function(response) {
+                        // Aquí podrías manejar la respuesta si es necesario
+                        console.log('Formulario enviado correctamente:', response);
+
+                        // Asumimos que el servidor manejará la redirección al finalizar
+                        // Si la respuesta incluye una URL de redirección, podemos redirigir manualmente
+                        if (response.redirect_url) {
+                            window.location.href = response.redirect_url;
+                        }
+                    },
+                    error: function(error) {
+                        // Manejar errores si la solicitud falla
+                        console.error('Error al enviar el formulario:', error);
+                    }
+                });
+
+                // Iniciar el monitoreo del progreso cada segundo
+                let checkProgressInterval = setInterval(() => {
+                    socket.emit('check_progress'); // Solicita la actualización del progreso al servidor
+
+                    // Opcional: Parar la verificación de progreso cuando se llegue al 100%
+                    if (parseFloat(progressBar.style.width) >= 100) {
+                        clearInterval(checkProgressInterval);
+                        processingOverlay.style.display = 'none'; // Ocultar el overlay cuando se completa
+                    }
+                }, 1000); // Actualiza cada segundo
+            });
+        });
+
+
+</script>
+
+</body>
+</html>

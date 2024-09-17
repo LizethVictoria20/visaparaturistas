@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Perfilamiento Completado</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='estilos.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        .thanks-container {
+            background: #fff;
+            padding: 40px;
+            max-width: 600px;
+            margin: 50px auto;
+            text-align: center;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+            border-radius: 10px;
+            position: relative;
+        }
+        .thanks-container h1 {
+            font-size: 2.5em;
+            margin-bottom: 20px;
+            color: #333;
+        }
+        .thanks-container p {
+            font-size: 1em; /* 16px */
+            color: #666;
+            line-height: 1.5;
+        }
+        .check-icon {
+            font-size: 5em;
+            color: #4CAF50;
+            margin-bottom: 20px;
+        }
+        .download-button {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 15px 30px;
+            font-size: 1.125em; /* 18px */
+            color: #fff;
+            background-color: #007BFF;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+        .download-button:hover {
+            background-color: #0056b3;
+            transform: translateY(-3px);
+        }
+        .footer-simple {
+            text-align: center;
+            padding: 20px 0;
+            background-color: #f8f9fa;
+            color: #6c757d;
+        }
+        .footer-content {
+            font-size: 0.875em; /* 14px */
+        }
+        .separator {
+            height: 2px;
+            background-color: #007BFF;
+            width: 50px;
+            margin: 20px auto;
+            border-radius: 1px;
+        }
+    </style>
+</head>
+<body>
+    <div class="topbar">
+        <div class="logo">VisaParaTurista.com</div>
+        <div class="topbar-menu menu-adjustable">
+            <a href="/" class="{% if request.path == '/' %}active{% endif %}">Formulario</a>
+            <a href="/results" class="{% if request.path == '/results' %}active{% endif %}">Ver Resultados</a>
+            {% if current_user.is_authenticated %}
+                <a href="{{ url_for('logout') }}" class="{% if request.path == url_for('logout') %}active{% endif %}">Logout</a>
+            {% else %}
+                <a href="{{ url_for('login') }}" class="{% if request.path == url_for('login') %}active{% endif %}">Login</a>
+            {% endif %}
+        </div>
+    </div>    
+    <div class="container thanks-container">
+        <i class="fas fa-check-circle check-icon"></i>
+        <h1>¡Perfilamiento Completado!</h1>
+        <div class="separator"></div>
+        <p><strong>El proceso de perfilamiento se ha completado exitosamente.</strong> Hemos generado un archivo PDF con toda tu información y lo hemos guardado en nuestro sistema para que puedas acceder a él cuando lo necesites.</p>
+        <p><strong>Tu información ha sido guardada y el PDF ha sido generado con éxito.</strong></p>
+        <p>Tu archivo se descargará automáticamente en unos segundos. Si la descarga no comienza, haz clic en el botón de abajo:</p>
+        <a id="download-link" href="{{ url_for('download', filename=filename) }}" class="download-button"><i class="fas fa-cloud-download-alt"></i> Descargar PDF</a>
+    </div>
+    <footer class="footer-simple">
+        <div class="footer-content">
+            &copy; 2024 VisaParaTurista.com. Todos los derechos reservados.
+        </div>
+    </footer>
+    <script>
+        window.onload = function() {
+            setTimeout(function() {
+                document.getElementById('download-link').click();
+            }, 3000); // 3 segundos de espera antes de iniciar la descarga
+        };
+    </script>
+    <script src="{{ url_for('static', filename='scripts.js') }}"></script>
+</body>
+</html>
