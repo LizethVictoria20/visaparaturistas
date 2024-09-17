@@ -9,7 +9,6 @@ Este proyecto está creado con inteligencia artificial por nuestra compañía [v
 ### Activar entorno de desarrollo
 
 `source env/bin/activate`
-`deactivate `
 
 ### Instalar dependencias
 
