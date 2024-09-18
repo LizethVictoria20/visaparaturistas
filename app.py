@@ -17,12 +17,11 @@ from wtforms.validators import DataRequired, Email, NumberRange
 import sqlite3
 import os
 from dotenv import load_dotenv
-import openai
+from openai import OpenAI
 from weasyprint import HTML
 from database import delete_record_by_id  # Importa la función desde el archivo database.py
 import io  # Agregar esta línea
 import subprocess
-import time
 
 
 
@@ -30,16 +29,13 @@ import time
 load_dotenv(dotenv_path='.env')
 
 # Crear una instancia del cliente OpenAI
-# client = OpenAI(api_key=os.getenv('OPENAI_API_KEY'))
-openai.api_key = os.getenv('OPENAI_API_KEY')
-
+client = OpenAI(api_key=os.getenv('OPENAI_API_KEY'))
 
 # Configuración de la aplicación
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'mysecretkey'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///form_results.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-
 
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
@@ -417,7 +413,7 @@ def emit_progress(message, progress):
 # Ruta para el formulario principal
 @app.route('/', methods=['GET', 'POST'])
 @login_required
-def form(client):
+def form():
     form = CuestionarioForm(request.form)
     if request.method == 'POST' and form.validate():
         # Datos del formulario
@@ -798,9 +794,7 @@ def generate_pdf(nombre, apellidos, email, telefono, pais_residencia, fecha, eda
     elements.append(table)
     elements.append(Spacer(1, 12))
 
-
     # Gráfico de calificación
-    # Crear el gráfico con Matplotlib
     fig, ax = plt.subplots(figsize=(6, 3))
     calificacion = max(0, min(calificacion, 100))  # Asegurarse de que la calificación esté en el rango 0-100
     wedges, texts, autotexts = ax.pie(
@@ -812,27 +806,21 @@ def generate_pdf(nombre, apellidos, email, telefono, pais_residencia, fecha, eda
         textprops=dict(color="w")
     )
 
-    # Ajustar colores del texto
     for text in texts:
         text.set_color('black')
 
     ax.axis('equal')
     plt.setp(autotexts, size=10, weight="bold")
 
-    # Definir la carpeta donde se guardará la imagen
-    img_directory = 'results'
-    if not os.path.exists(img_directory):
-        os.makedirs(img_directory)  # Crear el directorio si no existe
-
-    # Definir la ruta y nombre del archivo de imagen
-    img_path = os.path.join(img_directory, 'calificacion.png')
-
-    # Guardar el gráfico como imagen PNG
-    plt.savefig(img_path, format='png', bbox_inches='tight')
+    graph_path = os.path.join(os.getcwd(), 'resultados', 'calificacion.png')
+    plt.savefig(graph_path, format='png', bbox_inches='tight')
     plt.close()
 
-    print(f"El gráfico ha sido guardado en: {img_path}")
+    elements.append(Image(graph_path, width=15*cm, height=7.5*cm))
+    elements.append(Spacer(1, 12))
 
+    doc.build(elements)
+    os.remove(graph_path)
 
 
 @app.route('/delete', methods=['POST'])
@@ -1092,9 +1080,6 @@ def create_pdf(id):
     result = FormResult.query.get_or_404(id)
     rendered_html = render_template('detail_pdf.html', result=result)
 
-     # Obtiene la ruta absoluta del archivo CSS
-    css_path = os.path.join(app.root_path, 'static', 'css', 'detail_pdf.css')
-
     # Crear el directorio tmp si no existe
     if not os.path.exists('tmp'):
         os.makedirs('tmp')
@@ -1130,6 +1115,3 @@ if __name__ == "__main__":
     with app.app_context():
         db.create_all()
     socketio.run(app, debug=True, port=5001)
-
-
-
