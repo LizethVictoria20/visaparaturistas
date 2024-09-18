@@ -6,937 +6,806 @@
     <title>Detalle del Resultado</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <!-- <link rel="stylesheet" href="{{ url_for('static', filename='css/detail_pdf.css') }}"> -->
+     <link rel="stylesheet" href="../static/css/detail_pdf.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <style>
-        :root {
-            --icon-color: #bdbdbd;
-            --icon-size: 18px;
-            --icon-margin: 40px;
-            --block-spacing: 20px;
-            --table-margin: 40px;
-            --separator-color: #3b82f6;
-            --separator-width: 600px;
-            --separator-height: 4px;
-            --header-color: #2e3b4e;
-            --table-header-bg: #979797;
-            --table-header-color: #fff;
-            --table-bg: #f9f9f9;
-            --button-bg: #3b82f6;
-            --button-hover-bg: #0056b3;
-            --probability-bg: #ffeb3b;
-        }
-
-        body {
-            font-family: 'Roboto', Arial, sans-serif;
-            background-color: #f0f2f5;
-            margin: 0;
-            padding: 0;
-        }
-
-        .topbar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background-color: #2e3b4e;
-            color: #fff;
-            padding: 10px 20px;
-            position: fixed;
-            width: 100%;
-            top: 0;
-            z-index: 1000;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-
-        .topbar .logo {
-            font-size: 20px;
-            font-weight: bold;
-        }
-
-        .topbar-menu {
-            display: flex;
-            align-items: center;
-            margin-right: 140px;
-            padding-bottom: 0px;
-        }
-
-        .topbar-menu a {
-            color: #fff;
-            margin: 0 10px;
-            text-decoration: none;
-            padding: 10px 15px;
-            border-radius: 5px;
-            transition: background-color 0.3s ease;
-        }
-
-        .topbar-menu a:hover {
-            background-color: #3b82f6;
-        }
-
-        .topbar-menu a.active {
-            font-weight: bold;
-        }
-
-        .container {
-            max-width: 900px;
-            margin: calc(var(--block-spacing) + 80px) auto var(--block-spacing);
-            background-color: #fff;
-            padding: 60px;
-            border-radius: 12px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-
-        .header {
-            text-align: center;
-            margin-bottom: var(--block-spacing);
-        }
-
-        .header h1 {
-            font-size: 32px;
-            margin: 0;
-            color: var(--header-color);
-        }
-
-        .separator {
-            width: var(--separator-width);
-            height: var(--separator-height);
-            background-color: var(--separator-color);
-            margin: 20px auto;
-            border-radius: 2px;
-        }
-
-        .personal-details {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: space-between;
-            margin-bottom: 12px;
-            margin-top: 20px;
-            background-color: #f9f9f9;
-            padding-top: 30px;
-            padding-bottom: 10px;
-            padding-left: 60px;
-            padding-right: 40px;
-            border-radius: 12px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            position: relative;
-        }
-
-        .personal-details div {
-            flex: 1 1 45%;
-            margin-bottom: 15px;
-            position: relative;
-        }
-
-        .personal-details label {
-            font-weight: bold;
-            color: var(--header-color);
-        }
-
-        .personal-details span {
-            display: block;
-            color: #555;
-        }
-
-        .edit-button {
-            display: none;
-            position: absolute;
-            right: 10px;
-            top: 10px;
-            background-color: #b9b9b9;
-            color: #fff;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            padding-left: 10px;
-            padding-right: 10px;
-            padding-top: 3px;
-            padding-bottom: 3px;
-            margin-right: 40px;
-        }
-
-        .personal-details div:hover .edit-button {
-            display: block;
-        }
-        .buttons {
-            position: relative;
-            left: -25px;
-            display: flex;
-            justify-content: flex-end;
-            margin-bottom: 20px;
-            height: 18px;
-        }
-
-        .buttons a, .buttons button {
-            background-color: var(--button-bg);
-            color: #fff;
-            border: none;
-            padding: 12px 20px;
-            margin-left: 10px;
-            border-radius: 25px;
-            text-decoration: none;
-            font-size: 12px;
-            cursor: pointer;
-            transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .buttons a:hover, .buttons button:hover {
-            background-color: var(--button-hover-bg);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-        }
-
-        .buttons a:active, .buttons button:active {
-            transform: translateY(0);
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-        }
-
-        /* Estilos específicos para el botón de eliminar */
-        .buttons .delete-button {
-            background-color: rgb(212, 0, 0);
-            color: #fff;
-            border: none;
-            padding: 12px 20px;
-            margin-left: 10px;
-            border-radius: 25px;
-            text-decoration: none;
-            font-size: 12px;
-            cursor: pointer;
-            transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .buttons .delete-button:hover {
-            background-color: darkred;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 20px;
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            font-size: 0.9em; /* Ajustar el tamaño de fuente */
-        }
-
-        th, td {
-            padding: 12px;
-            text-align: left;
-            border-bottom: 1px solid #ddd;
-        }
-
-        th {
-            background-color: var(--table-header-bg);
-            color: var(--table-header-color);
-            font-weight: bold;
-            padding-left: 40px;
-            padding-right: 40px;
-            padding-top: 20px;
-            padding-bottom: 20px;
-            white-space: nowrap;  /* Agregar esta línea */
-        }
-
-        td {
-            padding-left: 40px;
-            padding-right: 40px;
-            text-align: left;
-            border-bottom: 1px solid #ddd;
-        }
-
-        .footer-simple {
-            background-color: #f0f0f0;
-            color: #333;
-            padding: 20px;
-            text-align: center;
-            width: 100%;
-        }
-
-        .footer-simple .footer-content {
-            max-width: 1000px;
-            margin: 0 auto;
-            font-size: 14px;
-        }
-
-        .content-margins {
-            margin-left: 20px;
-            margin-right: 20px;
-        }
-
-        h2 {
-            color: #252d63;
-            font-weight: 700;
-            margin-top: var(--block-spacing);
-            display: flex;
-            align-items: center;
-        }
-
-        h2 i {
-            margin-right: var(--icon-margin);
-            font-size: var(--icon-size);
-            color: var(--icon-color);
-        }
-
-        .probability {
-            background-color: var(--probability-bg);
-            font-weight: bold;
-            font-size: 1.4em;
-            text-align: center;
-            padding: 15px;
-            border-radius: 12px;
-            margin: 40px auto;  /* Añadir margin: auto; */
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            width: 600px;
-            margin-bottom: 15px;
-            margin-top: 50px;
-        }
-
-        .suggestion {
-            margin-bottom: var(--block-spacing);
-        }
-
-        .suggestion h3 {
-            color: #333;
-            font-weight: bold;
-            display: flex;
-            align-items: center;
-            margin-top: 0;
-            font-size: 18px;
-            margin-left: 40px;
-            margin-right: 40px;
-        }
-
-        .suggestion h3 i {
-            margin-right: var(--icon-margin);
-            font-size: var(--icon-size);
-            color: var(--icon-color);
-            margin-left: 40px;
-            margin-right: 40px;
-        }
-
-        .suggestion p {
-            margin: 10px 0;
-            background-color: #f9f9f9;
-            padding: 55px;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            font-size: 0.9em; /* Ajustar el tamaño de fuente */
-        }
-
-        .probability-bar {
-            width: 630px;
-            height: 20px;
-            background-color: rgb(193, 0, 0);
-            margin: 10px auto;
-            border-radius: 2px;
-            overflow: hidden;
-            position: relative;
-            margin-bottom: 80px;
-        }
-
-        .probability-bar-inner {
-            height: 100%;
-            background-color: rgb(0, 182, 0);
-            width: 0;
-        }
-
-        .analysis-item {
-            display: flex;
-            align-items: center;
-            padding: 20px;
-            background: #fff;
-            margin-bottom: 20px;
-            border-radius: 12px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-
-        .analysis-item:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
-        }
-
-        .analysis-status {
-            font-weight: bold;
-            color: rgb(0, 173, 0);
-            margin-right: 20px;
-            min-width: 80px;
-            text-align: center;
-            padding: 8px;
-            border-radius: 8px;
-            background-color: #e8f5e9;
-        }
-
-        .analysis-status.neutro {
-            color: #ff9800;
-            background-color: #fff3e0;
-        }
-
-        .analysis-status.negativo {
-            color: #f44336;
-            background-color: #ffebee;
-        }
-
-        .analysis-chart {
-            width: 80px;
-            height: 80px;
-            position: relative;
-            margin-right: 20px;
-        }
-
-        .analysis-info {
-            flex: 1;
-        }
-
-        .analysis-info strong {
-            display: block;
-            font-size: 20px;
-            color: #2e3b4e;
-            margin-bottom: 5px;
-        }
-
-        .analysis-info p {
-            margin: 5px 0;
-            color: #555;
-            font-size: 0.9em; /* Ajustar el tamaño de fuente */
-        }
-
-        .analysis-info strong.score {
-            font-size: 20px;
-            color: #2e3b4e;
-            text-align: right;
-            margin-top: 10px;
-        }
-
-        .circle {
-            width: 70px;
-            height: 70px;
-            border-radius: 50%;
-            background: conic-gradient(rgb(0, 173, 0) 0% 75%, lightgray 75% 100%);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            color: #2e3b4e;
-            font-size: 18px;
-            position: relative;
-        }
-
-        .circle.neutro {
-            background: conic-gradient(#ff9800 0% 60%, lightgray 60% 100%);
-        }
-
-        .circle.negativo {
-            background: conic-gradient(#f44336 0% 30%, lightgray 30% 100%);
-        }
-
-        .circle::before {
-            content: "";
-            display: block;
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            background: #fff;
-            position: absolute;
-            z-index: 1;
-        }
-
-        .circle > span {
-            position: relative;
-            z-index: 2;
-            color: #2e3b4e;
-            font-size: 22px;
-        }
-
-        .result-box {
-            padding: 10px;
-            border-radius: 8px;
-            margin-top: 10px;
-            text-align: center;
-            font-weight: bold;
-            color: #fff;
-            width: 230px;
-        }
-
-        .result-box.positivo {
-            background-color: rgb(3, 156, 3);
-        }
-
-        .result-box.neutro {
-            background-color: #ff9800;
-        }
-
-        .result-box.negativo {
-            background-color: #f44336;
-        }
-
-        .result-box {
-            padding: 10px;
-            border-radius: 8px;
-            margin-top: -40px;
-            text-align: center;
-            font-weight: bold;
-            color: #fff;
-            font-size: 9.5pt;
-            display: inline-block; /* Esto permite el alineamiento a la derecha */
-        }
-
-        .result-box.positivo {
-            background-color: rgb(0, 160, 0);
-        }
-
-        .result-box.neutro {
-            background-color: #ff9800;
-        }
-
-        .result-box.negativo {
-            background-color: #f44336;
-        }
-
-        .result-container {
-            text-align: right; /* Esto alinea el contenido dentro del contenedor a la derecha */
-        }
-
-        .dialog-overlay {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            z-index: 1000;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .dialog-overlay.active {
-            display: flex;
-        }
-
-        .dialog {
-            background: rgb(255, 255, 255);
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            width: 400px;
-            max-width: 100%;
-        }
-
-        .dialog h3 {
-            margin-top: 0;
-            font-size: 20px;
-        }
-
-        .dialog label {
-            display: block;
-            margin: 15px 0 5px;
-        }
-
-        .dialog input {
-            width: 375px;
-            padding: 10px;
-            margin-bottom: 10px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            justify-content: center;
-
-        }
-
-        .dialog .dialog-buttons {
-            display: flex;
-            justify-content: flex-end;
-        }
-
-        .dialog .dialog-buttons button {
-            background-color: var(--button-bg);
-            color: #fff;
-            border: none;
-            padding: 10px 20px;
-            margin-left: 10px;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-        }
-
-        .dialog .dialog-buttons button:hover {
-            background-color: var(--button-hover-bg);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-        }
-
-        .chart-container {
-            position: relative;
-            height: 400px;
-            margin-top: 60px; /* Agregar esta línea para margen superior */
-            margin-bottom: 60px; /* Agregar esta línea para margen inferior */
-        }
-
-        /* Overlay de procesamiento */
-     
-        .processing-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            display: none;
-            justify-content: center;
-            align-items: center;
-            z-index: 9999;
-        }
-
-        .processing-box {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            background: white;
-            padding: 20px;
-            border-radius: 10px;
-            text-align: center;
-            width: 400px;
-            height: 200px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-
-        .processing-box .status-text {
-            margin-bottom: 20px;
-            font-size: 14px;
-            font-weight: bold;
-            color: #8c8c8c;
-        }
-
-        .processing-box .progress-bar {
-            width: 100%;
-            background-color: #e0e0e0;
-            border-radius: 5px;
-            overflow: hidden;
-        }
-
-        .processing-box .progress {
-            background-color: #3b82f6;
-            height: 10px;
-            width: 0;
-            transition: width 0.4s ease;
-        }
-
-        .processing-box .animation {
-            margin-top: 20px;
-        }
-        
-
-        
-    </style>
+    
+    <!-- <style>
+      :root {
+    --icon-color: #bdbdbd;
+    --icon-size: 18px;
+    --icon-margin: 40px;
+    --block-spacing: 20px;
+    --table-margin: 40px;
+    --separator-color: #6C6C6C;
+    --separator-width: 290px;
+    --separator-height: 1.4px;
+    --header-color: #293492;
+    --table-header-bg: #979797;
+    --table-header-color: #fff;
+    --table-bg: #f9f9f9;
+    --button-bg: #3b82f6;
+    --button-hover-bg: #0056b3;
+    --probability-bg: #ffeb3b;
+}
+
+body {
+    font-family: 'Roboto', Arial, sans-serif;
+    background-color: #f0f2f5;
+    margin: 0;
+    padding: 0;
+}
+
+.topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #2e3b4e;
+    color: #fff;
+    padding: 10px 20px;
+    position: fixed;
+    width: 100%;
+    top: 0;
+    z-index: 1000;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.topbar .logo {
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.topbar-menu {
+    display: flex;
+    align-items: center;
+    margin-right: 140px;
+    padding-bottom: 0px;
+}
+
+.topbar-menu a {
+    color: #fff;
+    margin: 0 10px;
+    text-decoration: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+.topbar-menu a:hover {
+    background-color: #3b82f6;
+}
+
+.topbar-menu a.active {
+    font-weight: bold;
+}
+
+.container {
+    max-width: 900px;
+    margin: calc(var(--block-spacing) + 80px) auto var(--block-spacing);
+    background-color: #fff;
+    padding: 60px;
+    border-radius: 12px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.header {
+  margin-bottom: var(--block-spacing);
+}
+.header h2 {
+  text-transform: uppercase;
+  color: var(--header-color);
+}
+
+.header h3 {
+    font-size: 32px;
+    margin: 0;
+    color: var(--header-color);
+    
+}
+
+.separator {
+    width: var(--separator-width);
+    height: var(--separator-height);
+    background-color: var(--separator-color);
+    margin: 30px 0;
+    border-radius: 2px;
+}
+.separator-long {
+  width: 100%;
+  height: var(--separator-height);
+  background-color: var(--separator-color);
+  margin: 30px 0;
+  border-radius: 2px;
+}
+
+.personal-details {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    margin-bottom: 12px;
+    margin-top: 20px;
+    background-color: #f9f9f9;
+    padding-top: 30px;
+    padding-bottom: 10px;
+    padding-left: 60px;
+    padding-right: 40px;
+    border-radius: 12px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    position: relative;
+}
+
+.personal-details div {
+    flex: 1 1 45%;
+    margin-bottom: 15px;
+    position: relative;
+}
+
+.personal-details label {
+    font-weight: bold;
+    color: var(--header-color);
+}
+
+.personal-details span {
+    display: block;
+    color: #555;
+}
+
+.edit-button {
+    display: none;
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    background-color: #b9b9b9;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-top: 3px;
+    padding-bottom: 3px;
+    margin-right: 40px;
+}
+
+.personal-details div:hover .edit-button {
+    display: block;
+}
+.buttons {
+    position: relative;
+    left: -25px;
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 20px;
+    height: 18px;
+}
+
+.buttons a, .buttons button {
+    background-color: var(--button-bg);
+    color: #fff;
+    border: none;
+    padding: 12px 20px;
+    margin-left: 10px;
+    border-radius: 25px;
+    text-decoration: none;
+    font-size: 12px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.buttons a:hover, .buttons button:hover {
+    background-color: var(--button-hover-bg);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.buttons a:active, .buttons button:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* Estilos específicos para el botón de eliminar */
+.buttons .delete-button {
+    background-color: rgb(212, 0, 0);
+    color: #fff;
+    border: none;
+    padding: 12px 20px;
+    margin-left: 10px;
+    border-radius: 25px;
+    text-decoration: none;
+    font-size: 12px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.buttons .delete-button:hover {
+    background-color: darkred;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    font-size: 0.9em; /* Ajustar el tamaño de fuente */
+}
+
+th, td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+th {
+    background-color: var(--table-header-bg);
+    color: var(--table-header-color);
+    font-weight: bold;
+    padding-left: 40px;
+    padding-right: 40px;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    white-space: nowrap;  /* Agregar esta línea */
+}
+
+td {
+    padding-left: 40px;
+    padding-right: 40px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+.footer-simple {
+    background-color: #f0f0f0;
+    color: #333;
+    padding: 20px;
+    text-align: center;
+    width: 100%;
+}
+
+.footer-simple .footer-content {
+    max-width: 1000px;
+    margin: 0 auto;
+    font-size: 14px;
+}
+
+.content-margins {
+    margin-left: 20px;
+    margin-right: 20px;
+}
+
+h2 {
+    color: #252d63;
+    font-weight: 700;
+    margin-top: var(--block-spacing);
+    display: flex;
+    align-items: center;
+}
+
+h2 i {
+    margin-right: var(--icon-margin);
+    font-size: var(--icon-size);
+    color: var(--icon-color);
+}
+
+.probability {
+    background-color: var(--probability-bg);
+    font-weight: bold;
+    font-size: 1.4em;
+    text-align: center;
+    padding: 15px;
+    border-radius: 12px;
+    margin: 40px auto;  /* Añadir margin: auto; */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    width: 600px;
+    margin-bottom: 15px;
+    margin-top: 50px;
+}
+
+.suggestion {
+    margin-bottom: var(--block-spacing);
+}
+
+.suggestion h3 {
+    color: #333;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    margin-top: 0;
+    font-size: 18px;
+    margin-left: 40px;
+    margin-right: 40px;
+}
+
+.suggestion h3 i {
+    margin-right: var(--icon-margin);
+    font-size: var(--icon-size);
+    color: var(--icon-color);
+    margin-left: 40px;
+    margin-right: 40px;
+}
+
+.suggestion p {
+    margin: 10px 0;
+    background-color: #f9f9f9;
+    padding: 55px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    font-size: 0.9em; /* Ajustar el tamaño de fuente */
+}
+
+.probability-bar {
+    width: 630px;
+    height: 20px;
+    background-color: rgb(193, 0, 0);
+    margin: 10px auto;
+    border-radius: 2px;
+    overflow: hidden;
+    position: relative;
+    margin-bottom: 80px;
+}
+
+.probability-bar-inner {
+    height: 100%;
+    background-color: rgb(0, 182, 0);
+    width: 0;
+}
+
+.analysis-item {
+    display: flex;
+    align-items: center;
+    padding: 20px;
+    background: #fff;
+    margin-bottom: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.analysis-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.analysis-status {
+    font-weight: bold;
+    color: rgb(0, 173, 0);
+    margin-right: 20px;
+    min-width: 80px;
+    text-align: center;
+    padding: 8px;
+    border-radius: 8px;
+    background-color: #e8f5e9;
+}
+
+.analysis-status.neutro {
+    color: #ff9800;
+    background-color: #fff3e0;
+}
+
+.analysis-status.negativo {
+    color: #f44336;
+    background-color: #ffebee;
+}
+
+.analysis-chart {
+    width: 80px;
+    height: 80px;
+    position: relative;
+    margin-right: 20px;
+}
+
+.analysis-info {
+    flex: 1;
+}
+
+.analysis-info strong {
+    display: block;
+    font-size: 20px;
+    color: #2e3b4e;
+    margin-bottom: 5px;
+}
+
+.analysis-info p {
+    margin: 5px 0;
+    color: #555;
+    font-size: 0.9em; /* Ajustar el tamaño de fuente */
+}
+
+.analysis-info strong.score {
+    font-size: 20px;
+    color: #2e3b4e;
+    text-align: right;
+    margin-top: 10px;
+}
+
+.circle {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    background: conic-gradient(rgb(0, 173, 0) 0% 75%, lightgray 75% 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    color: #2e3b4e;
+    font-size: 18px;
+    position: relative;
+}
+
+.circle.neutro {
+    background: conic-gradient(#ff9800 0% 60%, lightgray 60% 100%);
+}
+
+.circle.negativo {
+    background: conic-gradient(#f44336 0% 30%, lightgray 30% 100%);
+}
+
+.circle::before {
+    content: "";
+    display: block;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: #fff;
+    position: absolute;
+    z-index: 1;
+}
+
+.circle > span {
+    position: relative;
+    z-index: 2;
+    color: #2e3b4e;
+    font-size: 22px;
+}
+
+.result-box {
+    padding: 10px;
+    border-radius: 8px;
+    margin-top: 10px;
+    text-align: center;
+    font-weight: bold;
+    color: #fff;
+    width: 230px;
+}
+
+.result-box.positivo {
+    background-color: rgb(3, 156, 3);
+}
+
+.result-box.neutro {
+    background-color: #ff9800;
+}
+
+.result-box.negativo {
+    background-color: #f44336;
+}
+
+.result-box {
+    padding: 10px;
+    border-radius: 8px;
+    margin-top: -40px;
+    text-align: center;
+    font-weight: bold;
+    color: #fff;
+    font-size: 9.5pt;
+    display: inline-block; /* Esto permite el alineamiento a la derecha */
+}
+
+.result-box.positivo {
+    background-color: rgb(0, 160, 0);
+}
+
+.result-box.neutro {
+    background-color: #ff9800;
+}
+
+.result-box.negativo {
+    background-color: #f44336;
+}
+
+.result-container {
+    text-align: right; /* Esto alinea el contenido dentro del contenedor a la derecha */
+}
+
+.dialog-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
+}
+
+.dialog-overlay.active {
+    display: flex;
+}
+
+.dialog {
+    background: rgb(255, 255, 255);
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    width: 400px;
+    max-width: 100%;
+}
+
+.dialog h3 {
+    margin-top: 0;
+    font-size: 20px;
+}
+
+.dialog label {
+    display: block;
+    margin: 15px 0 5px;
+}
+
+.dialog input {
+    width: 375px;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    justify-content: center;
+
+}
+
+.dialog .dialog-buttons {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.dialog .dialog-buttons button {
+    background-color: var(--button-bg);
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    margin-left: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.dialog .dialog-buttons button:hover {
+    background-color: var(--button-hover-bg);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.chart-container {
+    position: relative;
+    height: 400px;
+    margin-top: 60px; /* Agregar esta línea para margen superior */
+    margin-bottom: 60px; /* Agregar esta línea para margen inferior */
+}
+
+/* Overlay de procesamiento */
+
+.processing-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+}
+
+.processing-box {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    width: 400px;
+    height: 200px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.processing-box .status-text {
+    margin-bottom: 20px;
+    font-size: 14px;
+    font-weight: bold;
+    color: #8c8c8c;
+}
+
+.processing-box .progress-bar {
+    width: 100%;
+    background-color: #e0e0e0;
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+.processing-box .progress {
+    background-color: #3b82f6;
+    height: 10px;
+    width: 0;
+    transition: width 0.4s ease;
+}
+
+.processing-box .animation {
+    margin-top: 20px;
+}
+
+    </style> -->
+
 </head>
 <body>
     <div class="topbar">
-        <div class="logo">VisaParaTurista.com</div>
-        <div class="topbar-menu menu-adjustable">
-            <a href="/" class="{% if request.path == '/' %}active{% endif %}">Formulario</a>
-            <a href="/results" class="{% if request.path == '/results' %}active{% endif %}">Ver Resultados</a>
-            {% if current_user.is_authenticated %}
-                <a href="{{ url_for('logout') }}" class="{% if request.path == url_for('logout') %}active{% endif %}">Logout</a>
-            {% else %}
-                <a href="{{ url_for('login') }}" class="{% if request.path == url_for('login') %}active{% endif %}">Login</a>
-            {% endif %}
-            {% with messages = get_flashed_messages(with_categories=true) %}
-            {% if messages %}
-                <ul class="flashes">
-                    {% for category, message in messages %}
-                        <li class="flash {{ category }}">{{ message }}</li>
-                    {% endfor %}
-                </ul>
-            {% endif %}
-            {% endwith %}
-        </div>
     </div>
     <div class="container">
         <div class="header content-margins">
-            <h1>Detalle del Perfilamiento</h1>
-            <div class="separator"></div>
+          <img src="../static/images/navbarPDF.png" alt="" class="header-imagePDF">
+          <!-- <img src="{{ url_for('static', filename='images/navbarPDF.png') }} alt="Navbar visa para turistas"> -->
+          <hr class="separator">
+          <h3>Resultado / Test de perfilamiento con inteligencia artificial</h3>
+          <h2>Visa de turismo de EE.UU</h2>
+          <p>A continuación, se presentan los resultados del test de perfilamiento para la solicitud de visa de turismo a EE. UU., Este test, creado con inteligencia artificial por nuestra compañía "VisaParaTurista.com" le indicará sus probabilidades de obtener la visa, considerando diferentes factores matemáticos y calificando cada criterio en una escala de 1 a 10. Nuestro objetivo es ayudarle a identificar áreas en las que puede fortalecer su proceso de solicitud. Al final, encontrará consejos útiles y un diagrama para comprender mejor sus oportunidades de mejora. Agradecemos su confianza y esperamos ser de ayuda en su solicitud de visa de turismo a EE. UU.</p>
         </div>
-        <h2><i class="fa fa-user"></i> 1. Datos personales</h2>
-
+        <hr class="separator">
         <div class="personal-details content-margins">
             <div>
-                <label>Nombre:</label>
-                <span id="nombre-span">{{ result.nombre }}</span>
-                <button class="edit-button" onclick="openDialog('nombre', '{{ result.nombre }}')">Editar</button>
+                <p>Nombre del solicitante</p>
+                <strong><span id="nombre-span">{{ result.nombre }} {{ result.apellidos }}</span></strong>
             </div>
             <div>
-                <label>Apellidos:</label>
-                <span id="apellidos-span">{{ result.apellidos }}</span>
-                <button class="edit-button" onclick="openDialog('apellidos', '{{ result.apellidos }}')">Editar</button>
-            </div>
-            <div>
-                <label>Fecha:</label>
-                <span id="fecha-span">{{ result.fecha }}</span>
-                <button class="edit-button" onclick="openDialog('fecha', '{{ result.fecha }}')">Editar</button>
-            </div>
-            <div>
-                <label>Email:</label>
-                <span id="email-span">{{ result.email }}</span>
-                <button class="edit-button" onclick="openDialog('email', '{{ result.email }}')">Editar</button>
-            </div>
-            <div>
-                <label>Teléfono:</label>
-                <span id="telefono-span">{{ result.telefono }}</span>
-                <button class="edit-button" onclick="openDialog('telefono', '{{ result.telefono }}')">Editar</button>
-            </div>
-            <div>
-                <label>Nacionalidad:</label>
-                <span id="nacionalidad-span">{{ result.nacionalidad }}</span>
-                <button class="edit-button" onclick="openDialog('nacionalidad', '{{ result.nacionalidad }}')">Editar</button>
+                <p>Fecha del perfilamiento</p>
+                <strong><span id="fecha-span">{{ result.fecha }}</span></strong>
             </div>
         </div>
+        <hr class="separator-small">
+        <h4>1. Preguntas, respuestas y calificacion del test</h4>
+        <hr class="separator">
 
-      
-        <div class="buttons">
-            <a href="{{ url_for('download', filename=result.pdf_path.split('/')[-1]) }}">Descargar PDF</a>
-            <button type="button" onclick="document.getElementById('regenerar-form').submit();">Regenerar</button>
-            <button class="delete-button" onclick="openDeleteDialog()">Eliminar</button>
-        </div>
-        
-        
-
-        <!-- Dialogo de confirmación para eliminar -->
-        <div class="dialog-overlay" id="delete-dialog-overlay">
-            <div class="dialog">
-                <h3>Confirma la eliminación</h3>
-                <form id="delete-form">
-                    <label for="confirm-delete">Escribe "DELETE" para confirmar:</label>
-                    <input type="text" id="confirm-delete" name="confirm-delete" required>
-                    <input type="hidden" id="delete-id" name="id" value="{{ result.id }}">
-                    <div class="dialog-buttons">
-                        <button type="button" onclick="closeDeleteDialog()">Cancelar</button>
-                        <button type="submit">Eliminar</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-
-
-       <!-- Overlay de procesamiento -->
-       <div class="processing-overlay" id="processing-overlay">
-        <div class="processing-box">
-            <div class="status-text" id="message-overlay"></div>
-            <div class="progress-bar">
-                <div class="progress" id="progress-regenerar-bar"></div>
-            </div>
-            <div class="animation">
-                <i class="fas fa-spinner fa-spin"></i>
-            </div>
-        </div>
-    </div>
-    
-        
-        <h2><i class="fa fa-map-marker-alt"></i> 2. Información demográfica y familiar</h2>
-        <table class="other-info">
+        <table class="questions">
             <tr>
-                <th>Pregunta</th>
-                <th>Respuesta</th>
-                <th>Calificación IA</th>
+                <th class="subtitles">Pregunta</th>
+                <th class="subtitles">Respuesta</th>
+                <th class="subtitles">Puntaje</th>
             </tr>
             <tr>
-                <td>País de Residencia</td>
-                <td>{{ result.pais_residencia }}</td>
-                <td>{{ result.calificacion_pais_residencia_ChatGPT }}</td>
-            </tr>
-            <tr>
-                <td>Edad</td>
+                <td>1 - Edad</td>
                 <td>{{ result.edad }}</td>
                 <td>{{ result.calificacion_edad_ChatGPT }}</td>
             </tr>
             <tr>
-                <td>Estado Civil</td>
-                <td>{{ result.estado_civil }}</td>
-                <td>{{ result.calificacion_estado_civil_ChatGPT }}</td>
+              <td>2 - Estado Civil</td>
+              <td>{{ result.estado_civil }}</td>
+              <td>{{ result.calificacion_estado_civil_ChatGPT }}</td>
             </tr>
             <tr>
-                <td>¿Cuántos hijos tienes?</td>
+                <td>3 - ¿Cuántos hijos tienes?</td>
                 <td>{{ result.hijos }}</td>
                 <td>{{ result.calificacion_hijos_ChatGPT }}</td>
             </tr>
             <tr>
-                <td>¿Con quién comparte su vivienda actualmente?</td>
+                <td>4 - ¿Con quién comparte su vivienda actualmente?</td>
                 <td>{{ result.vivienda }}</td>
                 <td>{{ result.calificacion_vivienda_ChatGPT }}</td>
             </tr>
+            <tr>
+              <td>5 - Profesión u ocupación</td>
+              <td>{{ result.profesion }}</td>
+              <td>{{ result.calificacion_profesion_ChatGPT }}</td>
+          </tr>
+          <tr>
+            <td>6 - ¿Cuál es su nivel de educación?</td>
+            <td>{{ result.nivel_educacion }}</td>
+            <td>{{ result.calificacion_nivel_educacion_ChatGPT }}</td>
+          </tr>
+          <tr>
+            <td>7 - ¿Cuánto tiempo lleva trabajando en su empleo actual?</td>
+            <td>{{ result.tiempo_empleo }}</td>
+            <td>{{ result.calificacion_tiempo_empleo_ChatGPT }}</td>
+          </tr>
+          <tr>
+            <td>8 - ¿Es propietario o socio de alguna empresa?</td>
+            <td>{{ result.propietario }}</td>
+            <td>{{ result.calificacion_propietario_ChatGPT }}</td>
+          </tr>
+          <tr>
+            <td>9 - Ingresos mensuales aproximados en dólares americanos</td>
+            <td>{{ result.ingresos }}</td>
+            <td>{{ result.calificacion_ingresos_ChatGPT }}</td>
+          </tr>
+          <tr>
+            <td>10 - ¿Paga impuestos y no participa en programas de asistencia social?</td>
+            <td>{{ result.impuestos }}</td>
+            <td>{{ result.calificacion_impuestos_ChatGPT }}</td>
+          </tr>
+          <tr>
+            <td>11 - ¿Posee propiedades inmobiliarias y/o vehículos en su país de residencia?</td>
+            <td>{{ result.propiedades }}</td>
+            <td>{{ result.calificacion_propiedades_ChatGPT }}</td>
+          </tr>
+          <tr>
+            <td>12 - ¿En los últimos 5 años, a qué países ha viajado?</td>
+            <td>{{ result.viajes }}</td>
+            <td>{{ result.calificacion_viajes_ChatGPT }}</td>
+          </tr>
+          <tr>
+            <td>13 - ¿Tiene familiares que residan en los Estados Unidos?</td>
+            <td>{{ result.familiares_eeuu }}</td>
+            <td>{{ result.calificacion_familiares_eeuu_ChatGPT }}</td>
+          </tr>
+          <tr>
+            <td>14 - ¿Tiene familiares que cuenten con una visa de turismo a EE.UU.?</td>
+            <td>{{ result.familiares_visa }}</td>
+            <td>{{ result.calificacion_familiares_visa_ChatGPT }}</td>
+          </tr>
+          <tr>
+            <td>15 - ¿Le ha sido negada una visa de turismo para EE.UU. anteriormente?</td>
+            <td>{{ result.visa_negada }}</td>
+            <td>{{ result.calificacion_visa_negada_ChatGPT }}</td>
+          </tr>
+          <tr>
+            <td>16 - ¿Tiene antecedentes judiciales o ha estado en procesos de embargo?</td>
+            <td>{{ result.antecedentes }}</td>
+            <td>{{ result.calificacion_antecedentes_ChatGPT }}</td>
+          </tr>
+          <tr>
+            <td>17 - ¿Padece alguna enfermedad crónica o preexistente de base?</td>
+            <td>{{ result.enfermedades }}</td>
+            <td>{{ result.calificacion_enfermedades_ChatGPT }}</td>
+          </tr>
+          <tr>
+            <td>18 - ¿Tiene algún tipo de visa o permiso de residencia vigente para otro país?</td>
+            <td>{{ result.visa_otra }}</td>
+            <td>{{ result.calificacion_visa_otra_ChatGPT }}</td>
+          </tr>
+          <tr>
+            <td>19 - ¿Ha tenido problemas o dificultades con las autoridades migratorias?</td>
+            <td>{{ result.problemas_migratorios }}</td>
+            <td>{{ result.calificacion_problemas_migratorios_ChatGPT }}</td>
+          </tr>
+          <tr>
+            <td>20 - Criterios confidenciales del sistema</td>
+            <td>------------------</td>
+            <td>{{ result.calificacion_criterios_confidenciales_ChatGPT }}</td>
+          </tr>
         </table>
-        <div class="result-container">
-            <div id="result-info-table" class="result-box"></div>
-        </div>
-        
-        <h2><i class="fa fa-briefcase"></i> 3. Educación y empleo</h2>
-        <table class="other-info">
-            <tr>
-                <th>Pregunta</th>
-                <th>Respuesta</th>
-                <th>Calificación IA</th>
-            </tr>
-            <tr>
-                <td>Profesión u ocupación</td>
-                <td>{{ result.profesion }}</td>
-                <td>{{ result.calificacion_profesion_ChatGPT }}</td>
-            </tr>
-            <tr>
-                <td>¿Cuál es su nivel de educación?</td>
-                <td>{{ result.nivel_educacion }}</td>
-                <td>{{ result.calificacion_nivel_educacion_ChatGPT }}</td>
-            </tr>
-            <tr>
-                <td>¿Cuánto tiempo lleva trabajando en su empleo actual?</td>
-                <td>{{ result.tiempo_empleo }}</td>
-                <td>{{ result.calificacion_tiempo_empleo_ChatGPT }}</td>
-            </tr>
-        </table>
-        <div class="result-container">
-            <div id="result-education-table" class="result-box"></div>
-        </div>
-        
-        <h2><i class="fa fa-home"></i> 4. Propiedades y activos</h2>
-        <table class="other-info">
-            <tr>
-                <th>Pregunta</th>
-                <th>Respuesta</th>
-                <th>Calificación IA</th>
-            </tr>
-            <tr>
-                <td>¿Es propietario o socio de alguna empresa?</td>
-                <td>{{ result.propietario }}</td>
-                <td>{{ result.calificacion_propietario_ChatGPT }}</td>
-            </tr>
-            <tr>
-                <td>Ingresos mensuales aproximados en dólares americanos</td>
-                <td>{{ result.ingresos }}</td>
-                <td>{{ result.calificacion_ingresos_ChatGPT }}</td>
-            </tr>
-            <tr>
-                <td>¿Paga impuestos y no participa en programas de asistencia social?</td>
-                <td>{{ result.impuestos }}</td>
-                <td>{{ result.calificacion_impuestos_ChatGPT }}</td>
-            </tr>
-            <tr>
-                <td>¿Posee propiedades inmobiliarias y/o vehículos en su país de residencia?</td>
-                <td>{{ result.propiedades }}</td>
-                <td>{{ result.calificacion_propiedades_ChatGPT }}</td>
-            </tr>
-        </table>
-        <div class="result-container">
-            <div id="result-assets-table" class="result-box"></div>
-        </div>
-        
-        <h2><i class="fa fa-plane"></i> 5. Antecedentes y experiencia de viaje</h2>
-        <table class="other-info">
-            <tr>
-                <th>Pregunta</th>
-                <th>Respuesta</th>
-                <th>Calificación IA</th>
-            </tr>
-            <tr>
-                <td>¿En los últimos 5 años, a qué países ha viajado?</td>
-                <td>{{ result.viajes }}</td>
-                <td>{{ result.calificacion_viajes_ChatGPT }}</td>
-            </tr>
-            <tr>
-                <td>¿Tiene familiares que residan en los Estados Unidos?</td>
-                <td>{{ result.familiares_eeuu }}</td>
-                <td>{{ result.calificacion_familiares_eeuu_ChatGPT }}</td>
-            </tr>
-            <tr>
-                <td>¿Tiene familiares que cuenten con una visa de turismo a EE.UU.?</td>
-                <td>{{ result.familiares_visa }}</td>
-                <td>{{ result.calificacion_familiares_visa_ChatGPT }}</td>
-            </tr>
-            <tr>
-                <td>¿Le ha sido negada una visa de turismo para EE.UU. anteriormente?</td>
-                <td>{{ result.visa_negada }}</td>
-                <td>{{ result.calificacion_visa_negada_ChatGPT }}</td>
-            </tr>
-        </table>
-        <div class="result-container">
-            <div id="result-background-table" class="result-box"></div>
-        </div>
-        
-        <h2><i class="fa fa-lock"></i> 6. Criterios de elegibilidad</h2>
-        <table class="other-info">
-            <tr>
-                <th>Pregunta</th>
-                <th>Respuesta</th>
-                <th>Calificación IA</th>
-            </tr>
-            <tr>
-                <td>¿Tiene antecedentes judiciales o ha estado en procesos de embargo?</td>
-                <td>{{ result.antecedentes }}</td>
-                <td>{{ result.calificacion_antecedentes_ChatGPT }}</td>
-            </tr>
-            <tr>
-                <td>¿Padece alguna enfermedad crónica o preexistente de base?</td>
-                <td>{{ result.enfermedades }}</td>
-                <td>{{ result.calificacion_enfermedades_ChatGPT }}</td>
-            </tr>
-            <tr>
-                <td>¿Tiene algún tipo de visa o permiso de residencia vigente para otro país?</td>
-                <td>{{ result.visa_otra }}</td>
-                <td>{{ result.calificacion_visa_otra_ChatGPT }}</td>
-            </tr>
-            <tr>
-                <td>¿Ha tenido problemas o dificultades con las autoridades migratorias?</td>
-                <td>{{ result.problemas_migratorios }}</td>
-                <td>{{ result.calificacion_problemas_migratorios_ChatGPT }}</td>
-            </tr>
-            <tr>
-                <td>¿Cuál es su nacionalidad?</td>
-                <td>{{ result.nacionalidad }}</td>
-                <td>{{ result.calificacion_nacionalidad_ChatGPT }}</td>
-            </tr>
-            <tr>
-                <td>Calificación del evaluador</td>
-                <td>N/A</td>
-                <td>{{ result.calificacion }}</td>
-            </tr>
-        </table>
-        <div class="result-container">
-            <div id="result-confidential-table" class="result-box"></div>
-        </div>
 
-        <div class="probability">
-            <strong>Probabilidad de aprobación de visa</strong>
-            <strong>{{ result.probabilidad }}%</strong>
+        <div class="probability-result">
+          <hr class="separator-small">
+          <strong class="subtitles"><p>Probabilidad de aprobación de visa de turismo d EE.UU</p></strong>
+          <strong class="probability">{{ result.probabilidad }}%</strong>
         </div>
-        <div class="probability-bar">
-            <div class="probability-bar-inner"></div>
-        </div>
-        
-        <div class="suggestions content-margins">
-            <h2 style="margin-bottom: 60px;"><i class="fa fa-lightbulb"></i> 7. Sugerencias para mejorar su perfil</h2>
-            <div class="suggestion">
-                <h3><i class="fa fa-check-circle"></i> Sugerencia 1</h3>
-                <p>{{ result.sugerencia_1_ChatGPT }}</p>
-            </div>
-            <div class="suggestion">
-                <h3><i class="fa fa-check-circle"></i> Sugerencia 2</h3>
-                <p>{{ result.sugerencia_2_ChatGPT }}</p>
-            </div>
-            <div class="suggestion">
-                <h3><i class="fa fa-check-circle"></i> Sugerencia 3</h3>
-                <p>{{ result.sugerencia_3_ChatGPT }}</p>
-            </div>
+ 
+
+        <div class="suggestions">
+          <hr class="separator-small">
+          <h3 class="subtitles">2. Sugerencias para mejorar su perfil</h3>
+          <div class="suggestions-results">
+              <p>{{ result.sugerencia_1_ChatGPT }}</p>
+              <p>{{ result.sugerencia_2_ChatGPT }}</p>
+              <p>{{ result.sugerencia_3_ChatGPT }}</p>
+          </div>
         </div>
 
         <div class="analysis-container">
-            <h2><i class="fa fa-chart-pie"></i> 8. Criterios de análisis</h2>
-            
+            <h3>Análisis integral de su perfil</h3>
+            <p>En la siguiente sección, encontrará un diagrama que ilustra cinco categorías clave identificadas por nuestro sistema como las más relevantes para evaluar sus posibilidades de obtener una visa de turismo a los Estados Unidos. El objetivo es que conozca y comprenda cada uno de estos criterios, representados con calificaciones que varían de 1 a 10. Al analizar sus calificaciones en cada categoría, podrá identificar las áreas en las que necesita mejorar y buscar elementos que lo ayuden a fortalecer su perfil en dichas áreas. De esta manera, podrá aumentar sus probabilidades de éxito en la solicitud de la visa de turismo.</p>
             <div class="analysis-item">
                 <div class="analysis-status" id="status-info"></div>
                 <div class="analysis-chart">
@@ -1075,7 +944,8 @@
             document.getElementById('dialog-overlay').classList.remove('active');
         }
 
-        // Manejo del formulario de edición
+        // Manejo del formulario de edición 
+        //ESTA EDICIÓN DE INFORMACIÓN SE NECESITARÁ ?
         document.getElementById('edit-form').addEventListener('submit', function(event) {
             event.preventDefault();
             var formData = new FormData(event.target);
@@ -1109,6 +979,7 @@
         }
 
         // Manejo del formulario de eliminación
+        //ESTA EDICIÓN DE INFORMACIÓN SE NECESITARÁ ?
         document.getElementById('delete-form').addEventListener('submit', function(event) {
             event.preventDefault();
             var confirmDelete = document.getElementById('confirm-delete').value;
@@ -1169,8 +1040,9 @@
         }
 
         // Inicialización de gráficos y actualización de la UI al cargar la página
+
         document.addEventListener('DOMContentLoaded', function() {
-            var probability = {{ result.probabilidad }};
+            var probability = result.probabilidad ;
             var probabilityBarInner = document.querySelector('.probability-bar-inner');
             probabilityBarInner.style.width = probability + '%';
 
