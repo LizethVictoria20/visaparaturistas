@@ -5,6 +5,7 @@ Este proyecto está creado con inteligencia artificial por nuestra compañía [v
 ---
 
 ### Tecnologias usadas
+matplotlib - Para generación de graficos 
 
 ### Activar entorno de desarrollo
 
@@ -13,3 +14,4 @@ Este proyecto está creado con inteligencia artificial por nuestra compañía [v
 ### Instalar dependencias
 
 `pip3 install -r requirements.txt`
+
