@@ -6,8 +6,8 @@
     <title>Detalle del Resultado</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
-    <!-- <link rel="stylesheet" href="{{ url_for('static', filename='css/detail_pdf.css') }}"> -->
-     <link rel="stylesheet" href="../static/css/detail_pdf.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='../static/css/detail_pdf.css') }}">
+     <!-- <link rel="stylesheet" href="../static/css/detail_pdf.css"> -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script type="module" src="../graficos/radarChart.js"></script>
 
@@ -229,8 +229,7 @@
     </div>
     <div class="container">
         <div class="header content-margins">
-          <img src="../static/images/navbarPDF.png" alt="" class="header-imagePDF">
-          <!-- <img src="{{ url_for('static', filename='images/navbarPDF.png') }} alt="Navbar visa para turistas"> -->
+          <img src="{{ url_for('static', filename='../static/images/navbarPDF.png') }} alt="Navbar visa para turistas">
           <hr class="separator">
           <h3>Resultado / Test de perfilamiento con inteligencia artificial</h3>
           <h2>Visa de turismo de EE.UU</h2>
@@ -511,7 +510,7 @@
 
     
     <script type="module">
-      import { createRadarChart } from '../graficos/radarChart.js';  // Ajusta el path según la ubicación del archivo
+      import { createRadarChart } from '../static/graficos/radarChart.js';
 
       const ctx = document.getElementById('radarChart').getContext('2d');
       const data = {
