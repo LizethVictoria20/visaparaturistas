@@ -9,647 +9,220 @@
     <!-- <link rel="stylesheet" href="{{ url_for('static', filename='css/detail_pdf.css') }}"> -->
      <link rel="stylesheet" href="../static/css/detail_pdf.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    
-    <!-- <style>
+    <script type="module" src="../graficos/radarChart.js"></script>
+
+
+    <style>
+      /* Global styles */
       :root {
-    --icon-color: #bdbdbd;
-    --icon-size: 18px;
-    --icon-margin: 40px;
-    --block-spacing: 20px;
-    --table-margin: 40px;
-    --separator-color: #6C6C6C;
-    --separator-width: 290px;
-    --separator-height: 1.4px;
-    --header-color: #293492;
-    --table-header-bg: #979797;
-    --table-header-color: #fff;
-    --table-bg: #f9f9f9;
-    --button-bg: #3b82f6;
-    --button-hover-bg: #0056b3;
-    --probability-bg: #ffeb3b;
-}
-
-body {
-    font-family: 'Roboto', Arial, sans-serif;
-    background-color: #f0f2f5;
-    margin: 0;
-    padding: 0;
-}
-
-.topbar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background-color: #2e3b4e;
-    color: #fff;
-    padding: 10px 20px;
-    position: fixed;
-    width: 100%;
-    top: 0;
-    z-index: 1000;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.topbar .logo {
-    font-size: 20px;
-    font-weight: bold;
-}
-
-.topbar-menu {
-    display: flex;
-    align-items: center;
-    margin-right: 140px;
-    padding-bottom: 0px;
-}
-
-.topbar-menu a {
-    color: #fff;
-    margin: 0 10px;
-    text-decoration: none;
-    padding: 10px 15px;
-    border-radius: 5px;
-    transition: background-color 0.3s ease;
-}
-
-.topbar-menu a:hover {
-    background-color: #3b82f6;
-}
-
-.topbar-menu a.active {
-    font-weight: bold;
-}
-
-.container {
-    max-width: 900px;
-    margin: calc(var(--block-spacing) + 80px) auto var(--block-spacing);
-    background-color: #fff;
-    padding: 60px;
-    border-radius: 12px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-}
-
-.header {
-  margin-bottom: var(--block-spacing);
-}
-.header h2 {
-  text-transform: uppercase;
-  color: var(--header-color);
-}
-
-.header h3 {
-    font-size: 32px;
-    margin: 0;
-    color: var(--header-color);
-    
-}
-
-.separator {
-    width: var(--separator-width);
-    height: var(--separator-height);
-    background-color: var(--separator-color);
-    margin: 30px 0;
-    border-radius: 2px;
-}
-.separator-long {
-  width: 100%;
-  height: var(--separator-height);
-  background-color: var(--separator-color);
-  margin: 30px 0;
-  border-radius: 2px;
-}
-
-.personal-details {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    margin-bottom: 12px;
-    margin-top: 20px;
-    background-color: #f9f9f9;
-    padding-top: 30px;
-    padding-bottom: 10px;
-    padding-left: 60px;
-    padding-right: 40px;
-    border-radius: 12px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    position: relative;
-}
-
-.personal-details div {
-    flex: 1 1 45%;
-    margin-bottom: 15px;
-    position: relative;
-}
-
-.personal-details label {
-    font-weight: bold;
-    color: var(--header-color);
-}
-
-.personal-details span {
-    display: block;
-    color: #555;
-}
-
-.edit-button {
-    display: none;
-    position: absolute;
-    right: 10px;
-    top: 10px;
-    background-color: #b9b9b9;
-    color: #fff;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    padding-left: 10px;
-    padding-right: 10px;
-    padding-top: 3px;
-    padding-bottom: 3px;
-    margin-right: 40px;
-}
-
-.personal-details div:hover .edit-button {
-    display: block;
-}
-.buttons {
-    position: relative;
-    left: -25px;
-    display: flex;
-    justify-content: flex-end;
-    margin-bottom: 20px;
-    height: 18px;
-}
-
-.buttons a, .buttons button {
-    background-color: var(--button-bg);
-    color: #fff;
-    border: none;
-    padding: 12px 20px;
-    margin-left: 10px;
-    border-radius: 25px;
-    text-decoration: none;
-    font-size: 12px;
-    cursor: pointer;
-    transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.buttons a:hover, .buttons button:hover {
-    background-color: var(--button-hover-bg);
-    transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-}
-
-.buttons a:active, .buttons button:active {
-    transform: translateY(0);
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-}
-
-/* Estilos específicos para el botón de eliminar */
-.buttons .delete-button {
-    background-color: rgb(212, 0, 0);
-    color: #fff;
-    border: none;
-    padding: 12px 20px;
-    margin-left: 10px;
-    border-radius: 25px;
-    text-decoration: none;
-    font-size: 12px;
-    cursor: pointer;
-    transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.buttons .delete-button:hover {
-    background-color: darkred;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-}
-
-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-bottom: 20px;
-    border-radius: 12px;
-    overflow: hidden;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    font-size: 0.9em; /* Ajustar el tamaño de fuente */
-}
-
-th, td {
-    padding: 12px;
-    text-align: left;
-    border-bottom: 1px solid #ddd;
-}
-
-th {
-    background-color: var(--table-header-bg);
-    color: var(--table-header-color);
-    font-weight: bold;
-    padding-left: 40px;
-    padding-right: 40px;
-    padding-top: 20px;
-    padding-bottom: 20px;
-    white-space: nowrap;  /* Agregar esta línea */
-}
-
-td {
-    padding-left: 40px;
-    padding-right: 40px;
-    text-align: left;
-    border-bottom: 1px solid #ddd;
-}
-
-.footer-simple {
-    background-color: #f0f0f0;
-    color: #333;
-    padding: 20px;
-    text-align: center;
-    width: 100%;
-}
-
-.footer-simple .footer-content {
-    max-width: 1000px;
-    margin: 0 auto;
-    font-size: 14px;
-}
-
-.content-margins {
-    margin-left: 20px;
-    margin-right: 20px;
-}
-
-h2 {
-    color: #252d63;
-    font-weight: 700;
-    margin-top: var(--block-spacing);
-    display: flex;
-    align-items: center;
-}
-
-h2 i {
-    margin-right: var(--icon-margin);
-    font-size: var(--icon-size);
-    color: var(--icon-color);
-}
-
-.probability {
-    background-color: var(--probability-bg);
-    font-weight: bold;
-    font-size: 1.4em;
-    text-align: center;
-    padding: 15px;
-    border-radius: 12px;
-    margin: 40px auto;  /* Añadir margin: auto; */
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    width: 600px;
-    margin-bottom: 15px;
-    margin-top: 50px;
-}
-
-.suggestion {
-    margin-bottom: var(--block-spacing);
-}
-
-.suggestion h3 {
-    color: #333;
-    font-weight: bold;
-    display: flex;
-    align-items: center;
-    margin-top: 0;
-    font-size: 18px;
-    margin-left: 40px;
-    margin-right: 40px;
-}
-
-.suggestion h3 i {
-    margin-right: var(--icon-margin);
-    font-size: var(--icon-size);
-    color: var(--icon-color);
-    margin-left: 40px;
-    margin-right: 40px;
-}
-
-.suggestion p {
-    margin: 10px 0;
-    background-color: #f9f9f9;
-    padding: 55px;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    font-size: 0.9em; /* Ajustar el tamaño de fuente */
-}
-
-.probability-bar {
-    width: 630px;
-    height: 20px;
-    background-color: rgb(193, 0, 0);
-    margin: 10px auto;
-    border-radius: 2px;
-    overflow: hidden;
-    position: relative;
-    margin-bottom: 80px;
-}
-
-.probability-bar-inner {
-    height: 100%;
-    background-color: rgb(0, 182, 0);
-    width: 0;
-}
-
-.analysis-item {
-    display: flex;
-    align-items: center;
-    padding: 20px;
-    background: #fff;
-    margin-bottom: 20px;
-    border-radius: 12px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.analysis-item:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
-}
-
-.analysis-status {
-    font-weight: bold;
-    color: rgb(0, 173, 0);
-    margin-right: 20px;
-    min-width: 80px;
-    text-align: center;
-    padding: 8px;
-    border-radius: 8px;
-    background-color: #e8f5e9;
-}
-
-.analysis-status.neutro {
-    color: #ff9800;
-    background-color: #fff3e0;
-}
-
-.analysis-status.negativo {
-    color: #f44336;
-    background-color: #ffebee;
-}
-
-.analysis-chart {
-    width: 80px;
-    height: 80px;
-    position: relative;
-    margin-right: 20px;
-}
-
-.analysis-info {
-    flex: 1;
-}
-
-.analysis-info strong {
-    display: block;
-    font-size: 20px;
-    color: #2e3b4e;
-    margin-bottom: 5px;
-}
-
-.analysis-info p {
-    margin: 5px 0;
-    color: #555;
-    font-size: 0.9em; /* Ajustar el tamaño de fuente */
-}
-
-.analysis-info strong.score {
-    font-size: 20px;
-    color: #2e3b4e;
-    text-align: right;
-    margin-top: 10px;
-}
-
-.circle {
-    width: 70px;
-    height: 70px;
-    border-radius: 50%;
-    background: conic-gradient(rgb(0, 173, 0) 0% 75%, lightgray 75% 100%);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: bold;
-    color: #2e3b4e;
-    font-size: 18px;
-    position: relative;
-}
-
-.circle.neutro {
-    background: conic-gradient(#ff9800 0% 60%, lightgray 60% 100%);
-}
-
-.circle.negativo {
-    background: conic-gradient(#f44336 0% 30%, lightgray 30% 100%);
-}
-
-.circle::before {
-    content: "";
-    display: block;
-    width: 60px;
-    height: 60px;
-    border-radius: 50%;
-    background: #fff;
-    position: absolute;
-    z-index: 1;
-}
-
-.circle > span {
-    position: relative;
-    z-index: 2;
-    color: #2e3b4e;
-    font-size: 22px;
-}
-
-.result-box {
-    padding: 10px;
-    border-radius: 8px;
-    margin-top: 10px;
-    text-align: center;
-    font-weight: bold;
-    color: #fff;
-    width: 230px;
-}
-
-.result-box.positivo {
-    background-color: rgb(3, 156, 3);
-}
-
-.result-box.neutro {
-    background-color: #ff9800;
-}
-
-.result-box.negativo {
-    background-color: #f44336;
-}
-
-.result-box {
-    padding: 10px;
-    border-radius: 8px;
-    margin-top: -40px;
-    text-align: center;
-    font-weight: bold;
-    color: #fff;
-    font-size: 9.5pt;
-    display: inline-block; /* Esto permite el alineamiento a la derecha */
-}
-
-.result-box.positivo {
-    background-color: rgb(0, 160, 0);
-}
-
-.result-box.neutro {
-    background-color: #ff9800;
-}
-
-.result-box.negativo {
-    background-color: #f44336;
-}
-
-.result-container {
-    text-align: right; /* Esto alinea el contenido dentro del contenedor a la derecha */
-}
-
-.dialog-overlay {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.5);
-    z-index: 1000;
-    justify-content: center;
-    align-items: center;
-}
-
-.dialog-overlay.active {
-    display: flex;
-}
-
-.dialog {
-    background: rgb(255, 255, 255);
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    width: 400px;
-    max-width: 100%;
-}
-
-.dialog h3 {
-    margin-top: 0;
-    font-size: 20px;
-}
-
-.dialog label {
-    display: block;
-    margin: 15px 0 5px;
-}
-
-.dialog input {
-    width: 375px;
-    padding: 10px;
-    margin-bottom: 10px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    justify-content: center;
-
-}
-
-.dialog .dialog-buttons {
-    display: flex;
-    justify-content: flex-end;
-}
-
-.dialog .dialog-buttons button {
-    background-color: var(--button-bg);
-    color: #fff;
-    border: none;
-    padding: 10px 20px;
-    margin-left: 10px;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-}
-
-.dialog .dialog-buttons button:hover {
-    background-color: var(--button-hover-bg);
-    transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-}
-
-.chart-container {
-    position: relative;
-    height: 400px;
-    margin-top: 60px; /* Agregar esta línea para margen superior */
-    margin-bottom: 60px; /* Agregar esta línea para margen inferior */
-}
-
-/* Overlay de procesamiento */
-
-.processing-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.5);
-    display: none;
-    justify-content: center;
-    align-items: center;
-    z-index: 9999;
-}
-
-.processing-box {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    background: white;
-    padding: 20px;
-    border-radius: 10px;
-    text-align: center;
-    width: 400px;
-    height: 200px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-}
-
-.processing-box .status-text {
-    margin-bottom: 20px;
-    font-size: 14px;
-    font-weight: bold;
-    color: #8c8c8c;
-}
-
-.processing-box .progress-bar {
-    width: 100%;
-    background-color: #e0e0e0;
-    border-radius: 5px;
-    overflow: hidden;
-}
-
-.processing-box .progress {
-    background-color: #3b82f6;
-    height: 10px;
-    width: 0;
-    transition: width 0.4s ease;
-}
-
-.processing-box .animation {
-    margin-top: 20px;
-}
-
-    </style> -->
-
+        --main-color: #293492;
+
+      }
+      body {
+        font-family: 'Helvetica Neue', Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #f9f9f9;
+        color: #666666;
+        font-size: 11px;
+      }
+
+      /*General styles*/
+
+      .container {
+        max-width: 900px;
+        margin: 20px auto;
+        padding: 30px;
+        background-color: #ffffff;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        border-radius: 8px;
+      }
+
+      .separator {
+        margin: 1rem 0;
+      }
+
+      .separator-small {
+        width: 20rem;
+        margin: 1rem 0;
+      }
+
+      h4 {
+        color: var(--main-color);
+      }
+
+      .subtitles {
+        color:var(--main-color);
+
+      }
+
+      /* Header styles */
+      .header {
+        color: var(--main-color);
+        padding-bottom: 20px;
+      }
+
+      .header h2 {
+        font-size: 26px;
+        margin-bottom: 2rem;
+        margin-top: 0;
+      }
+
+      .header h3 {
+        margin-top: 3rem;
+        margin-bottom: 0;
+      }
+
+      .header p {
+        color: #666;
+        margin-top: 5px;
+      }
+      .header-imagePDF {
+        width: 100%;
+      }
+
+      /*Personal details*/
+      .personal-details {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8rem;
+        margin: 2rem 0 2rem 0;
+      }
+
+      /* Table styles */
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 30px;
+      }
+
+      table th, table td {
+        padding: 12px 15px;
+        text-align: left;
+      }
+
+      table th {
+        letter-spacing: 0.03em;
+      }
+
+      table tr:nth-child(even) {
+        background-color: #f2f2f2;
+      }
+
+      /* Results */
+      .probability-result {
+        float: right;
+      }
+
+      .probability {
+        color: #E02784;
+        font-size: 14px;
+      }
+
+      /* Progress bar styles */
+      .progress-section {
+        margin-bottom: 30px;
+      }
+
+      .progress-label {
+        font-weight: bold;
+        margin-bottom: 8px;
+      }
+
+      .progress-bar {
+        position: relative;
+        height: 20px;
+        width: 100%;
+        background-color: #f3f3f3;
+        border-radius: 10px;
+        overflow: hidden;
+      }
+
+      .progress-bar-inner {
+        height: 100%;
+        background-color: #28a745;
+        border-radius: 10px 0 0 10px;
+        width: 0;
+        transition: width 1s ease;
+      }
+
+      .progress-percentage {
+        position: absolute;
+        right: 10px;
+        top: 0;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        color: #fff;
+        font-weight: bold;
+      }
+
+      /* Suggestions section */
+      .suggestions {
+        margin-top: 10rem;
+      }
+
+      .suggestions-results {
+        background-color: #F3F3F3;
+        padding: 20px;
+        border-radius: .5rem;
+      }
+
+      .suggestions h2 {
+        color: #856404;
+        margin-bottom: 10px;
+      }
+
+      .suggestions p {
+        margin-bottom: 10px;
+      }
+
+      /* Analysis boxes */
+      .analysis-section {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 30px;
+      }
+
+      .analysis-box {
+        background-color: #f8f9fa;
+        width: 18%;
+        text-align: center;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+      }
+
+      .analysis-box h3 {
+        margin: 0;
+        font-size: 16px;
+        margin-bottom: 10px;
+        color: #0056b3;
+      }
+
+      .analysis-box .score {
+        font-weight: bold;
+        color: #28a745;
+      }
+
+      /* Footer */
+      footer {
+        text-align: center;
+        color: #666;
+        padding-top: 20px;
+        border-top: 1px solid #ddd;
+      }
+
+      footer a {
+        color: #0056b3;
+        text-decoration: none;
+      }
+
+      footer a:hover {
+        text-decoration: underline;
+      }
+
+    </style>
 </head>
 <body>
     <div class="topbar">
@@ -803,6 +376,7 @@ h2 i {
           </div>
         </div>
 
+
         <div class="analysis-container">
             <h3>Análisis integral de su perfil</h3>
             <p>En la siguiente sección, encontrará un diagrama que ilustra cinco categorías clave identificadas por nuestro sistema como las más relevantes para evaluar sus posibilidades de obtener una visa de turismo a los Estados Unidos. El objetivo es que conozca y comprenda cada uno de estos criterios, representados con calificaciones que varían de 1 a 10. Al analizar sus calificaciones en cada categoría, podrá identificar las áreas en las que necesita mejorar y buscar elementos que lo ayuden a fortalecer su perfil en dichas áreas. De esta manera, podrá aumentar sus probabilidades de éxito en la solicitud de la visa de turismo.</p>
@@ -872,6 +446,11 @@ h2 i {
             <canvas id="radarChart"></canvas>
         </div>
 
+        <h3><i class="fa fa-chart-pie"></i>Diagrama de resultados</h3>
+        <div class="chart-container content-margins">
+            <canvas id="radarChart"></canvas>
+        </div>
+
         
 
     <footer class="footer-simple">
@@ -931,7 +510,25 @@ h2 i {
     <script src="https://cdn.socket.io/4.0.0/socket.io.min.js"></script>
 
     
-    <script>
+    <script type="module">
+      import { createRadarChart } from '../graficos/radarChart.js';  // Ajusta el path según la ubicación del archivo
+
+      const ctx = document.getElementById('radarChart').getContext('2d');
+      const data = {
+          labels: ['Información demográfica', 'Educación', 'Propiedades', 'Antecedentes', 'Confidenciales'],
+          datasets: [{
+              data: [7.5, 8.0, 6.5, 7.0, 5.0],
+              backgroundColor: 'rgba(41, 128, 185, 0.2)',
+              borderColor: 'rgba(41, 128, 185, 1)',
+              borderWidth: 3,
+              pointBackgroundColor: 'rgba(41, 128, 185, 1)',
+              pointBorderColor: '#fff',
+              pointHoverBackgroundColor: '#fff',
+              pointHoverBorderColor: 'rgba(41, 128, 185, 1)'
+          }]
+      };
+
+      createRadarChart(ctx, data);  //
         // Funciones para abrir y cerrar diálogos
         function openDialog(field, value) {
             document.getElementById('dialog-title').innerText = field.charAt(0).toUpperCase() + field.slice(1);
@@ -1386,10 +983,6 @@ document.querySelector('.buttons button[type="button"]').addEventListener('click
         }
     });
 });
-
-function closeDeleteDialog() {
-    document.getElementById('delete-dialog-overlay').classList.remove('active');
-}
 
 const puppeteer = require('puppeteer');
 
