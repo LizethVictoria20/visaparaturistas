@@ -171,6 +171,7 @@ class CuestionarioForm(Form):
 @login_required
 def detail(id):
     result = FormResult.query.get_or_404(id)
+    print(result)
     return render_template('detail.html', result=result)
 
 def calificar_respuesta(client, respuesta, prompt):

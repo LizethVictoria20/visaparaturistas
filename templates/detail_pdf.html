@@ -6,13 +6,16 @@
     <title>Detalle del Resultado</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="{{ url_for('static', filename='../static/css/detail_pdf.css') }}">
-     <!-- <link rel="stylesheet" href="../static/css/detail_pdf.css"> -->
+    <!-- <link rel="stylesheet" href="{{ url_for('static', filename='../static/css/detail_pdf.css') }}"> -->
+     <link rel="stylesheet" href="../static/css/detail_pdf.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script type="module" src="../graficos/radarChart.js"></script>
+    <script type="module" src="../static/graficos/radarChart.js"></script>
+    <script type="module" src="../static/graficos/probabilityBar.js"></script>
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
 
 
-    <style>
+
+    <!-- <style>
       /* Global styles */
       :root {
         --main-color: #293492;
@@ -222,14 +225,15 @@
         text-decoration: underline;
       }
 
-    </style>
+    </style> -->
 </head>
 <body>
     <div class="topbar">
     </div>
     <div class="container">
         <div class="header content-margins">
-          <img src="{{ url_for('static', filename='../static/images/navbarPDF.png') }} alt="Navbar visa para turistas">
+          <!-- <img src="{{ url_for('static', filename='../static/images/navbarPDF.png') }}"" alt="Navbar visa para turistas"> -->
+          <img src="'../static/images/navbarPDF.png" alt="Navbar visa para turistas">
           <hr class="separator">
           <h3>Resultado / Test de perfilamiento con inteligencia artificial</h3>
           <h2>Visa de turismo de EE.UU</h2>
@@ -362,6 +366,9 @@
           <hr class="separator-small">
           <strong class="subtitles"><p>Probabilidad de aprobación de visa de turismo d EE.UU</p></strong>
           <strong class="probability">{{ result.probabilidad }}%</strong>
+          <div class="progress-bar">
+            <div class="progress" id="progress-regenerar-bar"></div>
+          </div>
         </div>
  
 
@@ -377,7 +384,7 @@
 
 
         <div class="analysis-container">
-            <h3>Análisis integral de su perfil</h3>
+            <h3>3. Análisis integral de su perfil</h3>
             <p>En la siguiente sección, encontrará un diagrama que ilustra cinco categorías clave identificadas por nuestro sistema como las más relevantes para evaluar sus posibilidades de obtener una visa de turismo a los Estados Unidos. El objetivo es que conozca y comprenda cada uno de estos criterios, representados con calificaciones que varían de 1 a 10. Al analizar sus calificaciones en cada categoría, podrá identificar las áreas en las que necesita mejorar y buscar elementos que lo ayuden a fortalecer su perfil en dichas áreas. De esta manera, podrá aumentar sus probabilidades de éxito en la solicitud de la visa de turismo.</p>
             <div class="analysis-item">
                 <div class="analysis-status" id="status-info"></div>
@@ -440,17 +447,15 @@
             </div>
         </div>
         
-        <h2><i class="fa fa-chart-pie"></i> 9. Gráfico de Resultados</h2>
+        <h2><i class="fa fa-chart-pie"></i>B. Diagrama de resultados</h2>
         <div class="chart-container content-margins">
             <canvas id="radarChart"></canvas>
         </div>
-
-        <h3><i class="fa fa-chart-pie"></i>Diagrama de resultados</h3>
-        <div class="chart-container content-margins">
-            <canvas id="radarChart"></canvas>
-        </div>
-
-        
+        <hr class="separator">
+        <h3>¿Le ha sido útil esta información?</h3>
+        <p>Póngase en contacto con uno de nuestros agentes especializados en visas de turismo a través del WhatsApp +57 301 7488133 e inicie su proceso de solicitud con nuestro acompañamiento. En VisaParaTurista.com, nuestro objetivo, en el que trabajamos cada día, es brindarle la orientación adecuada para aumentar sus posibilidades de éxito en la
+          obtención de su visa de turismo.</p>
+        <hr class="separator">
 
     <footer class="footer-simple">
         <div class="footer-content">
@@ -458,21 +463,6 @@
         </div>
     </footer>
 
-    <div class="dialog-overlay" id="dialog-overlay">
-        <div class="dialog">
-            <h3>Editar <span id="dialog-title"></span></h3>
-            <form id="edit-form">
-                <label for="edit-value">Nuevo valor:</label>
-                <input type="text" id="edit-value" name="value" required>
-                <input type="hidden" id="edit-field" name="field">
-                <input type="hidden" id="edit-id" name="id" value="{{ result.id }}">
-                <div class="dialog-buttons">
-                    <button type="button" onclick="closeDialog()">Cancelar</button>
-                    <button type="submit">Guardar</button>
-                </div>
-            </form>
-        </div>
-    </div>
 
     <form id="regenerar-form" action="{{ url_for('regenerar', id=result.id) }}" method="post" style="display: none;">
         <input type="hidden" name="id" value="{{ result.id }}">
@@ -507,10 +497,19 @@
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.socket.io/4.0.0/socket.io.min.js"></script>
+    
 
     
     <script type="module">
       import { createRadarChart } from '../static/graficos/radarChart.js';
+      import { ProbabilityBarInner } from '../static/graficos/probabilityBar.js';
+      
+      const probability = {{ result.probabilidad }};  // La probabilidad que viene desde el servidor
+      const container = document.querySelector('.progress-bar');
+
+      // Crea una instancia de la clase ProbabilityBarInner
+      new ProbabilityBarInner(container, probability);
+
 
       const ctx = document.getElementById('radarChart').getContext('2d');
       const data = {
