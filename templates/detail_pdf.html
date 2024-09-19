@@ -11,8 +11,6 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script type="module" src="../static/graficos/radarChart.js"></script>
     <script type="module" src="../static/graficos/probabilityBar.js"></script>
-    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
-
 
 
     <style>
@@ -63,6 +61,9 @@
       .header {
         color: var(--main-color);
         padding-bottom: 20px;
+      }
+      .header img {
+        width: 100%;
       }
 
       .header h2 {
@@ -233,7 +234,7 @@
     <div class="container">
         <div class="header content-margins">
           <!-- <img src="{{ url_for('static', filename='../static/images/navbarPDF.png') }}"" alt="Navbar visa para turistas"> -->
-          <img src="'../static/images/navbarPDF.png" alt="Navbar visa para turistas">
+          <img src="https://github.com/LizethVictoria20/visaparaturistas/blob/main/static/images/navbarPDF.png?raw=true" alt="Navbar visa para turistas">
           <hr class="separator">
           <h3>Resultado / Test de perfilamiento con inteligencia artificial</h3>
           <h2>Visa de turismo de EE.UU</h2>
@@ -502,13 +503,13 @@
     
     <script type="module">
       import { createRadarChart } from '../static/graficos/radarChart.js';
-      import { ProbabilityBarInner } from '../static/graficos/probabilityBar.js';
+      // import { ProbabilityBarInner } from '../static/graficos/probabilityBar.js';
       
-      const probability = {{ result.probabilidad }};  // La probabilidad que viene desde el servidor
-      const container = document.querySelector('.progress-bar');
+      // const probability = {{ result.probabilidad }};  // La probabilidad que viene desde el servidor
+      // const container = document.querySelector('.progress-bar');
 
-      // Crea una instancia de la clase ProbabilityBarInner
-      new ProbabilityBarInner(container, probability);
+      // // Crea una instancia de la clase ProbabilityBarInner
+      // new ProbabilityBarInner(container, probability);
 
 
       const ctx = document.getElementById('radarChart').getContext('2d');
