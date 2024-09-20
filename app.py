@@ -43,6 +43,11 @@ login_manager = LoginManager(app)
 login_manager.login_view = 'login'
 socketio = SocketIO(app)
 
+#Archivos estaticos
+@app.route('/detail_pdf')
+def detail_pdf():
+    return render_template('detail_pdf.html')  # Aquí es donde tu HTML carga el archivo JS
+
 # Modelo de usuario
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
