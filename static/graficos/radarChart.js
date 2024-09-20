@@ -1,6 +1,6 @@
 // radarChart.js
 export function createRadarChart(ctx, data) {
-  const config = {
+  new Chart(ctx, {
       type: 'radar',
       data: data,
       options: {
@@ -47,6 +47,23 @@ export function createRadarChart(ctx, data) {
               }
           }
       }
-  };
-  new Chart(ctx, config);
+  });
+}
+
+export function createProbabilityBar(percentage) {
+  const barContainer = document.createElement('div');
+  barContainer.classList.add('probability-bar');
+
+  const barInner = document.createElement('div');
+  barInner.classList.add('probability-bar-inner');
+  barInner.style.width = `${percentage}%`;
+
+  barContainer.appendChild(barInner);
+  return barContainer;
+}
+
+export function appendProbabilityBar(percentage, parentElementId) {
+  const parentElement = document.getElementById(parentElementId);
+  const bar = createProbabilityBar(percentage);
+  parentElement.appendChild(bar);
 }
