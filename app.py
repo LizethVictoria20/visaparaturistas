@@ -46,7 +46,8 @@ socketio = SocketIO(app)
 #Archivos estaticos
 @app.route('/detail_pdf')
 def detail_pdf():
-    return render_template('detail_pdf.html')  # Aquí es donde tu HTML carga el archivo JS
+    return render_template('detail_pdf.html') 
+
 
 # Modelo de usuario
 class User(UserMixin, db.Model):
