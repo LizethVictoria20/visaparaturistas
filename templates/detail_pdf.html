@@ -10,7 +10,8 @@
     <!-- <link rel="stylesheet" href="{{ url_for('static', filename='detail_pdf.css') }}"> -->
      <!-- <link rel="stylesheet" href="../static/css/detail_pdf.css"> -->
      <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-     <script type="module" src="{{ url_for('static', filename='js/radarChart.js') }}"></script>
+     <!-- <script type="module" src="{{ url_for('static', filename='js/radarChart.js') }}"></script> -->
+      <script type="module" src="../static/js/radarChart.js"></script>
 
 
     <style>
@@ -510,7 +511,7 @@
     <script type="module">
 
       //Genera los graficos de estadisticas
-      import { createRadarChart, appendProbabilityBar } from '/static/graficos/radarChart.js';
+      import { createRadarChart, appendProbabilityBar } from '/static/js/radarChart.js';
       appendProbabilityBar(68.25, 'bar-container');
 
       const ctx = document.getElementById('radarChart').getContext('2d');
@@ -918,48 +919,6 @@ socket.on('progressregenerar', function (data) {
     }
 });
 
-document.querySelector('.buttons button[type="button"]').addEventListener('click', function(event) {
-    event.preventDefault();
-
-    const processingOverlay = document.getElementById('processing-overlay');
-    const progressBar = document.getElementById('progress-regenerar-bar');
-    
-    processingOverlay.style.display = 'flex';  // Mostrar la caja flotante
-    animateText();  // Iniciar la animación del texto
-
-    // Iniciar la barra de progreso
-    let progress = 0;
-    const progressInterval = setInterval(() => {
-        progress += 2; // Incremento para completar en 40 segundos
-        progressBar.style.width = progress + '%';
-        
-        if (progress >= 100) {
-            clearInterval(progressInterval);
-            processingOverlay.style.display = 'none'; // Ocultar el overlay cuando se completa
-        }
-    }, 1000);
-
-    const form = document.getElementById('regenerar-form');
-    const formData = new FormData(form); // Crear FormData del formulario
-
-    // Enviar el formulario a través de AJAX para evitar recarga de página
-    $.ajax({
-        url: form.action, // URL de acción del formulario
-        method: form.method, // Método del formulario (POST en este caso)
-        data: formData,
-        processData: false,
-        contentType: false,
-        success: function(response) {
-            console.log('Formulario enviado correctamente:', response);
-            if (response.redirect_url) {
-                window.location.href = response.redirect_url;
-            }
-        },
-        error: function(error) {
-            console.error('Error al enviar el formulario:', error);
-        }
-    });
-});
 
 const puppeteer = require('puppeteer');
 
