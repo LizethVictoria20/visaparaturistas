@@ -110,7 +110,7 @@
         letter-spacing: 0.03em;
       }
 
-      table tr:nth-child(even) {
+      .questions tr:nth-child(even) {
         background-color: #f2f2f2;
       }
      
@@ -235,19 +235,30 @@
       }
 
       /* Estilos del círculo */
-.circle {
-    width: 70px;
-    height: 70px;
-    border-radius: 50%;
-    background: conic-gradient(rgb(0, 173, 0) 0% 75%, lightgray 75% 100%);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: bold;
-    color: #2e3b4e;
-    font-size: 18px;
-    position: relative;
-}
+    .circle {
+        width: 64px;
+        height: 64px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        color: #2e3b4e;
+        font-size: 18px;
+    }
+    .circle span {
+      position: relative;
+      left: 400px;
+      bottom: 1rem;
+    }
+    .table-analisis_body {
+      display: grid;
+      gap: 2rem;
+    }
+    .table-analisis_body tr {
+      background-color: white;
+    }
+
 
 /* Estilos para el estado */
 .analysis-status {
@@ -278,6 +289,10 @@
     position: relative;
     margin-right: 20px;
 }
+.container-circle {
+  width: 90px;
+}
+
 
     </style>
 </head>
@@ -442,12 +457,12 @@
             <p>En la siguiente sección, encontrará un diagrama que ilustra cinco categorías clave identificadas por nuestro sistema como las más relevantes para evaluar sus posibilidades de obtener una visa de turismo a los Estados Unidos. El objetivo es que conozca y comprenda cada uno de estos criterios, representados con calificaciones que varían de 1 a 10. Al analizar sus calificaciones en cada categoría, podrá identificar las áreas en las que necesita mejorar y buscar elementos que lo ayuden a fortalecer su perfil en dichas áreas. De esta manera, podrá aumentar sus probabilidades de éxito en la solicitud de la visa de turismo.</p>
             
             <table style="width: 100%; border-collapse: collapse;" class="table-analisis">
-              <tbody>
+              <tbody class="table-analisis_body">
                 <tr>
                   <td>
                     <div class="analysis-status" id="status-info"></div>
                   </td>
-                  <td>
+                  <td class="container-circle">
                     <div class="circle" id="circle-info"></div>
                   </td>
                   <td>
