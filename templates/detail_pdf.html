@@ -113,6 +113,7 @@
       table tr:nth-child(even) {
         background-color: #f2f2f2;
       }
+     
 
       /* Results */
       .probability-result {
@@ -440,66 +441,63 @@
             <h3 class="subtitles">3. Análisis integral de su perfil</h3>
             <p>En la siguiente sección, encontrará un diagrama que ilustra cinco categorías clave identificadas por nuestro sistema como las más relevantes para evaluar sus posibilidades de obtener una visa de turismo a los Estados Unidos. El objetivo es que conozca y comprenda cada uno de estos criterios, representados con calificaciones que varían de 1 a 10. Al analizar sus calificaciones en cada categoría, podrá identificar las áreas en las que necesita mejorar y buscar elementos que lo ayuden a fortalecer su perfil en dichas áreas. De esta manera, podrá aumentar sus probabilidades de éxito en la solicitud de la visa de turismo.</p>
             
-            <div class="analysis-item">
-              <div class="analysis-status" id="status-info"></div>
-              <div class="analysis-chart">
-                  <div class="circle" id="circle-info"></div>
-              </div>
-              <div class="analysis-info">
-                  <strong>Información demográfica y familiar</strong>
-                  <p style="font-size: 0.9em;">Información básica y familiar del solicitante que puede influir en la decisión de otorgar la visa.</p>
-                  <strong class="score" id="score-info"></strong>
-              </div>
-          </div>
-        
-            <div class="analysis-item">
-                <div class="analysis-status" id="status-education"></div>
-                <div class="analysis-chart">
+            <table style="width: 100%; border-collapse: collapse;" class="table-analisis">
+              <tbody>
+                <tr>
+                  <td>
+                    <div class="analysis-status" id="status-info"></div>
+                  </td>
+                  <td>
+                    <div class="circle" id="circle-info"></div>
+                  </td>
+                  <td>
+                    <strong>Información demográfica y familiar</strong>
+                    <p style="font-size: 0.9em;">Información básica y familiar del solicitante que puede influir en la decisión de otorgar la visa.</p>
+                    <strong class="score" id="score-info"></strong>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <div class="analysis-status" id="status-education"></div>
+                  </td>
+                  <td>
                     <div class="circle" id="circle-education"></div>
-                </div>
-                <div class="analysis-info">
+                  </td>
+                  <td>
                     <strong>Educación y empleo</strong>
                     <p style="font-size: 0.9em;">Datos relacionados con la educación y empleo del solicitante, que pueden indicar estabilidad laboral y capacidad para mantenerse durante el viaje.</p>
                     <strong class="score" id="score-education"></strong>
-                </div>
-            </div>
-        
-            <div class="analysis-item">
-                <div class="analysis-status" id="status-assets"></div>
-                <div class="analysis-chart">
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <div class="analysis-status" id="status-assets"></div>
+                  </td>
+                  <td>
                     <div class="circle" id="circle-assets"></div>
-                </div>
-                <div class="analysis-info">
+                  </td>
+                  <td>
                     <strong>Propiedades y activos</strong>
                     <p style="font-size: 0.9em;">Información sobre propiedades, vehículos e ingresos mensuales del solicitante, lo que puede reflejar solidez económica y vínculos con el país de residencia.</p>
                     <strong class="score" id="score-assets"></strong>
-                </div>
-            </div>
-        
-            <div class="analysis-item">
-                <div class="analysis-status" id="status-background"></div>
-                <div class="analysis-chart">
-                    <div class="circle neutro" id="circle-background"></div>
-                </div>
-                <div class="analysis-info">
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <div class="analysis-status" id="status-background"></div>
+                  </td>
+                  <td>
+                    <div class="circle" id="circle-background"></div>
+                  </td>
+                  <td>
                     <strong>Antecedentes y experiencia de viaje</strong>
                     <p style="font-size: 0.9em;">Puntos enfocados en la experiencia de viajes internacionales previos y antecedentes legales del solicitante, para evaluar el riesgo de incumplimiento de las regulaciones migratorias y posibles problemas durante su estancia en el país.</p>
                     <strong class="score" id="score-background"></strong>
-                </div>
-            </div>
-        
-            <div class="analysis-item">
-              <div class="analysis-status" id="status-info"></div>
-              <div class="analysis-chart">
-                  <div class="circle" id="circle-info"></div>
-              </div>
-              <div class="analysis-info">
-                  <strong>Información demográfica y familiar</strong>
-                  <p>{{ calificacion_categoria_educacion_empleo_ChatGPT }}</p>
-                  <p style="font-size: 0.9em;">Información básica y familiar del solicitante que puede influir en la decisión de otorgar la visa.</p>
-                  <strong class="score" id="score-info"></strong>
-              </div>
-            </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            
         
         <h3 class="subtitles"><i class="fa fa-chart-pie subtitles"></i>B. Diagrama de resultados</h3>
         <div class="chart-container content-margins">
