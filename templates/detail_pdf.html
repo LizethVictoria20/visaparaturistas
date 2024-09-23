@@ -10,8 +10,8 @@
     <!-- <link rel="stylesheet" href="{{ url_for('static', filename='detail_pdf.css') }}"> -->
      <!-- <link rel="stylesheet" href="../static/css/detail_pdf.css"> -->
      <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-     <script type="module" src="{{ url_for('static', filename='js/radarChart.js') }}"></script>
-      <!-- <script type="module" src="../static/js/radarChart.js"></script> -->
+     <!-- <script type="module" src="{{ url_for('static', filename='js/radarChart.js') }}"></script> -->
+      <script type="module" src="../static/js/radarChart.js"></script>
 
 
     <style>
@@ -233,6 +233,51 @@
         text-decoration: underline;
       }
 
+      /* Estilos del círculo */
+.circle {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    background: conic-gradient(rgb(0, 173, 0) 0% 75%, lightgray 75% 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    color: #2e3b4e;
+    font-size: 18px;
+    position: relative;
+}
+
+/* Estilos para el estado */
+.analysis-status {
+    font-weight: bold;
+    color: rgb(0, 173, 0);
+    margin-right: 20px;
+    min-width: 80px;
+    text-align: center;
+    padding: 8px;
+    border-radius: 8px;
+    background-color: #e8f5e9;
+}
+
+.analysis-status.neutro {
+    color: #ff9800;
+    background-color: #fff3e0;
+}
+
+.analysis-status.negativo {
+    color: #f44336;
+    background-color: #ffebee;
+}
+
+/* Contenedor del análisis */
+.analysis-chart {
+    width: 80px;
+    height: 80px;
+    position: relative;
+    margin-right: 20px;
+}
+
     </style>
 </head>
 <body>
@@ -394,17 +439,18 @@
         <div class="analysis-container">
             <h3 class="subtitles">3. Análisis integral de su perfil</h3>
             <p>En la siguiente sección, encontrará un diagrama que ilustra cinco categorías clave identificadas por nuestro sistema como las más relevantes para evaluar sus posibilidades de obtener una visa de turismo a los Estados Unidos. El objetivo es que conozca y comprenda cada uno de estos criterios, representados con calificaciones que varían de 1 a 10. Al analizar sus calificaciones en cada categoría, podrá identificar las áreas en las que necesita mejorar y buscar elementos que lo ayuden a fortalecer su perfil en dichas áreas. De esta manera, podrá aumentar sus probabilidades de éxito en la solicitud de la visa de turismo.</p>
+            
             <div class="analysis-item">
-                <div class="analysis-status" id="status-info"></div>
-                <div class="analysis-chart">
-                    <div class="circle" id="circle-info"></div>
-                </div>
-                <div class="analysis-info">
-                    <strong>Información demográfica y familiar</strong>
-                    <p style="font-size: 0.9em;">Información básica y familiar del solicitante que puede influir en la decisión de otorgar la visa.</p>
-                    <strong class="score" id="score-info"></strong>
-                </div>
-            </div>
+              <div class="analysis-status" id="status-info"></div>
+              <div class="analysis-chart">
+                  <div class="circle" id="circle-info"></div>
+              </div>
+              <div class="analysis-info">
+                  <strong>Información demográfica y familiar</strong>
+                  <p style="font-size: 0.9em;">Información básica y familiar del solicitante que puede influir en la decisión de otorgar la visa.</p>
+                  <strong class="score" id="score-info"></strong>
+              </div>
+          </div>
         
             <div class="analysis-item">
                 <div class="analysis-status" id="status-education"></div>
@@ -443,17 +489,17 @@
             </div>
         
             <div class="analysis-item">
-                <div class="analysis-status" id="status-confidential"></div>
-                <div class="analysis-chart">
-                    <div class="circle neutro" id="circle-confidential"></div>
-                </div>
-                <div class="analysis-info">
-                    <strong>Criterios confidenciales</strong>
-                    <p style="font-size: 0.9em;">Criterios y datos adicionales que nuestro sistema de evaluación considera que las autoridades migratorias pueden tener en cuenta al evaluar la solicitud de visa, pero que no se revelan públicamente.</p>
-                    <strong class="score" id="score-confidential"></strong>
-                </div>
+              <div class="analysis-status" id="status-info"></div>
+              <div class="analysis-chart">
+                  <div class="circle" id="circle-info"></div>
+              </div>
+              <div class="analysis-info">
+                  <strong>Información demográfica y familiar</strong>
+                  <p>{{ calificacion_categoria_educacion_empleo_ChatGPT }}</p>
+                  <p style="font-size: 0.9em;">Información básica y familiar del solicitante que puede influir en la decisión de otorgar la visa.</p>
+                  <strong class="score" id="score-info"></strong>
+              </div>
             </div>
-        </div>
         
         <h3 class="subtitles"><i class="fa fa-chart-pie subtitles"></i>B. Diagrama de resultados</h3>
         <div class="chart-container content-margins">
@@ -511,7 +557,8 @@
     <script type="module">
 
       //Genera los graficos de estadisticas
-      import { createRadarChart, appendProbabilityBar } from '/static/js/radarChart.js';
+      import { createRadarChart, appendProbabilityBar, updateStatusAndCircle } from '/static/js/radarChart.js';
+
       appendProbabilityBar(68.25, 'bar-container');
 
       const ctx = document.getElementById('radarChart').getContext('2d');
@@ -529,7 +576,198 @@
           }]
       };
 
-      createRadarChart(ctx, data);  //
+      createRadarChart(ctx, data);
+      
+      // TEST
+      document.addEventListener('DOMContentLoaded', function() {
+        var probability = 81.75;
+            var probabilityBarInner = document.querySelector('.probability-bar-inner');
+            probabilityBarInner.style.width = probability + '%';
+
+            function calculateAverage(scores) {
+                for (var i = 0; i < scores.length; i++) {
+                    if (isNaN(scores[i])) {
+                        return NaN;
+                    }
+                }
+                var sum = scores.reduce((a, b) => a + b, 0);
+                return (sum / scores.length).toFixed(2);
+            }
+
+            function calculateTableAverage(scores) {
+                scores = scores.map(val => parseFloat(val));
+                for (var i = 0; i < scores.length; i++) {
+                    if (isNaN(scores[i])) {
+                        return NaN;
+                    }
+                }
+                var sum = scores.reduce((a, b) => a + b, 0);
+                return (sum / scores.length).toFixed(2);
+            }
+
+            function updateStatusAndCircle(score, elementId, statusId) {
+                if (isNaN(score) || score === null) {
+                    document.getElementById(elementId).innerHTML = `<span>N/A</span>`;
+                    document.getElementById(statusId).innerText = 'N/A';
+                    document.getElementById(statusId).className = 'analysis-status';
+                    document.getElementById(elementId).className = 'circle';
+                    document.getElementById(elementId).style.background = 'conic-gradient(lightgray 0% 360deg)';
+                    return;
+                }
+
+                var status = 'POSITIVO';
+                var className = 'positivo';
+                if (score < 3) {
+                    status = 'NEGATIVO';
+                    className = 'negativo';
+                } else if (score < 6.5) {
+                    status = 'NEUTRO';
+                    className = 'neutro';
+                }
+
+                var degree = (score / 10) * 360;
+                var background = `conic-gradient(green 0% ${degree}deg, lightgray ${degree}deg 360deg)`;
+                if (className === 'neutro') {
+                    background = `conic-gradient(#ff9800 0% ${degree}deg, lightgray ${degree}deg 360deg)`;
+                } else if (className === 'negativo') {
+                    background = `conic-gradient(#f44336 0% ${degree}deg, lightgray ${degree}deg 360deg)`;
+                }
+
+                document.getElementById(elementId).innerHTML = `<span>${score}</span>`;
+                document.getElementById(statusId).innerText = status;
+                document.getElementById(statusId).className = `analysis-status ${className}`;
+                document.getElementById(elementId).className = `circle ${className}`;
+                document.getElementById(elementId).style.background = background;
+            }
+
+            function updateResultBox(score, elementId) {
+                if (isNaN(score)) {
+                    document.getElementById(elementId).innerText = 'Resultado: N/A';
+                    document.getElementById(elementId).className = 'result-box negativo';
+                    return;
+                }
+
+                var status = 'POSITIVO';
+                var className = 'positivo';
+                if (score < 3) {
+                    status = 'NEGATIVO';
+                    className = 'negativo';
+                } else if (score < 6.5) {
+                    status = 'NEUTRO';
+                    className = 'neutro';
+                }
+
+                document.getElementById(elementId).innerText = `Resultado: ${score} - ${status}`;
+                document.getElementById(elementId).className = `result-box ${className}`;
+            }
+
+            var demographyScores = [
+                parseFloat("6.50"),
+                parseFloat("7.50"),
+                parseFloat("7.00"),
+                parseFloat("5.50"),
+                parseFloat("8.50")
+            ].map(val => isNaN(val) ? NaN : val);
+
+            var educationScores = [
+                parseFloat("8.50"),
+                parseFloat("8.50"),
+                parseFloat("7.50")
+            ].map(val => isNaN(val) ? NaN : val);
+
+            var assetsScores = [
+                parseFloat("8.50"),
+                parseFloat("7.50"),
+                parseFloat("8.50"),
+                parseFloat("8.00")
+            ].map(val => isNaN(val) ? NaN : val);
+
+            var backgroundScores = [
+                parseFloat("8.00"),
+                parseFloat("6.50"),
+                parseFloat("7.50"),
+                parseFloat("9.00"),
+                parseFloat("9.00"),
+                parseFloat("5.00"),
+                parseFloat("9.00"),
+                parseFloat("8.00")
+            ].map(val => isNaN(val) ? NaN : val);
+
+            var confidentialScores = [
+                parseFloat("6.50"),
+                parseFloat("8")
+            ].map(val => isNaN(val) ? NaN : val);
+
+            var averageDemography = calculateAverage(demographyScores);
+            var averageEducation = calculateAverage(educationScores);
+            var averageAssets = calculateAverage(assetsScores);
+            var averageBackground = calculateAverage(backgroundScores);
+            var averageConfidential = calculateAverage(confidentialScores);
+
+            var demographyTableScores = [
+                "6.50",
+                "7.50",
+                "7.00",
+                "5.50",
+                "8.50"
+            ];
+
+            var educationTableScores = [
+                "8.50",
+                "8.50",
+                "7.50"
+            ];
+
+            var assetsTableScores = [
+                "8.50",
+                "7.50",
+                "8.50",
+                "8.00"
+            ];
+
+            var backgroundTableScores = [
+                "8.00",
+                "6.50",
+                "7.50",
+                "9.00"
+            ];
+
+            var confidentialTableScores = [
+                "8.00",
+                "9.00",
+                "5.00",
+                "9.00",
+                "6.50",
+                "8"
+            ];
+
+            var averageDemographyTable = calculateTableAverage(demographyTableScores);
+            var averageEducationTable = calculateTableAverage(educationTableScores);
+            var averageAssetsTable = calculateTableAverage(assetsTableScores);
+            var averageBackgroundTable = calculateTableAverage(backgroundTableScores);
+            var averageConfidentialTable = calculateTableAverage(confidentialTableScores);
+
+            updateStatusAndCircle(averageDemography, 'circle-info', 'status-info');
+            updateStatusAndCircle(averageEducation, 'circle-education', 'status-education');
+            updateStatusAndCircle(averageAssets, 'circle-assets', 'status-assets');
+            updateStatusAndCircle(averageBackground, 'circle-background', 'status-background');
+            updateStatusAndCircle(averageConfidential, 'circle-confidential', 'status-confidential');
+
+            updateResultBox(averageDemographyTable, 'result-info-table');
+            updateResultBox(averageEducationTable, 'result-education-table');
+            updateResultBox(averageAssetsTable, 'result-assets-table');
+            updateResultBox(averageBackgroundTable, 'result-background-table');
+            updateResultBox(averageConfidentialTable, 'result-confidential-table');
+
+            document.getElementById('score-info').innerText = averageDemography;
+            document.getElementById('score-education').innerText = averageEducation;
+            document.getElementById('score-assets').innerText = averageAssets;
+            document.getElementById('score-background').innerText = averageBackground;
+            document.getElementById('score-confidential').innerText = averageConfidential;
+      })
+      //TEST
+
+
         // Funciones para abrir y cerrar diálogos
         function openDialog(field, value) {
             document.getElementById('dialog-title').innerText = field.charAt(0).toUpperCase() + field.slice(1);
