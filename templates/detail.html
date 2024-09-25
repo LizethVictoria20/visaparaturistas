@@ -241,7 +241,6 @@
             padding-right: 40px;
             padding-top: 20px;
             padding-bottom: 20px;
-            white-space: nowrap;  /* Agregar esta línea */
         }
 
         td {
@@ -249,6 +248,8 @@
             padding-right: 40px;
             text-align: left;
             border-bottom: 1px solid #ddd;
+            word-wrap: break-word;  /* Permite que las palabras largas se dividan en varias líneas */
+            white-space: normal; 
         }
 
         .footer-simple {
@@ -690,12 +691,12 @@
                 <span id="email-span">{{ result.email }}</span>
                 <button class="edit-button" onclick="openDialog('email', '{{ result.email }}')">Editar</button>
             </div>
-            <div>
+            <div data-html2canvas-ignore="true">
                 <label>Teléfono:</label>
                 <span id="telefono-span">{{ result.telefono }}</span>
                 <button class="edit-button" onclick="openDialog('telefono', '{{ result.telefono }}')">Editar</button>
             </div>
-            <div>
+            <div data-html2canvas-ignore="true">
                 <label>Nacionalidad:</label>
                 <span id="nacionalidad-span">{{ result.nacionalidad }}</span>
                 <button class="edit-button" onclick="openDialog('nacionalidad', '{{ result.nacionalidad }}')">Editar</button>
@@ -1538,12 +1539,8 @@ function closeDeleteDialog() {
                 margin:       1,
                 filename:     'detalle_resultado_.pdf',
                 image:        { type: 'jpeg', quality: 0.98 },
-                html2canvas:  { scale: 2 },  // Aumentar la resolución de la captura
+                html2canvas:  { scale: 4 },  // Aumentar la resolución de la captura
                 jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' },
-                ignoreElements: function (element) {
-                  // Aquí excluimos los elementos que tienen la clase 'no-print'
-                  return element.classList.contains('no-print');
-                }
             };
             // Generar y descargar el PDF
             html2pdf().from(content).set(opt).save();
