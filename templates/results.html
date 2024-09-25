@@ -332,7 +332,7 @@
                         <td class="col-telefono">{{ result.telefono }}</td>
                         <td class="col-pais">{{ result.pais_residencia }}</td>
                         <td class="col-probabilidad">{{ result.probabilidad }}%</td>
-                        <td class="col-reporte"><button class="download-button rounded-icon" onclick="window.location.href='{{ url_for('download', filename=result.pdf_path.split('/')[-1]) }}'"><i class="fas fa-download"></i> Descargar</button></td>
+                        <td class="col-reporte"><button class="download-button rounded-icon" onclick="window.location.href='{{ url_for('download', filename=result.pdf_path.split('/')[-1]) }}'"><i class="fa-solid fa-circle-info" style="color: #ffffff;"></i> Ver detalles</button></td>
                     </tr>
                     {% endfor %}
                 </tbody>                
