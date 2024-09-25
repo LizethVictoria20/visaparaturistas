@@ -657,7 +657,7 @@
             {% endwith %}
         </div>
     </div>
-    <div class="container">
+    <div class="container" id="content">
         <div class="header content-margins">
             <h1>Detalle del Perfilamiento</h1>
             <div class="separator"></div>
@@ -698,7 +698,8 @@
         </div>
         
         <div class="buttons">
-            <a href="{{ url_for('create_pdf', id=result.id) }}">Descargar PDF</a>
+            <!-- <a href="{{ url_for('create_pdf', id=result.id) }}" id="generatePDF">Descargar PDF</a> -->
+            <a href="#" id="generatePDF" data-id="{{ result.id }}">Descargar PDF</a>
             <button type="button" onclick="document.getElementById('regenerar-form').submit();">Regenerar</button>
             <button class="delete-button" onclick="openDeleteDialog()">Eliminar</button>
         </div>
@@ -1057,7 +1058,13 @@
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.socket.io/4.0.0/socket.io.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.3.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.0.0-rc.5/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.3/html2pdf.bundle.min.js"></script>
 
+    <!-- TEMPLATE PDF -->
+
+    <!-- TEMPLATE PDF -->
     
     <script>
         // Funciones para abrir y cerrar diálogos
@@ -1516,6 +1523,27 @@ function closeDeleteDialog() {
     document.getElementById('delete-dialog-overlay').classList.remove('active');
 }
 
+document.getElementById('generatePDF').addEventListener('click', function (event) {
+            event.preventDefault();  // Prevenir el comportamiento por defecto del enlace
+
+            // Capturar el id del usuario desde el atributo data-id
+            const userId = event.target.getAttribute('data-id');
+
+            // Selecciona el área que deseas convertir en PDF
+            const content = document.getElementById('content');
+
+            // Opciones de html2pdf
+            const opt = {
+                margin:       1,
+                filename:     'detalle_resultado_' + userId + '.pdf',
+                image:        { type: 'jpeg', quality: 0.98 },
+                html2canvas:  { scale: 2 },  // Aumentar la resolución de la captura
+                jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
+            };
+
+            // Generar y descargar el PDF
+            html2pdf().from(content).set(opt).save();
+        });
 
 </script>
 </body>

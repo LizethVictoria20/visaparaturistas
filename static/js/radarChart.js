@@ -1,6 +1,6 @@
 // radarChart.js
 export function createRadarChart(ctx, data) {
-  new Chart(ctx, {
+  let myChart =  new Chart(ctx, {
     type: "radar",
     data: data,
     options: {
