@@ -12,6 +12,11 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <!-- <script type="module" src="{{ url_for('static', filename='js/radarChart.js') }}"></script> -->
     <script type="module" src="../static/js/radarChart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.3/html2pdf.bundle.min.js"></script>
+
+
 
   <style>
         /* Global styles */
@@ -300,7 +305,7 @@
   </style>
 
 </head>
-<body>
+<body class="content" id="content">
     <div class="topbar">
     </div>
     <div class="container">
@@ -443,7 +448,7 @@
             <div class="progress" id="progress-regenerar-bar"></div>
           </div>
         </div>
- 
+
 
         <div class="suggestions">
           <hr class="separator-small">
@@ -519,7 +524,7 @@
             
         
         <h3 class="subtitles"><i class="fa fa-chart-pie subtitles"></i>B. Diagrama de resultados</h3>
-        <div class="chart-container content-margins">
+        <div class="chart-container content-margins" id="miContenedor">
             <canvas id="radarChart"></canvas>
         </div>
         <hr class="separator">
@@ -550,6 +555,7 @@
         </div>
     </footer>
 
+    <button id="generatePDF">Descargar PDF</button>
 
     <form id="regenerar-form" action="{{ url_for('regenerar', id=result.id) }}" method="post" style="display: none;">
         <input type="hidden" name="id" value="{{ result.id }}">
@@ -609,8 +615,65 @@
           }]
       };
 
-      createRadarChart(ctx, data);
-      
+      // Crear el gráfico con Chart.js
+    const radarChart = new Chart(ctx, {
+        type: 'radar',
+        data: data,
+        options: {
+            responsive: true,
+            scales: {
+                r: {
+                    angleLines: {
+                        display: true
+                    },
+                    suggestedMin: 0,
+                    suggestedMax: 10
+                }
+            },
+            animation: {
+            onComplete: function() {
+              const imgURL = radarChart.toBase64Image();
+              console.log(imgURL);  // Aquí se obtiene el enlace de la imagen en formato base64
+
+              // Si quieres mostrar la imagen en el DOM
+              // const container = document.getElementById('radarChart')
+             // Suponiendo que imgURL contiene la URL base64 de la imagen
+              const imgElement = document.createElement('img');
+              imgElement.src = imgURL;
+              imgElement.alt = 'Gráfico radar';
+              imgElement.style.width = '50%';
+
+              // Selecciona el contenedor div por su id
+              const container = document.getElementById('miContenedor'); // Reemplaza 'miContenedor' con el id de tu contenedor
+
+              // Agrega la imagen al contenedor
+              container.appendChild(imgElement);
+            }
+          }
+        } 
+      });
+
+        // Función para generar PDF incluyendo gráficos
+        document.getElementById('generatePDF').addEventListener('click', function() {
+                    generatePDFWithChart();
+        });
+
+        function generatePDFWithChart() {
+          const element = document.getElementById('content');
+
+          // Usar html2pdf para generar el PDF
+          html2pdf().from(element).set({
+              margin: 1,
+              filename: 'resultado_perfilamiento.pdf',
+              image: { type: 'jpeg', quality: 0.98 },
+              html2canvas: {
+                  scale: 2, 
+                  useCORS: true
+              },
+              jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+          }).save();
+        }
+
       // TEST
       document.addEventListener('DOMContentLoaded', function() {
         var probability = 81.75;
@@ -797,8 +860,7 @@
             document.getElementById('score-assets').innerText = averageAssets;
             document.getElementById('score-background').innerText = averageBackground;
             document.getElementById('score-confidential').innerText = averageConfidential;
-      })
-      //TEST
+      })      
 
 
         // Funciones para abrir y cerrar diálogos
