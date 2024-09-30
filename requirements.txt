@@ -114,3 +114,5 @@ WTForms==3.0.1
 yarg==0.1.9
 yarl==1.11.1
 zopfli==0.2.3
+pandas
+XlsxWriter
