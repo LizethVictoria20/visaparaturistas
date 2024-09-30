@@ -45,10 +45,8 @@
             z-index: 1000;
         }
     
-        .topbar .logo {
-            font-size: 18px;
-            font-weight: bold;
-            margin-left: 20px;
+        .logo-topbar {
+          width: 10rem;
         }
     
         .topbar-menu {
@@ -76,15 +74,15 @@
     
         /* Contenedor principal */
         .container {
-            max-width: var(--container-width);
+            max-width: 700px;
             background: white;
             border-radius: 8px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            padding: 20px var(--container-padding-sides);
+            padding: 60px;            
             margin: var(--container-margin-top) auto var(--container-margin-bottom) auto;
             box-sizing: border-box;
             overflow: hidden;
-            min-height: var(--container-height);
+            height: 700px;;
             position: relative;
         }
     
@@ -108,15 +106,9 @@
             margin-bottom: var(--progress-form-spacing);
         }
     
-        .progress-label {
-            text-align: left;
-            color: #7a7a7a;
-            font-size: 14px;
-            margin-bottom: 5px;
-        }
-    
+
         .progress-bar {
-            background-color: #e0e0e0;
+            background-color: #673ab7;
             border-radius: 5px;
             height: 5px;
             overflow: hidden;
@@ -215,6 +207,8 @@
             cursor: pointer;
             font-size: 14px;
             transition: background-color 0.3s, box-shadow 0.3s;
+            position: relative;
+            top: 8px;
         }
     
         .submit-button-prev, .submit-button-next {
@@ -391,366 +385,355 @@
         }
     </style>
     
-    <div class="topbar">
-        <div class="logo">VisaParaTurista.com</div>
-        <div class="topbar-menu menu-adjustable">
-            <a href="/" class="{% if request.path == '/' %}active{% endif %}">Formulario</a>
-            <a href="/results" class="{% if request.path == '/results' %}active{% endif %}">Ver Resultados</a>
-            {% if current_user.is_authenticated %}
-                <a href="{{ url_for('logout') }}" class="{% if request.path == url_for('logout') %}active{% endif %}">Logout</a>
-            {% else %}
-                <a href="{{ url_for('login') }}" class="{% if request.path == url_for('login') %}active{% endif %}">Login</a>
-            {% endif %}
-            {% with messages = get_flashed_messages(with_categories=true) %}
-            {% if messages %}
-                <ul class="flashes">
-                    {% for category, message in messages %}
-                        <li class="flash {{ category }}">{{ message }}</li>
-                    {% endfor %}
-                </ul>
-            {% endif %}
-            {% endwith %}
-        </div>
-    </div>
+  {% extends "base.html" %}
+  <!-- Contenedor principal -->
+  <div>
+    {% block content %}
 
-    <!-- Contenedor principal -->
-    <div class="container">
-        <h1>Estudio de perfil para solicitantes de visa de turismo a E.E.U.U</h1>
-        <div class="subtitle">Formulario de captura de datos para el análisis.</div>
-        
-        <!-- Contenedor de progreso -->
-        <div class="progress-container">
-            <div class="progress-label">Nivel de progreso</div>
-            <div class="progress-bar" id="progress-bar">
-                <div class="progress"></div>
-            </div>
-        </div>
+      <div class="container">
 
-        <!-- Formulario -->
-        <form id="cuestionario-form" action="/" method="post" autocomplete="off" novalidate>
+          <h1>Estudio de perfil para solicitantes de visa de turismo a E.E.U.U</h1>
+          <div class="subtitle">Formulario de captura de datos para el análisis.</div>
+          
+          <!-- Contenedor de progreso -->
+          <div class="progress-container">
+              <div class="progress-bar" id="progress-bar">
+                  <div class="progress"></div>
+              </div>
+          </div>
+
+          <!-- Formulario -->
+
+          <form id="cuestionario-form" action="/" method="post" autocomplete="off" novalidate>
             <!-- Primera Sección -->
-            <div class="form-section active">
-                <div class="form-group-row">
-                    <div class="form-group">
-                        <label for="fecha"><i class="fas fa-calendar"></i> 1. Fecha:</label>
-                        <input type="text" id="fecha" name="fecha" placeholder="Ingrese la fecha" readonly>
-                        <div class="error-message">
-                            <div class="error-arrow"></div>Error en la fecha
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="pais_residencia"><i class="fas fa-globe"></i> 2. País de Residencia:</label>
-                        <input type="text" id="pais_residencia" name="pais_residencia" list="paises" placeholder="Ingrese su país de residencia">
-                        <datalist id="paises">
-                            <!-- List of countries -->
-                        </datalist>
-                        <div class="error-message">
-                            <div class="error-arrow"></div>Error en el país de residencia
-                        </div>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="nombre"><i class="fas fa-user"></i> 3. Nombre:</label>
-                    <input type="text" id="nombre" name="nombre" placeholder="Ingrese su nombre">
-                    <div class="error-message">
-                        <div class="error-arrow"></div>Error en el nombre
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="apellidos"><i class="fas fa-user"></i> 4. Apellidos:</label>
-                    <input type="text" id="apellidos" name="apellidos" placeholder="Ingrese sus apellidos">
-                    <div class="error-message">
-                        <div class="error-arrow"></div>Error en los apellidos
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="email"><i class="fas fa-envelope"></i> 5. Email:</label>
-                    <input type="email" id="email" name="email" placeholder="Ingrese su email">
-                    <div class="error-message">
-                        <div class="error-arrow"></div>Error en el email
-                    </div>
-                </div>
-                <div class="form-group-row">
-                    <div class="form-group">
-                        <label for="telefono"><i class="fas fa-phone"></i> 6. Teléfono:</label>
-                        <input type="text" id="telefono" name="telefono" placeholder="Ingrese su teléfono">
-                        <div class="error-message">
-                            <div class="error-arrow"></div>Error en el teléfono
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="edad"><i class="fas fa-calendar"></i> 7. Edad:</label>
-                        <input type="number" id="edad" name="edad" placeholder="Ingrese su edad">
-                        <div class="error-message">
-                            <div class="error-arrow"></div>Error en la edad
-                        </div>
-                    </div>
-                </div>
-            </div>
+              <div class="form-section active">
+                  <div class="form-group-row">
+                      <div class="form-group">
+                          <label for="fecha"><i class="fas fa-calendar"></i> 1. Fecha:</label>
+                          <input type="text" id="fecha" name="fecha" placeholder="Ingrese la fecha" readonly>
+                          <div class="error-message">
+                              <div class="error-arrow"></div>Error en la fecha
+                          </div>
+                      </div>
+                      <div class="form-group">
+                          <label for="pais_residencia"><i class="fas fa-globe"></i> 2. País de Residencia:</label>
+                          <input type="text" id="pais_residencia" name="pais_residencia" list="paises" placeholder="Ingrese su país de residencia">
+                          <datalist id="paises">
+                              <!-- List of countries -->
+                          </datalist>
+                          <div class="error-message">
+                              <div class="error-arrow"></div>Error en el país de residencia
+                          </div>
+                      </div>
+                  </div>
+                  <div class="form-group">
+                      <label for="nombre"><i class="fas fa-user"></i> 3. Nombre:</label>
+                      <input type="text" id="nombre" name="nombre" placeholder="Ingrese su nombre">
+                      <div class="error-message">
+                          <div class="error-arrow"></div>Error en el nombre
+                      </div>
+                  </div>
+                  <div class="form-group">
+                      <label for="apellidos"><i class="fas fa-user"></i> 4. Apellidos:</label>
+                      <input type="text" id="apellidos" name="apellidos" placeholder="Ingrese sus apellidos">
+                      <div class="error-message">
+                          <div class="error-arrow"></div>Error en los apellidos
+                      </div>
+                  </div>
+                  <div class="form-group">
+                      <label for="email"><i class="fas fa-envelope"></i> 5. Email:</label>
+                      <input type="email" id="email" name="email" placeholder="Ingrese su email">
+                      <div class="error-message">
+                          <div class="error-arrow"></div>Error en el email
+                      </div>
+                  </div>
+                  <div class="form-group-row">
+                      <div class="form-group">
+                          <label for="telefono"><i class="fas fa-phone"></i> 6. Teléfono:</label>
+                          <input type="text" id="telefono" name="telefono" placeholder="Ingrese su teléfono">
+                          <div class="error-message">
+                              <div class="error-arrow"></div>Error en el teléfono
+                          </div>
+                      </div>
+                      <div class="form-group">
+                          <label for="edad"><i class="fas fa-calendar"></i> 7. Edad:</label>
+                          <input type="number" id="edad" name="edad" placeholder="Ingrese su edad">
+                          <div class="error-message">
+                              <div class="error-arrow"></div>Error en la edad
+                          </div>
+                      </div>
+                  </div>
+              </div>
 
-            <!-- Segunda Sección -->
-            <div class="form-section">
-                <div class="form-group-row">
-                    <div class="form-group">
-                        <label for="estado_civil"><i class="fas fa-heart"></i> 8. Estado civil:</label>
-                        <select id="estado_civil" name="estado_civil" required>
-                            <option value="" disabled selected>Seleccione su estado civil</option>
-                            <option value="Soltero">Soltero</option>
-                            <option value="Casado">Casado</option>
-                            <option value="Divorciado">Divorciado</option>
-                            <option value="Viudo">Viudo</option>
-                            <option value="Union Libre">Union Libre / Convivencia</option>
-                        </select>
-                        <div class="error-message">
-                            <div class="error-arrow"></div>Error en el estado civil
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="hijos"><i class="fas fa-child"></i> 9. ¿Cuántos hijos tienes?</label>
-                        <select id="hijos" name="hijos" required>
-                            <option value="" disabled selected>Seleccione cantidad de hijos</option>
-                            <option value="0">0 Hijos</option>
-                            <option value="1">1 Hijo</option>
-                            <option value="2">2 Hijos</option>
-                            <option value="3">Más de 3 hijos</option>
-                        </select>
-                        <div class="error-message">
-                            <div class="error-arrow"></div>Error en la cantidad de hijos
-                        </div>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="vivienda"><i class="fas fa-home"></i> 10. ¿Con quién comparte su vivienda actualmente?</label>
-                    <select id="vivienda" name="vivienda" required>
-                        <option value="" disabled selected>Seleccione con quién vive</option>
-                        <option value="Solo">Solo</option>
-                        <option value="Con pareja">Con pareja</option>
-                        <option value="Con familiares">Con familiares (padres, hermanos, etc.)</option>
-                        <option value="Con amigos">Con amigos u otros compañeros de cuarto</option>
-                    </select>
-                    <div class="error-message">
-                        <div class="error-arrow"></div>Error en con quién vive
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="profesion"><i class="fas fa-briefcase"></i> 11. Profesión u ocupación:</label>
-                    <input type="text" id="profesion" name="profesion" placeholder="Ingrese su profesión u ocupación">
-                    <div class="error-message">
-                        <div class="error-arrow"></div>Error en la profesión
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="nivel_educacion"><i class="fas fa-graduation-cap"></i> 12. ¿Cuál es su nivel de educación?</label>
-                    <select id="nivel_educacion" name="nivel_educacion" required>
-                        <option value="" disabled selected>Seleccione su nivel de educación</option>
-                        <option value="Ninguno">Ninguno</option>
-                        <option value="Primaria">Primaria</option>
-                        <option value="Secundaria">Secundaria</option>
-                        <option value="Bachillerato">Bachillerato</option>
-                        <option value="Técnico">Técnico</option>
-                        <option value="Profesional">Profesional</option>
-                        <option value="Profesional">Especialista - Postgrado</option>
-                        <option value="Maestría">Maestría  - Postgrado</option>
-                        <option value="Doctorado">Doctorado  - Postgrado</option>
-                    </select>
-                    <div class="error-message">
-                        <div class="error-arrow"></div>Error en el nivel de educación
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="tiempo_empleo"><i class="fas fa-clock"></i> 13. ¿Cuánto tiempo lleva trabajando en su empleo actual?</label>
-                    <select id="tiempo_empleo" name="tiempo_empleo" required>
-                        <option value="" disabled selected>Seleccione su tiempo en empleo actual</option>
-                        <option value="Menos de 1 año">Menos de 1 año</option>
-                        <option value="1-2 años">1-2 años</option>
-                        <option value="2-5 años">2-5 años</option>
-                        <option value="5-10 años">5-10 años</option>
-                        <option value="Más de 10 años">Más de 10 años</option>
-                    </select>
-                    <div class="error-message">
-                        <div class="error-arrow"></div>Error en el tiempo de empleo
-                    </div>
-                </div>
-            </div>
+              <!-- Segunda Sección -->
+              <div class="form-section">
+                  <div class="form-group-row">
+                      <div class="form-group">
+                          <label for="estado_civil"><i class="fas fa-heart"></i> 8. Estado civil:</label>
+                          <select id="estado_civil" name="estado_civil" required>
+                              <option value="" disabled selected>Seleccione su estado civil</option>
+                              <option value="Soltero">Soltero</option>
+                              <option value="Casado">Casado</option>
+                              <option value="Divorciado">Divorciado</option>
+                              <option value="Viudo">Viudo</option>
+                              <option value="Union Libre">Union Libre / Convivencia</option>
+                          </select>
+                          <div class="error-message">
+                              <div class="error-arrow"></div>Error en el estado civil
+                          </div>
+                      </div>
+                      <div class="form-group">
+                          <label for="hijos"><i class="fas fa-child"></i> 9. ¿Cuántos hijos tienes?</label>
+                          <select id="hijos" name="hijos" required>
+                              <option value="" disabled selected>Seleccione cantidad de hijos</option>
+                              <option value="0">0 Hijos</option>
+                              <option value="1">1 Hijo</option>
+                              <option value="2">2 Hijos</option>
+                              <option value="3">Más de 3 hijos</option>
+                          </select>
+                          <div class="error-message">
+                              <div class="error-arrow"></div>Error en la cantidad de hijos
+                          </div>
+                      </div>
+                  </div>
+                  <div class="form-group">
+                      <label for="vivienda"><i class="fas fa-home"></i> 10. ¿Con quién comparte su vivienda actualmente?</label>
+                      <select id="vivienda" name="vivienda" required>
+                          <option value="" disabled selected>Seleccione con quién vive</option>
+                          <option value="Solo">Solo</option>
+                          <option value="Con pareja">Con pareja</option>
+                          <option value="Con familiares">Con familiares (padres, hermanos, etc.)</option>
+                          <option value="Con amigos">Con amigos u otros compañeros de cuarto</option>
+                      </select>
+                      <div class="error-message">
+                          <div class="error-arrow"></div>Error en con quién vive
+                      </div>
+                  </div>
+                  <div class="form-group">
+                      <label for="profesion"><i class="fas fa-briefcase"></i> 11. Profesión u ocupación:</label>
+                      <input type="text" id="profesion" name="profesion" placeholder="Ingrese su profesión u ocupación">
+                      <div class="error-message">
+                          <div class="error-arrow"></div>Error en la profesión
+                      </div>
+                  </div>
+                  <div class="form-group">
+                      <label for="nivel_educacion"><i class="fas fa-graduation-cap"></i> 12. ¿Cuál es su nivel de educación?</label>
+                      <select id="nivel_educacion" name="nivel_educacion" required>
+                          <option value="" disabled selected>Seleccione su nivel de educación</option>
+                          <option value="Ninguno">Ninguno</option>
+                          <option value="Primaria">Primaria</option>
+                          <option value="Secundaria">Secundaria</option>
+                          <option value="Bachillerato">Bachillerato</option>
+                          <option value="Técnico">Técnico</option>
+                          <option value="Profesional">Profesional</option>
+                          <option value="Profesional">Especialista - Postgrado</option>
+                          <option value="Maestría">Maestría  - Postgrado</option>
+                          <option value="Doctorado">Doctorado  - Postgrado</option>
+                      </select>
+                      <div class="error-message">
+                          <div class="error-arrow"></div>Error en el nivel de educación
+                      </div>
+                  </div>
+                  <div class="form-group">
+                      <label for="tiempo_empleo"><i class="fas fa-clock"></i> 13. ¿Cuánto tiempo lleva trabajando en su empleo actual?</label>
+                      <select id="tiempo_empleo" name="tiempo_empleo" required>
+                          <option value="" disabled selected>Seleccione su tiempo en empleo actual</option>
+                          <option value="Menos de 1 año">Menos de 1 año</option>
+                          <option value="1-2 años">1-2 años</option>
+                          <option value="2-5 años">2-5 años</option>
+                          <option value="5-10 años">5-10 años</option>
+                          <option value="Más de 10 años">Más de 10 años</option>
+                      </select>
+                      <div class="error-message">
+                          <div class="error-arrow"></div>Error en el tiempo de empleo
+                      </div>
+                  </div>
+              </div>
 
-            <!-- Tercera Sección -->
-            <div class="form-section">
-                <div class="form-group">
-                    <label for="propietario"><i class="fas fa-building"></i> 14. ¿Es propietario o socio de alguna empresa?</label>
-                    <select id="propietario" name="propietario" required>
-                        <option value="" disabled selected>Seleccione si es propietario o socio</option>
-                        <option value="Si">Si</option>
-                        <option value="No">No</option>
-                    </select>
-                    <div class="error-message">
-                        <div class="error-arrow"></div>Error en propietario o socio
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="ingresos"><i class="fas fa-dollar-sign"></i> 15. Ingresos mensuales aproximados en dólares americanos:</label>
-                    <input type="number" id="ingresos" name="ingresos" placeholder="Ingrese su ingreso mensual aproximado" required>
-                    <div class="error-message">
-                        <div class="error-arrow"></div>Error en los ingresos
-                    </div>
-                </div>                
-                <div class="form-group">
-                    <label for="impuestos"><i class="fas fa-file-invoice-dollar"></i> 16. ¿Paga impuestos y no participa en programas de asistencia social?</label>
-                    <select id="impuestos" name="impuestos" required>
-                        <option value="" disabled selected>Seleccione si paga impuestos</option>
-                        <option value="Si">Si</option>
-                        <option value="No">No</option>
-                    </select>
-                    <div class="error-message">
-                        <div class="error-arrow"></div>Error en los impuestos
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="propiedades"><i class="fas fa-home"></i> 17. ¿Posee propiedades inmobiliarias y/o vehículos en su país de residencia?</label>
-                    <input type="text" id="propiedades" name="propiedades" placeholder="Describa sus propiedades y/o vehículos" required>
-                    <div class="error-message">
-                        <div class="error-arrow"></div>Error en propiedades
-                    </div>
-                </div>                
-                <div class="form-group">
-                    <label for="viajes"><i class="fas fa-plane"></i> 18. ¿En los ultimos 5 años ha que paises ha viajado?</label>
-                    <input type="text" id="viajes" name="viajes" placeholder="Ingrese la cantidad de países">
-                    <div class="error-message">
-                        <div class="error-arrow"></div>Error en viajes al extranjero
-                    </div>
-                </div>
-            </div>
+              <!-- Tercera Sección -->
+              <div class="form-section">
+                  <div class="form-group">
+                      <label for="propietario"><i class="fas fa-building"></i> 14. ¿Es propietario o socio de alguna empresa?</label>
+                      <select id="propietario" name="propietario" required>
+                          <option value="" disabled selected>Seleccione si es propietario o socio</option>
+                          <option value="Si">Si</option>
+                          <option value="No">No</option>
+                      </select>
+                      <div class="error-message">
+                          <div class="error-arrow"></div>Error en propietario o socio
+                      </div>
+                  </div>
+                  <div class="form-group">
+                      <label for="ingresos"><i class="fas fa-dollar-sign"></i> 15. Ingresos mensuales aproximados en dólares americanos:</label>
+                      <input type="number" id="ingresos" name="ingresos" placeholder="Ingrese su ingreso mensual aproximado" required>
+                      <div class="error-message">
+                          <div class="error-arrow"></div>Error en los ingresos
+                      </div>
+                  </div>                
+                  <div class="form-group">
+                      <label for="impuestos"><i class="fas fa-file-invoice-dollar"></i> 16. ¿Paga impuestos y no participa en programas de asistencia social?</label>
+                      <select id="impuestos" name="impuestos" required>
+                          <option value="" disabled selected>Seleccione si paga impuestos</option>
+                          <option value="Si">Si</option>
+                          <option value="No">No</option>
+                      </select>
+                      <div class="error-message">
+                          <div class="error-arrow"></div>Error en los impuestos
+                      </div>
+                  </div>
+                  <div class="form-group">
+                      <label for="propiedades"><i class="fas fa-home"></i> 17. ¿Posee propiedades inmobiliarias y/o vehículos en su país de residencia?</label>
+                      <input type="text" id="propiedades" name="propiedades" placeholder="Describa sus propiedades y/o vehículos" required>
+                      <div class="error-message">
+                          <div class="error-arrow"></div>Error en propiedades
+                      </div>
+                  </div>                
+                  <div class="form-group">
+                      <label for="viajes"><i class="fas fa-plane"></i> 18. ¿En los ultimos 5 años ha que paises ha viajado?</label>
+                      <input type="text" id="viajes" name="viajes" placeholder="Ingrese la cantidad de países">
+                      <div class="error-message">
+                          <div class="error-arrow"></div>Error en viajes al extranjero
+                      </div>
+                  </div>
+              </div>
 
-            <!-- Cuarta Sección -->
-            <div class="form-section">
-                <div class="form-group">
-                    <label for="familiares_eeuu"><i class="fas fa-users"></i> 19. ¿Tiene familiares que residan en los Estados Unidos?</label>
-                    <select id="familiares_eeuu" name="familiares_eeuu" required>
-                        <option value="" disabled selected>Seleccione si tiene familiares en EE.UU.</option>
-                        <option value="No">No</option>
-                        <option value="Si">Si - Status regular</option>
-                        <option value="Si">Si - Status irregular</option>
-                    </select>
-                    <div class="error-message">
-                        <div class="error-arrow"></div>Error en familiares en EE.UU.
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="familiares_visa"><i class="fas fa-id-card"></i> 20. ¿Tiene familiares que cuenten con una visa de turismo a EE.UU.?</label>
-                    <select id="familiares_visa" name="familiares_visa" required>
-                        <option value="" disabled selected>Seleccione si tienen visa de turismo</option>
-                        <option value="Si">Si</option>
-                        <option value="No">No</option>
-                    </select>
-                    <div class="error-message">
-                        <div class="error-arrow"></div>Error en familiares con visa
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="visa_negada"><i class="fas fa-times-circle"></i> 21. ¿Le ha sido negada una visa de turismo para EE.UU. anteriormente?</label>
-                    <select id="visa_negada" name="visa_negada" required>
-                        <option value="" disabled selected>Seleccione si le han negado la visa</option>
-                        <option value="No">No</option>
-                        <option value="Si">Si, 1 vez</option>
-                        <option value="Si">Si, más de 1 vez</option>
-                        <option value="Si">Si, más de 3 veces</option>
-                    </select>
-                    <div class="error-message">
-                        <div class="error-arrow"></div>Error en visa negada
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="antecedentes"><i class="fas fa-gavel"></i> 22. ¿Tiene antecedentes judiciales o ha estado en procesos de embargo?</label>
-                    <select id="antecedentes" name="antecedentes" required>
-                        <option value="" disabled selected>Seleccione si tiene antecedentes</option>
-                        <option value="Si">Si</option>
-                        <option value="No">No</option>
-                    </select>
-                    <div class="error-message">
-                        <div class="error-arrow"></div>Error en antecedentes judiciales
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="enfermedades"><i class="fas fa-notes-medical"></i> 23. ¿Padece alguna enfermedad crónica o preexistente de base?</label>
-                    <select id="enfermedades" name="enfermedades" required>
-                        <option value="" disabled selected>Seleccione si padece enfermedades</option>
-                        <option value="Si">Si</option>
-                        <option value="No">No</option>
-                    </select>
-                    <div class="error-message">
-                        <div class="error-arrow"></div>Error en enfermedades crónicas
-                    </div>
-                </div>
-            </div>
+              <!-- Cuarta Sección -->
+              <div class="form-section">
+                  <div class="form-group">
+                      <label for="familiares_eeuu"><i class="fas fa-users"></i> 19. ¿Tiene familiares que residan en los Estados Unidos?</label>
+                      <select id="familiares_eeuu" name="familiares_eeuu" required>
+                          <option value="" disabled selected>Seleccione si tiene familiares en EE.UU.</option>
+                          <option value="No">No</option>
+                          <option value="Si">Si - Status regular</option>
+                          <option value="Si">Si - Status irregular</option>
+                      </select>
+                      <div class="error-message">
+                          <div class="error-arrow"></div>Error en familiares en EE.UU.
+                      </div>
+                  </div>
+                  <div class="form-group">
+                      <label for="familiares_visa"><i class="fas fa-id-card"></i> 20. ¿Tiene familiares que cuenten con una visa de turismo a EE.UU.?</label>
+                      <select id="familiares_visa" name="familiares_visa" required>
+                          <option value="" disabled selected>Seleccione si tienen visa de turismo</option>
+                          <option value="Si">Si</option>
+                          <option value="No">No</option>
+                      </select>
+                      <div class="error-message">
+                          <div class="error-arrow"></div>Error en familiares con visa
+                      </div>
+                  </div>
+                  <div class="form-group">
+                      <label for="visa_negada"><i class="fas fa-times-circle"></i> 21. ¿Le ha sido negada una visa de turismo para EE.UU. anteriormente?</label>
+                      <select id="visa_negada" name="visa_negada" required>
+                          <option value="" disabled selected>Seleccione si le han negado la visa</option>
+                          <option value="No">No</option>
+                          <option value="Si">Si, 1 vez</option>
+                          <option value="Si">Si, más de 1 vez</option>
+                          <option value="Si">Si, más de 3 veces</option>
+                      </select>
+                      <div class="error-message">
+                          <div class="error-arrow"></div>Error en visa negada
+                      </div>
+                  </div>
+                  <div class="form-group">
+                      <label for="antecedentes"><i class="fas fa-gavel"></i> 22. ¿Tiene antecedentes judiciales o ha estado en procesos de embargo?</label>
+                      <select id="antecedentes" name="antecedentes" required>
+                          <option value="" disabled selected>Seleccione si tiene antecedentes</option>
+                          <option value="Si">Si</option>
+                          <option value="No">No</option>
+                      </select>
+                      <div class="error-message">
+                          <div class="error-arrow"></div>Error en antecedentes judiciales
+                      </div>
+                  </div>
+                  <div class="form-group">
+                      <label for="enfermedades"><i class="fas fa-notes-medical"></i> 23. ¿Padece alguna enfermedad crónica o preexistente de base?</label>
+                      <select id="enfermedades" name="enfermedades" required>
+                          <option value="" disabled selected>Seleccione si padece enfermedades</option>
+                          <option value="Si">Si</option>
+                          <option value="No">No</option>
+                      </select>
+                      <div class="error-message">
+                          <div class="error-arrow"></div>Error en enfermedades crónicas
+                      </div>
+                  </div>
+              </div>
 
-            <!-- Quinta Sección -->
-            <div class="form-section">
-                <div class="form-group">
-                    <label for="visa_otra"><i class="fas fa-passport"></i> 24. ¿Tiene algún tipo de visa o permiso de residencia vigente para otro país?</label>
-                    <select id="visa_otra" name="visa_otra" required>
-                        <option value="" disabled selected>Seleccione si tiene otra visa</option>
-                        <option value="Si">Si</option>
-                        <option value="No">No</option>
-                    </select>
-                    <div class="error-message">
-                        <div class="error-arrow"></div>Error en visa o permiso de residencia
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="problemas_migratorios"><i class="fas fa-user-check"></i> 25. ¿Ha tenido problemas o dificultades con las autoridades migratorias?</label>
-                    <select id="problemas_migratorios" name="problemas_migratorios" required>
-                        <option value="" disabled selected>Seleccione si ha tenido problemas</option>
-                        <option value="Si">Si</option>
-                        <option value="No">No</option>
-                    </select>
-                    <div class="error-message">
-                        <div class="error-arrow"></div>Error en problemas migratorios
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="nacionalidad"><i class="fas fa-flag"></i> 26. ¿Cuál es su nacionalidad?</label>
-                    <input type="text" id="nacionalidad" name="nacionalidad" list="nacionalidades" placeholder="Ingrese su nacionalidad">
-                    <datalist id="nacionalidades">
-                        <!-- List of countries -->
-                    </datalist>
-                    <div class="error-message">
-                        <div class="error-arrow"></div>Error en la nacionalidad
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="calificacion"><i class="fas fa-star"></i> 27. Calificación del evaluador:</label>
-                    <div class="rating">
-                        <input type="radio" id="star10" name="calificacion" value="10"><label for="star10"></label>
-                        <input type="radio" id="star9" name="calificacion" value="9"><label for="star9"></label>
-                        <input type="radio" id="star8" name="calificacion" value="8"><label for="star8"></label>
-                        <input type="radio" id="star7" name="calificacion" value="7"><label for="star7"></label>
-                        <input type="radio" id="star6" name="calificacion" value="6"><label for="star6"></label>
-                        <input type="radio" id="star5" name="calificacion" value="5"><label for="star5"></label>
-                        <input type="radio" id="star4" name="calificacion" value="4"><label for="star4"></label>
-                        <input type="radio" id="star3" name="calificacion" value="3"><label for="star3"></label>
-                        <input type="radio" id="star2" name="calificacion" value="2"><label for="star2"></label>
-                        <input type="radio" id="star1" name="calificacion" value="1"><label for="star1"></label>
-                    </div>
-                    <div class="error-message">
-                        <div class="error-arrow"></div>Error en la calificación
-                    </div>
-                </div>
-            </div>
+              <!-- Quinta Sección -->
+              <div class="form-section">
+                  <div class="form-group">
+                      <label for="visa_otra"><i class="fas fa-passport"></i> 24. ¿Tiene algún tipo de visa o permiso de residencia vigente para otro país?</label>
+                      <select id="visa_otra" name="visa_otra" required>
+                          <option value="" disabled selected>Seleccione si tiene otra visa</option>
+                          <option value="Si">Si</option>
+                          <option value="No">No</option>
+                      </select>
+                      <div class="error-message">
+                          <div class="error-arrow"></div>Error en visa o permiso de residencia
+                      </div>
+                  </div>
+                  <div class="form-group">
+                      <label for="problemas_migratorios"><i class="fas fa-user-check"></i> 25. ¿Ha tenido problemas o dificultades con las autoridades migratorias?</label>
+                      <select id="problemas_migratorios" name="problemas_migratorios" required>
+                          <option value="" disabled selected>Seleccione si ha tenido problemas</option>
+                          <option value="Si">Si</option>
+                          <option value="No">No</option>
+                      </select>
+                      <div class="error-message">
+                          <div class="error-arrow"></div>Error en problemas migratorios
+                      </div>
+                  </div>
+                  <div class="form-group">
+                      <label for="nacionalidad"><i class="fas fa-flag"></i> 26. ¿Cuál es su nacionalidad?</label>
+                      <input type="text" id="nacionalidad" name="nacionalidad" list="nacionalidades" placeholder="Ingrese su nacionalidad">
+                      <datalist id="nacionalidades">
+                          <!-- List of countries -->
+                      </datalist>
+                      <div class="error-message">
+                          <div class="error-arrow"></div>Error en la nacionalidad
+                      </div>
+                  </div>
+                  <div class="form-group">
+                      <label for="calificacion"><i class="fas fa-star"></i> 27. Calificación del evaluador:</label>
+                      <div class="rating">
+                          <input type="radio" id="star10" name="calificacion" value="10"><label for="star10"></label>
+                          <input type="radio" id="star9" name="calificacion" value="9"><label for="star9"></label>
+                          <input type="radio" id="star8" name="calificacion" value="8"><label for="star8"></label>
+                          <input type="radio" id="star7" name="calificacion" value="7"><label for="star7"></label>
+                          <input type="radio" id="star6" name="calificacion" value="6"><label for="star6"></label>
+                          <input type="radio" id="star5" name="calificacion" value="5"><label for="star5"></label>
+                          <input type="radio" id="star4" name="calificacion" value="4"><label for="star4"></label>
+                          <input type="radio" id="star3" name="calificacion" value="3"><label for="star3"></label>
+                          <input type="radio" id="star2" name="calificacion" value="2"><label for="star2"></label>
+                          <input type="radio" id="star1" name="calificacion" value="1"><label for="star1"></label>
+                      </div>
+                      <div class="error-message">
+                          <div class="error-arrow"></div>Error en la calificación
+                      </div>
+                  </div>
+              </div>
 
-            <!-- Botones de navegación -->
-            <div class="navigation-buttons">
-                <button type="button" id="prev-btn" class="submit-button submit-button-prev" onclick="showPrevSection()">Anterior</button>
-                <button type="button" id="next-btn" class="submit-button submit-button-next" onclick="validateSection()">Siguiente</button>
-                <button type="submit" id="submit-btn" class="submit-button submit-button-submit" style="display: none;">Enviar</button>
-            </div>
-        </form>
-    </div>
+              <!-- Botones de navegación -->
+              <div class="navigation-buttons">
+                  <button type="button" id="prev-btn" class="submit-button submit-button-prev" onclick="showPrevSection()">Anterior</button>
+                  <button type="button" id="next-btn" class="submit-button submit-button-next" onclick="validateSection()">Siguiente</button>
+                  <button type="submit" id="submit-btn" class="submit-button submit-button-submit" style="display: none;">Enviar</button>
+              </div>
+          </form>
 
-    <!-- Pie de página -->
-    <footer class="footer-simple">
-        <div class="footer-content">
-            &copy; 2024 VisaParaTurista.com. Todos los derechos reservados.
-        </div>
-    </footer>
+      </div>
+      {% endblock %}
+
+  </div>
+
+    {% block footer %}
+      <!-- Pie de página -->
+      <footer class="footer-simple">
+          <div class="footer-content">
+              &copy; 2024 VisaParaTurista.com. Todos los derechos reservados.
+          </div>
+      </footer>
+    {% endblock %}
 
     <!-- Overlay de procesamiento -->
     <div class="processing-overlay" id="processing-overlay">
