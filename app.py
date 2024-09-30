@@ -182,62 +182,6 @@ def detail(id):
     print(result)
     return render_template('detail.html', result=result)
 
-# Obteniendo datos de la base de datos para generar archivo XLS 
-
-# Nueva función para exportar todos los datos
-@app.route('/export-all', methods=['GET'])
-def export_all():
-    # Consulta todos los registros de la base de datos
-    all_results = FormResult.query.all()
-    # Extraer los datos y convertirlos en una lista de diccionarios
-    data = []
-    for result in all_results:
-        data.append({
-            'Nombre': result.nombre,
-            'Apellidos': result.apellidos,
-            'Email': result.email,
-            'Telefono': result.telefono,
-            'Pais residencia': result.pais_residencia,
-            'Fecha': result.fecha,
-            'Edad': result.edad,
-            'Estado Civil': result.estado_civil,
-            'Hijos': result.hijos,
-            'Vivienda': result.vivienda,
-            'Profesion': result.profesion,
-            'Nivel_educacion': result.nivel_educacion,
-            'Tiempo_empleo': result.tiempo_empleo,
-            'Propietario': result.propietario,
-            'Ingresos': result.ingresos,
-            'Impuestos': result.impuestos,
-            'Propiedades': result.propiedades,
-            'Viajes': result.viajes,
-            'Familiares eeuu': result.familiares_eeuu,
-            'Familiares visa': result.familiares_visa,
-            'Visa negada': result.visa_negada,
-            'Antecedentes': result.antecedentes,
-            'Enfermedades': result.enfermedades,
-            'Visa otra': result.visa_otra,
-            'Problemas migratorios': result.problemas_migratorios,
-            'Nacionalidad': result.nacionalidad,
-            'Calificacion': result.calificacion,             
-        })
-
-    # Convertir la lista de diccionarios en un DataFrame de pandas
-    df = pd.DataFrame(data)
-    # Guardar el DataFrame en un archivo Excel en memoria
-    output = BytesIO()
-    with pd.ExcelWriter(output, engine='xlsxwriter') as writer:
-        df.to_excel(writer, index=False, sheet_name='Sheet1')
-    output.seek(0)  # Volver al inicio del archivo en memoria
-
-    # Enviar el archivo como respuesta para descargar
-    return send_file(output, 
-                     mimetype='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-                     download_name='datos_exportados.xlsx',
-                     as_attachment=True)
-
-
-
 
 def calificar_respuesta(client, respuesta, prompt):
     try:
@@ -887,6 +831,101 @@ def generate_pdf(nombre, apellidos, email, telefono, pais_residencia, fecha, eda
 
     doc.build(elements)
     os.remove(graph_path)
+
+
+# Obteniendo datos de la base de datos para generar archivo XLS y CSV
+@app.route('/export-all-xls', methods=['GET'])
+def export_all_XLS():
+  all_results = FormResult.query.all()
+  data = []
+  for result in all_results:
+      data.append({
+          'Nombre': result.nombre,
+          'Apellidos': result.apellidos,
+          'Email': result.email,
+          'Telefono': result.telefono,
+          'Pais residencia': result.pais_residencia,
+          'Fecha': result.fecha,
+          'Edad': result.edad,
+          'Estado Civil': result.estado_civil,
+          'Hijos': result.hijos,
+          'Vivienda': result.vivienda,
+          'Profesion': result.profesion,
+          'Nivel_educacion': result.nivel_educacion,
+          'Tiempo_empleo': result.tiempo_empleo,
+          'Propietario': result.propietario,
+          'Ingresos': result.ingresos,
+          'Impuestos': result.impuestos,
+          'Propiedades': result.propiedades,
+          'Viajes': result.viajes,
+          'Familiares eeuu': result.familiares_eeuu,
+          'Familiares visa': result.familiares_visa,
+          'Visa negada': result.visa_negada,
+          'Antecedentes': result.antecedentes,
+          'Enfermedades': result.enfermedades,
+          'Visa otra': result.visa_otra,
+          'Problemas migratorios': result.problemas_migratorios,
+          'Nacionalidad': result.nacionalidad,
+          'Calificacion': result.calificacion,             
+      })
+
+  df = pd.DataFrame(data)
+  output = BytesIO()
+  with pd.ExcelWriter(output, engine='xlsxwriter') as writer:
+      df.to_excel(writer, index=False, sheet_name='Sheet1')
+  output.seek(0) 
+
+  return send_file(output, 
+                    mimetype='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+                    download_name='datos_exportados.xlsx',
+                    as_attachment=True)
+
+@app.route('/export-all-csv', methods=['GET'])
+def export_all_CSV():
+  all_results = FormResult.query.all()
+  data = []
+  for result in all_results:
+      data.append({
+          'Nombre': result.nombre,
+          'Apellidos': result.apellidos,
+          'Email': result.email,
+          'Telefono': result.telefono,
+          'Pais residencia': result.pais_residencia,
+          'Fecha': result.fecha,
+          'Edad': result.edad,
+          'Estado Civil': result.estado_civil,
+          'Hijos': result.hijos,
+          'Vivienda': result.vivienda,
+          'Profesion': result.profesion,
+          'Nivel_educacion': result.nivel_educacion,
+          'Tiempo_empleo': result.tiempo_empleo,
+          'Propietario': result.propietario,
+          'Ingresos': result.ingresos,
+          'Impuestos': result.impuestos,
+          'Propiedades': result.propiedades,
+          'Viajes': result.viajes,
+          'Familiares eeuu': result.familiares_eeuu,
+          'Familiares visa': result.familiares_visa,
+          'Visa negada': result.visa_negada,
+          'Antecedentes': result.antecedentes,
+          'Enfermedades': result.enfermedades,
+          'Visa otra': result.visa_otra,
+          'Problemas migratorios': result.problemas_migratorios,
+          'Nacionalidad': result.nacionalidad,
+          'Calificacion': result.calificacion,             
+      })
+
+  df = pd.DataFrame(data)
+  output = BytesIO()
+  df.to_csv(output, index=False)
+  output.seek(0)  
+
+  return send_file(output, 
+                    mimetype='text/csv',
+                    download_name='datos_exportados.csv',
+                    as_attachment=True)
+
+
 
 
 @app.route('/delete', methods=['POST'])

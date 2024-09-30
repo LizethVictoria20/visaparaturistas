@@ -143,11 +143,10 @@ document.addEventListener('DOMContentLoaded', function () {
         downloadCSV(csv.join("\n"), filename);
     };
 
-    function downloadCSV(csv, filename) {
-        var csvFile = new Blob([csv], { type: "text/csv" });
+    function downloadCSV(filename) {
         var downloadLink = document.createElement("a");
         downloadLink.download = filename;
-        downloadLink.href = window.URL.createObjectURL(csvFile);
+        downloadLink.href = '/export-all-csv';
         downloadLink.style.display = "none";
         document.body.appendChild(downloadLink);
         downloadLink.click();
@@ -163,7 +162,7 @@ document.addEventListener('DOMContentLoaded', function () {
             table.appendChild(row.cloneNode(true));
         });
         var downloadLink = document.createElement("a");
-        downloadLink.href = '/export-all';
+        downloadLink.href = '/export-all-xls';
         downloadLink.download = filename;
         document.body.appendChild(downloadLink);
         downloadLink.click();
