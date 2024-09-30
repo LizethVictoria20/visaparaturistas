@@ -7,8 +7,28 @@ body {
     padding: 0;
 }
 
+.header {
+  margin-bottom: 20px;
+}
+
+.header h1 {
+  font-size: 24px;
+  margin: 0;
+  text-transform: uppercase;
+  text-align: left;
+}
+
+.header .results-info {
+  font-size: 16px;
+  color: #888;
+  text-align: left;
+  margin-top: 5px;
+}
+
 /* Estilos para la barra superior y el menú */
-.topbar {
+    
+  /* Barra superior */
+  .topbar {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -21,16 +41,14 @@ body {
     z-index: 1000;
 }
 
-.topbar .logo {
-    font-size: 18px;
-    font-weight: bold;
-    margin-left: 20px;
+.logo-topbar {
+  width: 10rem;
 }
 
 .topbar-menu {
     display: flex;
     align-items: center;
-    margin-right: 140px; /* Ajusta este valor según tus necesidades */
+    margin-right: 140px;
 }
 
 .topbar-menu a {
@@ -52,13 +70,15 @@ body {
 
 /* Contenedor principal para páginas internas */
 .container {
-    max-width: 600px;
-    background: white;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    padding: 20px;
-    margin: 100px auto;
-    box-sizing: border-box;
+  max-width: 75%;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 60px;            
+  margin: 6rem auto;;
+  box-sizing: border-box;
+  overflow: hidden;
+  position: relative;
 }
 
 /* Estilos del título y separador */
@@ -606,7 +626,7 @@ th.desc .sort-indicator {
     --col-apellido-width: 70px;
     --col-telefono-width: 70px;
     --col-pais-width: 20px;
-    --col-probabilidad-width: 0px;
+    --col-probabilidad-width: 56px;
     --col-reporte-width: 40px;   /* Cambio de 'reporte' a 'perfilamiento' */
 }
 
