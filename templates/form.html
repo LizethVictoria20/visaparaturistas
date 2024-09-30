@@ -1,383 +1,54 @@
 <!doctype html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Estudio de Perfil para Solicitantes de Visa de Turismo a E.E.U.U.</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css">
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Estudio de Perfil para Solicitantes de Visa de Turismo a E.E.U.U.</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/form.css') }}">
     
-        /* Variables CSS */
-        :root {
-            --form-spacing: 13px;
-            --container-height: 560px;
-            --container-width: 700px;
-            --container-margin-top: 95px;
-            --container-margin-bottom: 60px;
-            --container-padding-sides: 60px;
-            --buttons-position-x: 60px;
-            --buttons-position-y: 35px;
-            --progress-form-spacing: 50px;
-            --rating-gap: 15px;
-        }
-    
-        /* Estilo del cuerpo */
-        body {
-            font-family: 'Roboto', Arial, sans-serif;
-            background-color: #f7f9fc;
-            margin: 0;
-            padding: 0;
-        }
-    
-        /* Barra superior */
-        .topbar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background-color: #2e3b4e;
-            color: #fff;
-            padding: 10px 20px;
-            position: fixed;
-            width: 100%;
-            top: 0;
-            z-index: 1000;
-        }
-    
-        .logo-topbar {
-          width: 10rem;
-        }
-    
-        .topbar-menu {
-            display: flex;
-            align-items: center;
-            margin-right: 140px;
-        }
-    
-        .topbar-menu a {
-            color: #fff;
-            margin: 0 10px;
-            text-decoration: none;
-            padding: 10px 15px;
-            border-radius: 5px;
-            transition: background-color 0.3s ease;
-        }
-    
-        .topbar-menu a:hover {
-            background-color: #3b82f6;
-        }
-    
-        .topbar-menu a.active {
-            font-weight: bold;
-        }
-    
-        /* Contenedor principal */
-
-    
-        h1 {
-            color: #252d63;
-            font-weight: 700;
-            font-size: 24px;
-            text-align: center;
-            margin-bottom: 10px;
-        }
-    
-        .subtitle {
-            color: #7a7a7a;
-            font-size: 16px;
-            text-align: center;
-            margin-bottom: 20px;
-        }
-    
-        /* Contenedor de progreso */
-        .progress-container {
-            margin-bottom: var(--progress-form-spacing);
-        }
-    
-
-        .progress-bar {
-            background-color: #673ab7;
-            border-radius: 5px;
-            height: 5px;
-            overflow: hidden;
-        }
-    
-        .progress {
-            background-color: #673ab7;
-            height: 100%;
-            width: 0;
-            transition: width 0.4s ease;
-        }
-    
-        /* Formulario */
-        form {
-            text-align: left;
-        }
-    
-        .form-section {
-            display: none;
-            height: calc(var(--container-height) - 100px);
-            overflow: auto;
-        }
-    
-        .form-section.active {
-            display: block;
-        }
-    
-        .form-group {
-            margin-bottom: var(--form-spacing);
-            position: relative;
-        }
-    
-        label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: 400;
-            color: #333;
-        }
-    
-        label i {
-            color: #cccccc;
-            margin-right: 10px;
-        }
-    
-        input, textarea, select {
-            width: 100%;
-            padding: 10px;
-            box-sizing: border-box;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            background-color: #f9fafb;
-            font-size: 14px;
-            color: #333;
-        }
-    
-        input::placeholder {
-            color: #cccccc;
-        }
-    
-        select option[value=""][disabled] {
-            display: none;
-        }
-    
-        select:invalid {
-            color: #cccccc;
-        }
-    
-        .form-group-row {
-            display: flex;
-            gap: 10px;
-        }
-    
-        .form-group-row .form-group {
-            flex: 1;
-        }
-    
-        /* Botones de navegación */
-        .navigation-buttons {
-            display: flex;
-            justify-content: flex-end;
-            gap: 10px;
-            position: absolute;
-            bottom: var(--buttons-position-y);
-            right: var(--buttons-position-x);
-        }
-    
-        .navigation-buttons button {
-            min-width: 120px;
-        }
-    
-        .submit-button {
-            padding: 8px 20px;
-            border: none;
-            color: white;
-            border-radius: 50px;
-            cursor: pointer;
-            font-size: 14px;
-            transition: background-color 0.3s, box-shadow 0.3s;
-            position: relative;
-            top: 8px;
-        }
-    
-        .submit-button-prev, .submit-button-next {
-            background-color: #3b82f6;
-        }
-    
-        .submit-button-prev:hover, .submit-button-next:hover {
-            background-color: #005bb5;
-            box-shadow: 0 5px 15px rgba(0, 91, 181, 0.2);
-        }
-    
-        .submit-button-submit {
-            background-color: #28a745;
-        }
-    
-        .submit-button-submit:hover {
-            background-color: #218838;
-            box-shadow: 0 5px 15px rgba(33, 136, 56, 0.2);
-        }
-    
-        /* Pie de página */
-        .footer-simple {
-            background-color: #f0f0f0;
-            color: #333;
-            padding: 20px;
-            text-align: center;
-            width: 100%;
-        }
-    
-        .footer-content {
-            font-size: 14px;
-        }
-    
-        /* Sistema de calificación */
-        .rating {
-            display: flex;
-            flex-direction: row-reverse;
-            justify-content: left;
-            gap: var(--rating-gap);
-        }
-    
-        .rating input {
-            display: none;
-        }
-    
-        .rating label {
-            cursor: pointer;
-            color: #ccc;
-        }
-    
-        .rating label:before {
-            content: '★';
-            font-size: 24px;
-        }
-    
-        .rating input:checked ~ label,
-        .rating label:hover,
-        .rating label:hover ~ label {
-            color: gold;
-        }
-    
-        /* Mensajes de error flotantes */
-        .error-message {
-            display: none;
-            color: white;
-            font-size: 12px;
-            position: absolute;
-            top: 40px;
-            left: 10px;
-            background-color: #a94442;
-            padding: 5px;
-            border-radius: 3px;
-            border: 1px solid #a94442;
-            white-space: nowrap;
-            padding-right: 20px;
-            z-index: 1000;
-        }
-    
-        .error-arrow {
-            position: absolute;
-            top: -10px;
-            left: 10px;
-            width: 0;
-            height: 0;
-            border-left: 10px solid transparent;
-            border-right: 10px solid transparent;
-            border-bottom: 10px solid #a94442;
-        }
-    
-    
-    
-        /* Flash messages */
-        .flashes {
-            list-style-type: none;
-            padding: 0;
-            margin: 20px 0;
-        }
-    
-        .flash {
-            padding: 10px;
-            margin-bottom: 10px;
-            border-radius: 5px;
-            font-size: 14px;
-            color: white;
-        }
-    
-        .flash.success {
-            background-color: #28a745;
-        }
-    
-        .flash.error {
-            background-color: #dc3545;
-        }
-    
-        .flash.info {
-            background-color: #17a2b8;
-        }
-    
-        .flash.warning {
-            background-color: #ffc107;
-        }
-    
-        /* Overlay de procesamiento */
-        .processing-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            display: none;
-            justify-content: center;
-            align-items: center;
-            z-index: 9999;
-        }
-    
-        .processing-box {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            background: white;
-            padding: 20px;
-            border-radius: 10px;
-            text-align: center;
-            width: 400px;
-            height: 200px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-    
-        .processing-box .status-text {
-            margin-bottom: 20px;
-            font-size: 14px;
-            font-weight: bold;
-            color: #8c8c8c;
-        }
-    
-        .processing-box .progress-bar {
-            width: 100%;
-            background-color: #e0e0e0;
-            border-radius: 5px;
-            overflow: hidden;
-        }
-    
-        .processing-box .progress {
-            background-color: #3b82f6;
-            height: 20px;
-            width: 0;
-            transition: width 0.4s ease;
-        }
-    
-        .processing-box .animation {
-            margin-top: 20px;
-        }
-    </style>
-    
-  {% extends "base.html" %}
-  <!-- Contenedor principal -->
+  <nav class="navbar">
+    <div class="topbar">
+      <a href="/">
+        <img
+          src="../static/images/navbar.png"
+          alt="Logo visa par turistas"
+          class="logo-topbar"
+      /></a>
+      <div class="topbar-menu menu-adjustable">
+        <a href="/form" class="{% if request.path == '/' %}active{% endif %}"
+          >Formulario</a
+        >
+        <a
+          href="/results"
+          class="{% if request.path == '/results' %}active{% endif %}"
+          >Resultados</a
+        >
+        {% if current_user.is_authenticated %}
+        <a
+          href="{{ url_for('logout') }}"
+          class="{% if request.path == url_for('logout') %}active{% endif %}"
+          >Logout</a
+        >
+        {% else %}
+        <a
+          href="{{ url_for('login') }}"
+          class="{% if request.path == url_for('login') %}active{% endif %}"
+          >Login</a
+        >
+        {% endif %} {% with messages =
+        get_flashed_messages(with_categories=true) %} {% if messages %}
+        <ul class="flashes">
+          {% for category, message in messages %}
+          <li class="flash {{ category }}">{{ message }}</li>
+          {% endfor %}
+        </ul>
+        {% endif %} {% endwith %}
+      </div>
+    </div>
+  </nav>  <!-- Contenedor principal -->
   <div>
-    {% block content %}
 
       <div class="container">
 
@@ -439,7 +110,7 @@
                   <div class="form-group-row">
                       <div class="form-group">
                           <label for="telefono"><i class="fas fa-phone"></i> 6. Teléfono:</label>
-                          <input type="text" id="telefono" name="telefono" placeholder="Ingrese su teléfono">
+                          <input type="number" id="telefono" name="telefono" placeholder="Ingrese su teléfono">
                           <div class="error-message">
                               <div class="error-arrow"></div>Error en el teléfono
                           </div>
@@ -711,18 +382,15 @@
           </form>
 
       </div>
-      {% endblock %}
 
   </div>
 
-    {% block footer %}
       <!-- Pie de página -->
       <footer class="footer-simple">
           <div class="footer-content">
               &copy; 2024 VisaParaTurista.com. Todos los derechos reservados.
           </div>
       </footer>
-    {% endblock %}
 
     <!-- Overlay de procesamiento -->
     <div class="processing-overlay" id="processing-overlay">
@@ -740,8 +408,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.min.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
     
-<script>
-document.addEventListener('DOMContentLoaded', function () {
+<script>;
+  document.addEventListener('DOMContentLoaded', function () {
     // Variables globales y selección de elementos
     const sections = document.querySelectorAll('.form-section');
     const nextBtn = document.getElementById('next-btn');
