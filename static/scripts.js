@@ -156,20 +156,14 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Exportar a XLS
     window.exportTableToXLS = function (filename) {
-        var rows = getSelectedRows();
-        if (rows.length === 0) {
-            rows = document.querySelectorAll("#results-table tr");
-        }
         var table = document.createElement('table');
         var headerRow = document.querySelector("#results-table thead").cloneNode(true);
         table.appendChild(headerRow);
         rows.forEach(function (row) {
             table.appendChild(row.cloneNode(true));
         });
-        var html = table.outerHTML;
-        var url = 'data:application/vnd.ms-excel,' + encodeURIComponent(html);
         var downloadLink = document.createElement("a");
-        downloadLink.href = url;
+        downloadLink.href = '/export-all';
         downloadLink.download = filename;
         document.body.appendChild(downloadLink);
         downloadLink.click();
