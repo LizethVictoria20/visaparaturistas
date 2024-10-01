@@ -21,6 +21,7 @@ from openai import OpenAI
 from weasyprint import HTML
 from database import delete_record_by_id  # Importa la función desde el archivo database.py
 from io import BytesIO
+import io
 import subprocess
 import pandas as pd
 
@@ -44,12 +45,6 @@ migrate = Migrate(app, db)
 login_manager = LoginManager(app)
 login_manager.login_view = 'login'
 socketio = SocketIO(app)
-
-#Archivos estaticos
-@app.route('/detail_pdf')
-def detail_pdf():
-    return render_template('detail_pdf.html') 
-
 
 # Modelo de usuario
 class User(UserMixin, db.Model):
@@ -179,9 +174,7 @@ class CuestionarioForm(Form):
 @login_required
 def detail(id):
     result = FormResult.query.get_or_404(id)
-    print(result)
     return render_template('detail.html', result=result)
-
 
 def calificar_respuesta(client, respuesta, prompt):
     try:
@@ -394,7 +387,7 @@ def sugerencia_3(client, pais_residencia, edad, estado_civil, hijos, vivienda, p
     return calificar_respuesta(client, f"{pais_residencia}, {edad}, {estado_civil}, {hijos}, {vivienda}, {profesion}, {nivel_educacion}, {tiempo_empleo}, {propietario}, {ingresos}, {impuestos}, {propiedades}, {viajes}, {familiares_eeuu}, {familiares_visa}, {visa_negada}, {antecedentes}, {enfermedades}, {visa_otra}, {problemas_migratorios}, {nacionalidad}, {calificacion_pais_residencia}, {calificacion_edad}, {calificacion_estado_civil}, {calificacion_hijos}, {calificacion_vivienda}, {calificacion_profesion}, {calificacion_nivel_educacion}, {calificacion_tiempo_empleo}, {calificacion_propietario}, {calificacion_ingresos}, {calificacion_impuestos}, {calificacion_propiedades}, {calificacion_viajes}, {calificacion_familiares_eeuu}, {calificacion_familiares_visa}, {calificacion_visa_negada}, {calificacion_antecedentes}, {calificacion_enfermedades}, {calificacion_visa_otra}, {calificacion_problemas_migratorios}, {calificacion_nacionalidad}, {calificacion_criterios_confidenciales, sugerencia_1_ChatGPT, sugerencia_2_ChatGPT}", prompt)
 
 # Ruta para el login
-@app.route('/', methods=['GET', 'POST'])
+@app.route('/login', methods=['GET', 'POST'])
 def login():
     form = LoginForm(request.form)
     if request.method == 'POST' and form.validate():
@@ -421,7 +414,7 @@ def emit_progress(message, progress):
     socketio.emit('progress', {'message': message, 'progress': progress})
 
 # Ruta para el formulario principal
-@app.route('/form', methods=['GET', 'POST'])
+@app.route('/', methods=['GET', 'POST'])
 @login_required
 def form():
     form = CuestionarioForm(request.form)
@@ -831,9 +824,8 @@ def generate_pdf(nombre, apellidos, email, telefono, pais_residencia, fecha, eda
 
     doc.build(elements)
     os.remove(graph_path)
-
-
-# Obteniendo datos de la base de datos para generar archivo XLS y CSV
+    
+    # Obteniendo datos de la base de datos para generar archivo XLS y CSV
 @app.route('/export-all-xls', methods=['GET'])
 def export_all_XLS():
   all_results = FormResult.query.all()
@@ -924,7 +916,6 @@ def export_all_CSV():
                     mimetype='text/csv',
                     download_name='datos_exportados.csv',
                     as_attachment=True)
-
 
 
 

@@ -44,9 +44,6 @@
             top: 0;
             z-index: 1000;
         }
-        .logo-topbar {
-          width: 10rem;
-        }
     
         .topbar .logo {
             font-size: 18px;
@@ -79,16 +76,16 @@
     
         /* Contenedor principal */
         .container {
-          max-width: 55%;
-          background: white;
-          border-radius: 8px;
-          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-          padding: 20px var(--container-padding-sides);
-          margin: var(--container-margin-top) auto var(--container-margin-bottom) auto;
-          box-sizing: border-box;
-          overflow: hidden;
-          min-height: var(--container-height);
-          position: relative;
+            max-width: var(--container-width);
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px var(--container-padding-sides);
+            margin: var(--container-margin-top) auto var(--container-margin-bottom) auto;
+            box-sizing: border-box;
+            overflow: hidden;
+            min-height: var(--container-height);
+            position: relative;
         }
     
         h1 {
@@ -392,6 +389,9 @@
         .processing-box .animation {
             margin-top: 20px;
         }
+        .logo-topbar {
+          width: 10rem;
+        }
     </style>
     
     <nav class="navbar">
@@ -495,7 +495,7 @@
                 <div class="form-group-row">
                     <div class="form-group">
                         <label for="telefono"><i class="fas fa-phone"></i> 6. Teléfono:</label>
-                        <input type="number" id="telefono" name="telefono" placeholder="Ingrese su teléfono">
+                        <input type="text" id="telefono" name="telefono" placeholder="Ingrese su teléfono">
                         <div class="error-message">
                             <div class="error-arrow"></div>Error en el teléfono
                         </div>
