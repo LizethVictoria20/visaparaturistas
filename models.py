@@ -1,9 +1,22 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import UserMixin
+from sqlalchemy.ext.hybrid import hybrid_property
+from passlib.context import CryptContext
 
 
+pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 db = SQLAlchemy()
+
+
+
+# Modelo de roles de usuario  
+class Roles(db.Model):
+    __tablename__ = 'roles'
+    id = db.Column(db.Integer(), primary_key=True)
+    name = db.Column(db.String(50), unique=True, nullable=False)
+    slug = db.Column(db.String(50), unique=True, nullable=False)
+    users = db.relationship("User", secondary="user_roles", back_populates="roles")
 
 
 # Modelo de usuario
@@ -11,8 +24,36 @@ class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(100), unique=True, nullable=False)
     password = db.Column(db.String(100), nullable=False)
+    roles = db.relationship('Roles', secondary='user_roles')
+    roles = db.relationship("Roles", secondary="user_roles", back_populates="users")
+
     
+    @hybrid_property
+    def password(self):
+      return self._password
     
+    @password.setter
+    def password(self, value):
+      self._password = pwd_context.hash(value)
+
+    
+    def has_role(self, role):
+      return bool(
+        Roles.query
+        .join(Roles.users)
+        .filter(User.id == self.id)
+        .filter(Roles.slug == role)
+        .count() == 1
+      )
+      
+      
+
+class UserRole(db.Model):
+  __tablename__ = 'user_roles'
+  user_id = db.Column(db.Integer, db.ForeignKey('user.id'), primary_key=True)
+  role_id = db.Column(db.Integer, db.ForeignKey('roles.id'), primary_key=True)
+    
+
 # Modelo de formulario
 class FormResult(db.Model):
   id = db.Column(db.Integer, primary_key=True)

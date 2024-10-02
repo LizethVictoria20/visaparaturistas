@@ -116,3 +116,4 @@ yarl==1.11.1
 zopfli==0.2.3
 pandas
 XlsxWriter
+passlib

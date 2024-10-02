@@ -15,3 +15,8 @@ matplotlib - Para generación de graficos
 
 `pip3 install -r requirements.txt`
 
+
+
+### Actualizar cambios en la base de datos
+`flask db migrate`
+`flask db upgrade`

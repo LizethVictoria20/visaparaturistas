@@ -24,7 +24,7 @@ from io import BytesIO
 import io
 import subprocess
 import pandas as pd
-from models import db, User, FormResult  # Importa tus modelos desde models.py
+from models import db, User, FormResult, Roles  # Importa tus modelos desde models.py
 
 
 # Cargar variables de entorno desde el archivo .env
