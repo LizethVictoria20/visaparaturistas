@@ -87,20 +87,12 @@
         <p><strong>El proceso de perfilamiento se ha completado exitosamente.</strong> Hemos generado un archivo PDF con toda tu información y lo hemos guardado en nuestro sistema para que puedas acceder a él cuando lo necesites.</p>
         <p><strong>Tu información ha sido guardada y el PDF ha sido generado con éxito.</strong></p>
         <p>Tu archivo se descargará automáticamente en unos segundos. Si la descarga no comienza, haz clic en el botón de abajo:</p>
-        <a id="download-link" href="{{ url_for('download', filename=filename) }}" class="download-button"><i class="fas fa-cloud-download-alt"></i> Descargar PDF</a>
     </div>
     <footer class="footer-simple">
         <div class="footer-content">
             &copy; 2024 VisaParaTurista.com. Todos los derechos reservados.
         </div>
     </footer>
-    <script>
-        window.onload = function() {
-            setTimeout(function() {
-                document.getElementById('download-link').click();
-            }, 3000); // 3 segundos de espera antes de iniciar la descarga
-        };
-    </script>
     <script src="{{ url_for('static', filename='scripts.js') }}"></script>
 </body>
 </html>

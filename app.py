@@ -17,6 +17,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import sqlite3
 import os
+from flask_bcrypt import Bcrypt
 from dotenv import load_dotenv
 from openai import OpenAI
 from weasyprint import HTML
@@ -49,7 +50,7 @@ principals = Principal(app)
 # Definir permisos por roles
 admin_permission = Permission(RoleNeed('admin'))
 user_permission = Permission(RoleNeed('user'))
-
+bcrypt = Bcrypt(app)
 
 # Evento que se ejecuta cuando se carga la identidad del usuario
 @identity_loaded.connect_via(app)
@@ -287,24 +288,22 @@ def sugerencia_3(client, pais_residencia, edad, estado_civil, hijos, vivienda, p
 # Ruta para el login
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-    form = LoginForm(request.form)
-    if request.method == 'POST' and form.validate():
-        user = User.query.filter_by(username=form.username.data).first()
-        print(user.roles)
-
-        if user and user.password == form.password.data:
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+        
+        # Buscar al usuario por su nombre de usuario
+        user = User.query.filter_by(username=username).first()
+        
+        # Verificar si el usuario existe y si la contraseña es correcta
+        if user and bcrypt.check_password_hash(user.password_hash, password):
             login_user(user)
-            identity_changed.send(current_app._get_current_object(), identity=Identity(user.id))
-            flash('Login successful!', 'success')
-
-            # Redirigir según el rol del usuario
-            if admin_permission.can():
-                return redirect(url_for('form'))  # Para admin
-            else:
-                return redirect(url_for('results'))  # Para usuarios regulares
+            flash('Inicio de sesión exitoso', 'success')
+            return redirect(url_for('results'))  # Redirigir a alguna página protegida
         else:
-            flash('Invalid username or password', 'danger')
-    return render_template('login.html', form=form)
+            flash('Nombre de usuario o contraseña incorrectos', 'danger')
+    
+    return render_template('login.html')
   
 
 # Ruta para el logout
@@ -1109,6 +1108,43 @@ def create_pdf(id):
     HTML(string=rendered_html).write_pdf(pdf_file_path)
 
     return send_file(pdf_file_path, as_attachment=True)
+
+@login_required
+@admin_permission.require(http_exception=403)
+@app.route("/admin-dashboard", methods=['GET', 'POST'])
+def admin_dashboard():
+    return render_template('admin_dashboard.html')
+
+
+@login_required
+@admin_permission.require(http_exception=403)
+@app.route("/register", methods=['GET', 'POST'])
+def register():
+    if request.method == 'POST':
+        username = request.form['username']
+        password_hash = request.form['password']
+        hashed_password = bcrypt.generate_password_hash(password_hash).decode('utf-8')
+
+        # Crear nuevo usuario
+        user = User(username=username, password_hash=hashed_password)
+        db.session.add(user)
+        
+        # Obtener los roles seleccionados del formulario
+        selected_roles = request.form.getlist('roles')  # Asume que los roles llegan como una lista de IDs
+        roles_to_add = Roles.query.filter(Roles.id.in_(selected_roles)).all()
+        
+        # Asignar los roles al usuario
+        user.roles = roles_to_add
+        
+        db.session.commit()
+
+        flash('Tu cuenta ha sido creada y los roles han sido asignados!', 'success')
+        return redirect(url_for('admin_dashboard'))
+
+    # Pasar los roles disponibles al formulario de registro
+    available_roles = Roles.query.all()
+    return render_template('create_user.html', roles=available_roles)
+
 
 
 if __name__ == "__main__":
