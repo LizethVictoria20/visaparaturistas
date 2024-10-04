@@ -1,4 +1,5 @@
-from flask import Flask, render_template, request, send_file, redirect, url_for, flash, jsonify
+from functools import wraps
+from flask import Flask, abort, render_template, request, send_file, redirect, url_for, flash, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, UserMixin, login_user, logout_user, current_user, login_required
 from flask_migrate import Migrate
@@ -9,6 +10,7 @@ from reportlab.lib.units import cm
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle, Image
 import matplotlib
+
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import numpy as np
@@ -36,7 +38,7 @@ client = OpenAI(api_key=os.getenv('OPENAI_API_KEY'))
 # Configuración de la aplicación
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'mysecretkey'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///form_results.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///form_results.db?timeout=20'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db.init_app(app)
 migrate = Migrate(app, db)
@@ -313,7 +315,12 @@ def login():
         if user and user.password == form.password.data:
             login_user(user)
             flash('Login successful!', 'success')
-            return redirect(url_for('form'))
+            
+            # Redirigir según el rol del usuario
+            if any(role.id == 1 for role in user.roles):
+                return redirect(url_for('form'))  # Para admin, redirige a /form
+            else:
+                return redirect(url_for('results'))  # Para usuarios regulares, redirige a /results
         else:
             flash('Invalid username or password', 'danger')
     return render_template('login.html', form=form)
