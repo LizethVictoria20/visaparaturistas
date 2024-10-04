@@ -151,6 +151,7 @@
             padding-top: 3px;
             padding-bottom: 3px;
             margin-right: 40px;
+            width: 9rem;
         }
 
         .personal-details div:hover .edit-button {
@@ -158,11 +159,12 @@
         }
         .buttons {
             position: relative;
-            left: -25px;
+            right: -36rem;
             display: flex;
             justify-content: flex-end;
             margin-bottom: 20px;
             height: 18px;
+            width: 22rem;
         }
 
         .buttons a, .buttons button {
@@ -180,6 +182,10 @@
             display: flex;
             align-items: center;
             justify-content: center;
+        }
+        .descargaPDF {
+          width: 63rem;
+          text-decoration: none;
         }
 
         .buttons a:hover, .buttons button:hover {
@@ -690,10 +696,15 @@
         </div>
         
         <div class="buttons" data-html2canvas-ignore="true">
-            <!-- <a href="{{ url_for('create_pdf', id=result.id) }}" id="generatePDF">Descargar PDF</a> -->
-            <a href="#" id="generatePDF" data-id="{{ result.id }}">Descargar PDF</a>
+          {% if current_user.roles[0].id == 1 %}
+            <a href="#" class="descargaPDF" id="generatePDF" data-id="{{ result.id }}">Descargar PDF</a>
             <button type="button" onclick="document.getElementById('regenerar-form').submit();">Regenerar</button>
             <button class="delete-button" onclick="openDeleteDialog()">Eliminar</button>
+          {% else %}
+            <a href="#" class="descargaPDF" id="generatePDF" data-id="{{ result.id }}">Descargar PDF</a>
+            <button type="button" onclick="document.getElementById('regenerar-form').submit();">Regenerar</button>
+          {% endif %}
+
         </div>
         
         
