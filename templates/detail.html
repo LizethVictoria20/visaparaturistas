@@ -645,46 +645,10 @@
     </style>
 </head>
 <body>
-  <nav class="navbar">
-    <div class="topbar">
-      <a href="/">
-        <img
-          src="../static/images/navbar.png"
-          alt="Logo visa par turistas"
-          class="logo-topbar"
-      /></a>
-      <div class="topbar-menu menu-adjustable">
-        <a href="/form" class="{% if request.path == '/' %}active{% endif %}"
-          >Formulario</a
-        >
-        <a
-          href="/results"
-          class="{% if request.path == '/results' %}active{% endif %}"
-          >Resultados</a
-        >
-        {% if current_user.is_authenticated %}
-        <a
-          href="{{ url_for('logout') }}"
-          class="{% if request.path == url_for('logout') %}active{% endif %}"
-          >Logout</a
-        >
-        {% else %}
-        <a
-          href="{{ url_for('login') }}"
-          class="{% if request.path == url_for('login') %}active{% endif %}"
-          >Login</a
-        >
-        {% endif %} {% with messages =
-        get_flashed_messages(with_categories=true) %} {% if messages %}
-        <ul class="flashes">
-          {% for category, message in messages %}
-          <li class="flash {{ category }}">{{ message }}</li>
-          {% endfor %}
-        </ul>
-        {% endif %} {% endwith %}
-      </div>
-    </div>
-  </nav>
+
+  {% include 'base.html' %}
+  {% block content %}
+
     <div class="container" id="content">
         <div class="header content-margins">
             <h1>Detalle del Perfilamiento</h1>
@@ -1569,5 +1533,6 @@ function closeDeleteDialog() {
         });
 
 </script>
+{% endblock %}
 </body>
 </html>

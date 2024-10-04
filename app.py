@@ -1,7 +1,8 @@
 from functools import wraps
-from flask import Flask, abort, render_template, request, send_file, redirect, url_for, flash, jsonify
+from flask import Flask, abort, current_app, render_template, request, send_file, redirect, url_for, flash, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, UserMixin, login_user, logout_user, current_user, login_required
+from flask_principal import Principal, Permission, RoleNeed, identity_loaded, UserNeed, Identity, identity_changed, AnonymousIdentity
 from flask_migrate import Migrate
 from flask_socketio import SocketIO, emit
 from reportlab.lib.pagesizes import letter, A4
@@ -34,7 +35,6 @@ load_dotenv(dotenv_path='.env')
 
 # Crear una instancia del cliente OpenAI
 client = OpenAI(api_key=os.getenv('OPENAI_API_KEY'))
-
 # Configuración de la aplicación
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'mysecretkey'
@@ -45,12 +45,30 @@ migrate = Migrate(app, db)
 login_manager = LoginManager(app)
 login_manager.login_view = 'login'
 socketio = SocketIO(app)
+principals = Principal(app)
 
+
+# Definir permisos por roles
+admin_permission = Permission(RoleNeed('admin'))
+user_permission = Permission(RoleNeed('user'))
+
+
+# Evento que se ejecuta cuando se carga la identidad del usuario
+@identity_loaded.connect_via(app)
+def on_identity_loaded(sender, identity):
+    identity.user = current_user
+    
+    if hasattr(current_user, 'id'):
+        identity.provides.add(UserNeed(current_user.id))
+
+    if hasattr(current_user, 'roles'):
+        for role in current_user.roles:
+            identity.provides.add(RoleNeed(role.name))
 
 
 @login_manager.user_loader
-def load_user(user_id):
-    return User.query.get(int(user_id))
+def load_user(id):
+    return User.query.get(int(id))
 
 
 # Formulario de inicio de sesión
@@ -312,19 +330,21 @@ def login():
     form = LoginForm(request.form)
     if request.method == 'POST' and form.validate():
         user = User.query.filter_by(username=form.username.data).first()
+        print(user.roles)
+
         if user and user.password == form.password.data:
             login_user(user)
+            identity_changed.send(current_app._get_current_object(), identity=Identity(user.id))
             flash('Login successful!', 'success')
-            
+
             # Redirigir según el rol del usuario
-            if any(role.id == 1 for role in user.roles):
-                return redirect(url_for('form'))  # Para admin, redirige a /form
+            if admin_permission.can():
+                return redirect(url_for('form'))  # Para admin
             else:
-                return redirect(url_for('results'))  # Para usuarios regulares, redirige a /results
+                return redirect(url_for('results'))  # Para usuarios regulares
         else:
             flash('Invalid username or password', 'danger')
     return render_template('login.html', form=form)
-
 # Ruta para el logout
 @app.route('/logout')
 @login_required
@@ -341,6 +361,7 @@ def emit_progress(message, progress):
 # Ruta para el formulario principal
 @app.route('/', methods=['GET', 'POST'])
 @login_required
+@admin_permission.require(http_exception=403)
 def form():
     form = CuestionarioForm(request.form)
     if request.method == 'POST' and form.validate():
@@ -841,7 +862,6 @@ def export_all_CSV():
                     mimetype='text/csv',
                     download_name='datos_exportados.csv',
                     as_attachment=True)
-
 
 
 @app.route('/delete', methods=['POST'])

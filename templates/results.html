@@ -1,397 +1,425 @@
 <!DOCTYPE html>
 <html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Resultados de los Formularios Completados</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='estilos.css') }}">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='estilos.css') }}"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+    />
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f9f9f9;
-            color: #333;
-            margin: 0;
-            padding: 0;
-        }
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f9f9f9;
+        color: #333;
+        margin: 0;
+        padding: 0;
+      }
 
-        .container {
-            max-width: 1000px;
-            margin: 100px auto 20px auto;
-            background-color: #fff;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
+      .container {
+        max-width: 1000px;
+        margin: 100px auto 20px auto;
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      }
 
-        .header {
-            margin-bottom: 20px;
-        }
+      .header {
+        margin-bottom: 20px;
+      }
 
-        .header h1 {
-            font-size: 24px;
-            margin: 0;
-            text-transform: uppercase;
-            text-align: left;
-        }
+      .header h1 {
+        font-size: 24px;
+        margin: 0;
+        text-transform: uppercase;
+        text-align: left;
+      }
 
-        .header .results-info {
-            font-size: 16px;
-            color: #888;
-            text-align: left;
-            margin-top: 5px;
-        }
+      .header .results-info {
+        font-size: 16px;
+        color: #888;
+        text-align: left;
+        margin-top: 5px;
+      }
 
-        .separator {
-            width: 100%;
-            height: 2px;
-            background-color: #ccc;
-            margin: 20px 0;
-        }
+      .separator {
+        width: 100%;
+        height: 2px;
+        background-color: #ccc;
+        margin: 20px 0;
+      }
 
-        .actions {
-            display: flex;
-            align-items: center;
-            margin-bottom: 20px;
-        }
+      .actions {
+        display: flex;
+        align-items: center;
+        margin-bottom: 20px;
+      }
 
-        .actions .search-input {
-            flex-grow: 1;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            margin-right: 2px;
-            max-width: 60%;
-        }
+      .actions .search-input {
+        flex-grow: 1;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        margin-right: 2px;
+        max-width: 60%;
+      }
 
-        .actions select {
-            background-color: #f4f4f4;
-            width: auto;
-            padding: 5px 10px;
-            border: 1px solid #b0b0b0;
-            border-radius: 4px;
-            margin-right: 10px;
-            max-width: 130px;
-        }
+      .actions select {
+        background-color: #f4f4f4;
+        width: auto;
+        padding: 5px 10px;
+        border: 1px solid #b0b0b0;
+        border-radius: 4px;
+        margin-right: 10px;
+        max-width: 130px;
+      }
 
-        .actions .export-button {
-            background-color: #007bff;
-            color: white;
-            border: none;
-            padding: 5px 10px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 12px;
-            margin-right: 10px;
-            white-space: nowrap;
-            transition: background-color 0.3s, box-shadow 0.3s;
-        }
+      .actions .export-button {
+        background-color: #007bff;
+        color: white;
+        border: none;
+        padding: 5px 10px;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 12px;
+        margin-right: 10px;
+        white-space: nowrap;
+        transition: background-color 0.3s, box-shadow 0.3s;
+      }
 
-        .actions .export-button:hover:not(.disabled) {
-            background-color: #0056b3;
-            box-shadow: 0 5px 15px rgba(0, 91, 181, 0.2);
-        }
+      .actions .export-button:hover:not(.disabled) {
+        background-color: #0056b3;
+        box-shadow: 0 5px 15px rgba(0, 91, 181, 0.2);
+      }
 
-        .actions .export-button.disabled {
-            background-color: #f3f3f3;
-            color: #afafaf;
-            cursor: not-allowed;
-        }
+      .actions .export-button.disabled {
+        background-color: #f3f3f3;
+        color: #afafaf;
+        cursor: not-allowed;
+      }
 
-        .actions .export-button.xls {
-            background-color: #28a745;
-            font-size: 12px;
-        }
+      .actions .export-button.xls {
+        background-color: #28a745;
+        font-size: 12px;
+      }
 
-        .actions .export-button.xls.disabled {
-            background-color: #f3f3f3;
-            color: #afafaf;
-            cursor: not-allowed;
-        }
+      .actions .export-button.xls.disabled {
+        background-color: #f3f3f3;
+        color: #afafaf;
+        cursor: not-allowed;
+      }
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 20px;
-            border: none;
-        }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 20px;
+        border: none;
+      }
 
-        thead {
-            background-color: #333;
-            color: white;
-        }
+      thead {
+        background-color: #333;
+        color: white;
+      }
 
-        th, td {
-            padding: 10px;
-            border: none;
-            text-align: center;
-            vertical-align: middle;
-        }
+      th,
+      td {
+        padding: 10px;
+        border: none;
+        text-align: center;
+        vertical-align: middle;
+      }
 
-        th input[type="checkbox"], td input[type="checkbox"] {
-            margin: 0;
-        }
+      th input[type="checkbox"],
+      td input[type="checkbox"] {
+        margin: 0;
+      }
 
-        tbody tr:nth-child(even) {
-            background-color: #f9f9f9;
-        }
+      tbody tr:nth-child(even) {
+        background-color: #f9f9f9;
+      }
 
-        .report-button {
-            background-color: #007bff;
-            color: white;
-            border: none;
-            padding: 5px 10px;
-            border-radius: 4px;
-            cursor: pointer;
-        }
+      .report-button {
+        background-color: #007bff;
+        color: white;
+        border: none;
+        padding: 5px 10px;
+        border-radius: 4px;
+        cursor: pointer;
+      }
 
-        .pagination {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
+      .pagination {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
 
-        .page-number {
-            margin: 0 5px;
-            padding: 10px;
-            cursor: pointer;
-            color: #007bff;
-        }
+      .page-number {
+        margin: 0 5px;
+        padding: 10px;
+        cursor: pointer;
+        color: #007bff;
+      }
 
-        .page-number.active {
-            font-weight: bold;
-            color: #333;
-        }
+      .page-number.active {
+        font-weight: bold;
+        color: #333;
+      }
 
-        .page-number:hover {
-            color: #0056b3;
-        }
+      .page-number:hover {
+        color: #0056b3;
+      }
 
-        .page-number.disabled {
-            pointer-events: none;
-            color: #aaa;
-        }
+      .page-number.disabled {
+        pointer-events: none;
+        color: #aaa;
+      }
 
-        input[type="checkbox"] {
-            transform: scale(1.2);
-            margin-right: 10px;
-        }
+      input[type="checkbox"] {
+        transform: scale(1.2);
+        margin-right: 10px;
+      }
 
-        :root {
-    --button-width: 115px; /* Ancho del botón */
-    --button-margin: 5px 0; /* Margen superior e inferior */
-}
+      :root {
+        --button-width: 115px; /* Ancho del botón */
+        --button-margin: 5px 0; /* Margen superior e inferior */
+      }
 
-:root {
-    --button-width: 125px; /* Ancho del botón */
-    --button-margin-top-bottom: 5px; /* Margen superior e inferior */
-    --button-margin-left: 20px; /* Margen izquierdo */
-}
+      :root {
+        --button-width: 125px; /* Ancho del botón */
+        --button-margin-top-bottom: 5px; /* Margen superior e inferior */
+        --button-margin-left: 20px; /* Margen izquierdo */
+      }
 
-.download-button.rounded-icon {
-    background-color: #007bff;
-    color: white;
-    border: none;
-    padding: 6px 6px; /* Reducido el padding */
-    border-radius: 12px; /* Redondeado menos pronunciado */
-    cursor: pointer;
-    font-size: 12px; /* Ajustado el tamaño de la fuente */
-    transition: background-color 0.3s, box-shadow 0.3s;
-    display: flex;
-    align-items: center; /* Asegura que el botón esté alineado verticalmente */
-    justify-content: center;
-    width: var(--button-width); /* Usar variable para el ancho */
-    margin: var(--button-margin-top-bottom) 0 var(--button-margin-top-bottom) var(--button-margin-left); /* Usar variables para el margen */
-}
+      .download-button.rounded-icon {
+        background-color: #007bff;
+        color: white;
+        border: none;
+        padding: 6px 6px; /* Reducido el padding */
+        border-radius: 12px; /* Redondeado menos pronunciado */
+        cursor: pointer;
+        font-size: 12px; /* Ajustado el tamaño de la fuente */
+        transition: background-color 0.3s, box-shadow 0.3s;
+        display: flex;
+        align-items: center; /* Asegura que el botón esté alineado verticalmente */
+        justify-content: center;
+        width: var(--button-width); /* Usar variable para el ancho */
+        margin: var(--button-margin-top-bottom) 0
+          var(--button-margin-top-bottom) var(--button-margin-left); /* Usar variables para el margen */
+      }
 
-.download-button.rounded-icon i {
-    margin-right: 7px; /* Reducido el margen entre el ícono y el texto */
-}
+      .download-button.rounded-icon i {
+        margin-right: 7px; /* Reducido el margen entre el ícono y el texto */
+      }
 
-/* Asegurar que el botón esté centrado horizontal y verticalmente en la columna */
-.table-container td {
-    text-align: center;
-    vertical-align: middle; /* Centrar verticalmente */
-}
+      /* Asegurar que el botón esté centrado horizontal y verticalmente en la columna */
+      .table-container td {
+        text-align: center;
+        vertical-align: middle; /* Centrar verticalmente */
+      }
 
+      th.sortable {
+        cursor: pointer;
+      }
 
+      th.sortable .sort-indicator {
+        margin-left: 5px;
+        transition: transform 0.3s ease;
+      }
 
+      th.sortable.asc .sort-indicator {
+        transform: rotate(180deg);
+      }
 
-        th.sortable {
-            cursor: pointer;
-        }
+      th.sortable.desc .sort-indicator {
+        transform: rotate(0deg);
+      }
 
-        th.sortable .sort-indicator {
-            margin-left: 5px;
-            transition: transform 0.3s ease;
-        }
+      th.sortable .sort-indicator.default {
+        opacity: 0.2;
+      }
 
-        th.sortable.asc .sort-indicator {
-            transform: rotate(180deg);
-        }
+      th {
+        text-align: center;
+      }
 
-        th.sortable.desc .sort-indicator {
-            transform: rotate(0deg);
-        }
+      .fixed-table th,
+      .fixed-table td {
+        --col-checkbox-width: 40px;
+        --col-fecha-width: 90px;
+        --col-nombre-width: 150px;
+        --col-apellido-width: 150px;
+        --col-email-width: 200px;
+        --col-telefono-width: 150px;
+        --col-pais-width: 100px;
+        --col-probabilidad-width: 100px;
+        --col-reporte-width: 150px;
+      }
 
-        th.sortable .sort-indicator.default {
-            opacity: 0.2;
-        }
+      .fixed-table .col-checkbox {
+        width: var(--col-checkbox-width);
+      }
+      .fixed-table .col-nombre {
+        width: var(--col-nombre-width);
+      }
+      .fixed-table .col-apellido {
+        width: var(--col-apellido-width);
+      }
+      .fixed-table .col-email {
+        width: var(--col-email-width);
+      }
+      .fixed-table .col-telefono {
+        width: var(--col-telefono-width);
+      }
+      .fixed-table .col-pais {
+        width: var(--col-pais-width);
+      }
+      .fixed-table .col-probabilidad {
+        width: var(--col-probabilidad-width);
+      }
+      .fixed-table .col-reporte {
+        width: var(--col-reporte-width);
+      }
 
-        th {
-            text-align: center;
-        }
+      .footer-simple {
+        background-color: #f0f0f0;
+        color: #333;
+        padding: 20px;
+        text-align: center;
+        width: 100%;
+      }
 
-        .fixed-table th, .fixed-table td {
-            --col-checkbox-width: 40px;
-            --col-fecha-width: 90px;
-            --col-nombre-width: 150px;
-            --col-apellido-width: 150px;
-            --col-email-width: 200px;
-            --col-telefono-width: 150px;
-            --col-pais-width: 100px;
-            --col-probabilidad-width: 100px;
-            --col-reporte-width: 150px;
-        }
-
-        .fixed-table .col-checkbox { width: var(--col-checkbox-width); }
-        .fixed-table .col-nombre { width: var(--col-nombre-width); }
-        .fixed-table .col-apellido { width: var(--col-apellido-width); }
-        .fixed-table .col-email { width: var(--col-email-width); }
-        .fixed-table .col-telefono { width: var(--col-telefono-width); }
-        .fixed-table .col-pais { width: var(--col-pais-width); }
-        .fixed-table .col-probabilidad { width: var(--col-probabilidad-width); }
-        .fixed-table .col-reporte { width: var(--col-reporte-width); }
-
-        .footer-simple {
-            background-color: #f0f0f0;
-            color: #333;
-            padding: 20px;
-            text-align: center;
-            width: 100%;
-        }
-
-        .footer-simple .footer-content {
-            max-width: 1000px;
-            margin: 0 auto;
-            font-size: 14px;
-        }
-        .logo-topbar {
-          width: 10rem;
-        }
+      .footer-simple .footer-content {
+        max-width: 1000px;
+        margin: 0 auto;
+        font-size: 14px;
+      }
+      .logo-topbar {
+        width: 10rem;
+      }
     </style>
-</head>
-<body>
-  <nav class="navbar">
-    <div class="topbar">
-      <a href="/">
-        <img
-          src="../static/images/navbar.png"
-          alt="Logo visa par turistas"
-          class="logo-topbar"
-      /></a>
-      <div class="topbar-menu menu-adjustable">
-        <a href="/" class="{% if request.path == '/' %}active{% endif %}"
-          >Formulario</a
+  </head>
+  <body>
+    {% include 'base.html' %}
+    {% block content %}
+    <div class="container">
+      <div class="header">
+        <h1>RESULTADOS ESTUDIOS DE PERFIL / VISA DE TURISMO EE.UU.</h1>
+        <div class="results-info">
+          Perfilamientos cargados en el sistema: {{ results|length }}
+        </div>
+        <div class="separator"></div>
+      </div>
+      <div class="actions">
+        <input
+          type="text"
+          id="search-input"
+          class="search-input"
+          placeholder="Buscar..."
+        />
+        <select id="recordsPerPage" class="btn">
+          <option value="10">10 Registros</option>
+          <option value="50">50 Registros</option>
+          <option value="100">100 Registros</option>
+        </select>
+        <button
+          class="btn export-button disabled"
+          onclick="exportTableToCSV('results.csv')"
+          disabled
         >
-        <a
-          href="/results"
-          class="{% if request.path == '/results' %}active{% endif %}"
-          >Resultados</a
+          <i class="fas fa-file-csv"></i> Exportar .CSV
+        </button>
+        <button
+          class="btn export-button xls disabled"
+          onclick="exportTableToXLS('results.xls')"
+          disabled
         >
-        {% if current_user.is_authenticated %}
-        <a
-          href="{{ url_for('logout') }}"
-          class="{% if request.path == url_for('logout') %}active{% endif %}"
-          >Logout</a
-        >
-        {% else %}
-        <a
-          href="{{ url_for('login') }}"
-          class="{% if request.path == url_for('login') %}active{% endif %}"
-          >Login</a
-        >
-        {% endif %} {% with messages =
-        get_flashed_messages(with_categories=true) %} {% if messages %}
-        <ul class="flashes">
-          {% for category, message in messages %}
-          <li class="flash {{ category }}">{{ message }}</li>
-          {% endfor %}
-        </ul>
-        {% endif %} {% endwith %}
+          <i class="fas fa-file-excel"></i> Exportar .XLS
+        </button>
+      </div>
+      <div class="table-container">
+        <table id="results-table" class="fixed-table">
+          <thead>
+            <tr>
+              <th class="col-checkbox">
+                <input type="checkbox" id="select-all" />
+              </th>
+              <th class="col-fecha sortable" onclick="sortTable(1)">
+                Fecha <span class="sort-indicator"></span>
+              </th>
+              <th class="col-nombre sortable" onclick="sortTable(2)">
+                Nombre <span class="sort-indicator"></span>
+              </th>
+              <th class="col-apellido sortable" onclick="sortTable(3)">
+                Apellido <span class="sort-indicator"></span>
+              </th>
+              <th class="col-telefono sortable" onclick="sortTable(4)">
+                Teléfono <span class="sort-indicator"></span>
+              </th>
+              <th class="col-pais sortable" onclick="sortTable(5)">
+                País <span class="sort-indicator"></span>
+              </th>
+              <th class="col-probabilidad sortable" onclick="sortTable(6)">
+                Probabilidad <span class="sort-indicator"></span>
+              </th>
+              <th class="col-reporte">Perfilamiento</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for result in results %}
+            <tr
+              data-href="{{ url_for('detail', id=result.id) }}"
+              class="clickable-row"
+            >
+              <td class="col-checkbox">
+                <input type="checkbox" class="row-checkbox" />
+              </td>
+              <td class="col-fecha">{{ result.fecha }}</td>
+              <td class="col-nombre">{{ result.nombre }}</td>
+              <td class="col-apellido">{{ result.apellidos }}</td>
+              <td class="col-telefono">{{ result.telefono }}</td>
+              <td class="col-pais">{{ result.pais_residencia }}</td>
+              <td class="col-probabilidad">{{ result.probabilidad }}%</td>
+              <td class="col-reporte">
+                <button
+                  class="download-button rounded-icon"
+                  onclick="window.location.href='{{ url_for('download', filename=result.pdf_path.split('/')[-1]) }}'"
+                >
+                  <i class="fa-solid fa-circle-info" style="color: #ffffff"></i>
+                  Ver detalles
+                </button>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+
+      <div class="pagination" id="pagination-container">
+        <!-- Números de página se insertarán aquí dinámicamente -->
       </div>
     </div>
-  </nav>
-    
-    <div class="container">
-        <div class="header">
-            <h1>RESULTADOS ESTUDIOS DE PERFIL / VISA DE TURISMO EE.UU.</h1>
-            <div class="results-info">Perfilamientos cargados en el sistema: {{ results|length }}</div>
-            <div class="separator"></div>
-        </div>
-        <div class="actions">
-            <input type="text" id="search-input" class="search-input" placeholder="Buscar...">
-            <select id="recordsPerPage" class="btn">
-                <option value="10">10 Registros</option>
-                <option value="50">50 Registros</option>
-                <option value="100">100 Registros</option>
-            </select>
-            <button class="btn export-button disabled" onclick="exportTableToCSV('results.csv')" disabled><i class="fas fa-file-csv"></i> Exportar .CSV</button>
-            <button class="btn export-button xls disabled" onclick="exportTableToXLS('results.xls')" disabled><i class="fas fa-file-excel"></i> Exportar .XLS</button>
-        </div>
-        <div class="table-container">
-            <table id="results-table" class="fixed-table">
-                <thead>
-                    <tr>
-                        <th class="col-checkbox"><input type="checkbox" id="select-all"></th>
-                        <th class="col-fecha sortable" onclick="sortTable(1)">Fecha <span class="sort-indicator"></span></th>
-                        <th class="col-nombre sortable" onclick="sortTable(2)">Nombre <span class="sort-indicator"></span></th>
-                        <th class="col-apellido sortable" onclick="sortTable(3)">Apellido <span class="sort-indicator"></span></th>
-                        <th class="col-telefono sortable" onclick="sortTable(4)">Teléfono <span class="sort-indicator"></span></th>
-                        <th class="col-pais sortable" onclick="sortTable(5)">País <span class="sort-indicator"></span></th>
-                        <th class="col-probabilidad sortable" onclick="sortTable(6)">Probabilidad <span class="sort-indicator"></span></th>
-                        <th class="col-reporte">Perfilamiento</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for result in results %}
-                    <tr data-href="{{ url_for('detail', id=result.id) }}" class="clickable-row">
-                        <td class="col-checkbox"><input type="checkbox" class="row-checkbox"></td>
-                        <td class="col-fecha">{{ result.fecha }}</td>
-                        <td class="col-nombre">{{ result.nombre }}</td>
-                        <td class="col-apellido">{{ result.apellidos }}</td>
-                        <td class="col-telefono">{{ result.telefono }}</td>
-                        <td class="col-pais">{{ result.pais_residencia }}</td>
-                        <td class="col-probabilidad">{{ result.probabilidad }}%</td>
-                        <td class="col-reporte"><button class="download-button rounded-icon" onclick="window.location.href='{{ url_for('download', filename=result.pdf_path.split('/')[-1]) }}'"><i class="fa-solid fa-circle-info" style="color: #ffffff"></i>
-                          Ver detalles</button></td>
-                    </tr>
-                    {% endfor %}
-                </tbody>                
-            </table>
-        </div>
-        
-        <div class="pagination" id="pagination-container">
-            <!-- Números de página se insertarán aquí dinámicamente -->
-        </div>
-    </div>
     <footer class="footer-simple">
-        <div class="footer-content">
-            &copy; 2024 VisaParaTurista.com. Todos los derechos reservados.
-        </div>
+      <div class="footer-content">
+        &copy; 2024 VisaParaTurista.com. Todos los derechos reservados.
+      </div>
     </footer>
-    <script src="{{ url_for('static', filename='scripts.js') }}">
-    </script>
+    <script src="{{ url_for('static', filename='scripts.js') }}"></script>
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            var rows = document.querySelectorAll('.clickable-row');
-            rows.forEach(function (row) {
-                row.addEventListener('click', function () {
-                    window.location.href = row.getAttribute('data-href');
-                });
-            });
+      document.addEventListener("DOMContentLoaded", function () {
+        var rows = document.querySelectorAll(".clickable-row");
+        rows.forEach(function (row) {
+          row.addEventListener("click", function () {
+            window.location.href = row.getAttribute("data-href");
+          });
         });
+      });
     </script>
-    
-</body>
+    {% endblock %}
+  </body>
 </html>
