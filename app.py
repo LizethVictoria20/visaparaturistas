@@ -345,6 +345,8 @@ def login():
         else:
             flash('Invalid username or password', 'danger')
     return render_template('login.html', form=form)
+  
+
 # Ruta para el logout
 @app.route('/logout')
 @login_required
