@@ -6,6 +6,40 @@
   <title>Document</title>
 </head>
 <body>
-  <h1>Dashboard Admin</h1>
+  {% include 'base.html' %}
+  {% block content %}
+  <div class="container">
+    <h1 class="my-4">Dashboard de Administración</h1>
+    <h2>Lista de usuarios registrados</h2>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nombre de usuario</th>
+                <th>Rol</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for user in users %}
+                <tr>
+                    <td>{{ user.id }}</td>
+                    <td>{{ user.username }}</td>
+                    <td>
+                      {% for role in user.roles %}
+                      {{ role.name }}{% if not loop.last %}, {% endif %}
+                      {% else %}
+                          Sin roles
+                      {% endfor %}
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="4">No hay usuarios registrados.</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+  </div>
+{% endblock %}  
 </body>
 </html>

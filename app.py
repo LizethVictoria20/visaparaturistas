@@ -1113,7 +1113,8 @@ def create_pdf(id):
 @admin_permission.require(http_exception=403)
 @app.route("/admin-dashboard", methods=['GET', 'POST'])
 def admin_dashboard():
-    return render_template('admin_dashboard.html')
+    users = User.query.all()    
+    return render_template('admin_dashboard.html', users=users)
 
 
 @login_required
