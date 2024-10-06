@@ -1145,10 +1145,8 @@ def admin_dashboard():
 @admin_permission.require(http_exception=403)
 @app.route("/delete_user/<int:user_id>", methods=['POST'])
 def delete_user(user_id):
-    # Buscar al usuario en la base de datos por ID
     user = User.query.get_or_404(user_id)
     
-    # Eliminar el usuario de la base de datos
     db.session.delete(user)
     db.session.commit()
 
