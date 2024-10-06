@@ -584,6 +584,8 @@ def update_database(id, field, value):
         return False
 
 # Ruta para mostrar los resultados
+@admin_permission.require(http_exception=403)
+@user_permission.require(http_exception=403)
 @app.route('/results')
 @login_required
 def results():
@@ -1113,38 +1115,33 @@ def create_pdf(id):
 @admin_permission.require(http_exception=403)
 @app.route("/admin-dashboard", methods=['GET', 'POST'])
 def admin_dashboard():
-    users = User.query.all()    
-    return render_template('admin_dashboard.html', users=users)
+  if request.method == 'POST':
+    name = request.form['name']
+    username = request.form['username']
+    password_hash = bcrypt.generate_password_hash(request.form['password']).decode('utf-8')
+    email = request.form['email']
+    telefono = request.form['telefono']
+    role_selected = request.form['roles']  # Obtener el rol seleccionado del formulario ('admin' o 'user')
 
+    if role_selected == 'admin':
+        roles = db.session.query(Roles).filter_by(name='admin').first()
+    else:
+        roles = db.session.query(Roles).filter_by(name='user').first()
 
-@login_required
-@admin_permission.require(http_exception=403)
-@app.route("/register", methods=['GET', 'POST'])
-def register():
-    if request.method == 'POST':
-        username = request.form['username']
-        password_hash = request.form['password']
-        hashed_password = bcrypt.generate_password_hash(password_hash).decode('utf-8')
+    # Crear nuevo usuario
+    user = User(name=name, username=username,password_hash=password_hash, email=email, telefono=telefono, roles=[roles])
+    db.session.add(user)
+    db.session.commit()
 
-        # Crear nuevo usuario
-        user = User(username=username, password_hash=hashed_password)
-        db.session.add(user)
-        
-        # Obtener los roles seleccionados del formulario
-        selected_roles = request.form.getlist('roles')  # Asume que los roles llegan como una lista de IDs
-        roles_to_add = Roles.query.filter(Roles.id.in_(selected_roles)).all()
-        
-        # Asignar los roles al usuario
-        user.roles = roles_to_add
-        
-        db.session.commit()
+    flash('Usuario agregado exitosamente!', 'success')
+    return redirect(url_for('admin_dashboard'))
 
-        flash('Tu cuenta ha sido creada y los roles han sido asignados!', 'success')
-        return redirect(url_for('admin_dashboard'))
+  # Obtener todos los usuarios para mostrarlos en el template
+  users = User.query.all()
+  return render_template('admin_dashboard.html', users=users)
 
-    # Pasar los roles disponibles al formulario de registro
-    available_roles = Roles.query.all()
-    return render_template('create_user.html', roles=available_roles)
+  return redirect(url_for('admin_dashboard'))
+
 
 
 
