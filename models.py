@@ -23,13 +23,15 @@ class Roles(db.Model):
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(100), unique=True, nullable=False)
+    name = db.Column(db.String(100), nullable=False)
+    email = db.Column(db.String(100), nullable=False, unique=True)
+    telefono = db.Column(db.Integer, nullable=False)
     password_hash = db.Column(db.String(100), nullable=False)
     roles = db.relationship("Roles", secondary="user_roles", back_populates="users")
 
-    
     @hybrid_property
     def password(self):
-        return self.password_hash 
+        return self.passPword_hash 
     
     
     @password.setter

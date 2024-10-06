@@ -29,7 +29,6 @@
           {% if current_user.roles[0].id == 1 %}
               <a href="/" class="{% if request.path == '/' %}active{% endif %}">Formulario</a>
               <a href="/results" class="{% if request.path == '/results' %}active{% endif %}">Resultados</a>
-              <a href="/register" class="{% if request.path == '/register' %}active{% endif %}">Crear usuario</a>
               <a href="/admin-dashboard" class="{% if request.path == '/admin-dashboard' %}active{% endif %}">Panel de admin</a>
           {% else %}
               <a href="/results" class="{% if request.path == '/results' %}active{% endif %}">Resultados</a>

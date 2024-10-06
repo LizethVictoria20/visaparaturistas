@@ -118,3 +118,4 @@ pandas
 XlsxWriter
 passlib
 bcrypt
+Flask-WTF

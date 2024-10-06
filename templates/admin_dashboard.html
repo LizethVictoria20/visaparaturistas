@@ -1,45 +1,115 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
+<style>
+  /* Estilos independientes para la tabla de usuarios */
+  .user-table {
+      width: 100%;
+      border-collapse: collapse;
+  }
+  .user-table th, .user-table td {
+      border: 1px solid #dee2e6;
+      padding: 8px;
+      text-align: left;
+  }
+  .user-table th {
+      background-color: #2e3b4f;
+  }
+  .user-table td {
+      background-color: #ffffff;
+  }
+</style>
 <body>
   {% include 'base.html' %}
   {% block content %}
-  <div class="container">
-    <h1 class="my-4">Dashboard de Administración</h1>
-    <h2>Lista de usuarios registrados</h2>
-    <table class="table table-bordered">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Nombre de usuario</th>
-                <th>Rol</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for user in users %}
-                <tr>
-                    <td>{{ user.id }}</td>
-                    <td>{{ user.username }}</td>
-                    <td>
-                      {% for role in user.roles %}
-                      {{ role.name }}{% if not loop.last %}, {% endif %}
-                      {% else %}
-                          Sin roles
-                      {% endfor %}
-                    </td>
-                </tr>
-            {% else %}
-                <tr>
-                    <td colspan="4">No hay usuarios registrados.</td>
-                </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-  </div>
-{% endblock %}  
+    <div class="container">
+        <h2 class="mb-4">Dashboard de Administrador</h2>
+        <div class="row">
+            <!-- Columna izquierda: Formulario para agregar usuario -->
+            <div class="col-md-6">
+                <div class="card mb-4">
+                    <div class="card-header">Agregar Usuario</div>
+                    <div class="card-body">
+                        <form action="/add_user" method="POST">
+                            <div class="form-group">
+                                <label for="name">Nombre de Usuario:</label>
+                                <input type="text" class="form-control" id="name" name="name" required>
+                            </div>
+                            <div class="form-group">
+                              <label for="username">Username</label>
+                              <input type="text" class="form-control" id="username" name="username" required>
+                          </div>
+                            <div class="form-group">
+                                <label for="email">Email:</label>
+                                <input type="email" class="form-control" id="email" name="email" required>
+                            </div>
+                            <div class="form-group">
+                              <label for="telefono">Teléfono:</label>
+                              <input type="tel" class="form-control" id="telefono" name="telefono" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="role">Rol:</label>
+                                <select class="form-control" id="role" name="role">
+                                    <option value="user">Usuario</option>
+                                    <option value="admin">Administrador</option>
+                                </select>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Agregar Usuario</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Columna derecha: Lista de usuarios -->
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">Lista de Usuarios</div>
+                    <div class="card-body">
+                      <table class="user-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Nombre de Usuario</th>
+                                <th>Email</th>
+                                <th>Rol</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for user in users %}
+                            <tr>
+                                <td>{{ user.id }}</td>
+                                <td>{{ user.username }}</td>
+                                <td>{{ user.email }}</td>
+                                <td>
+                                  {% for role in user.roles %}
+                                  {{ role.name }}{% if not loop.last %}, {% endif %}
+                                  {% else %}
+                                      Sin roles
+                                  {% endfor %}
+                                </td>
+                                <td>
+                                    <form action="/delete_user/{{ user.id }}" method="POST" style="display:inline-block;">
+                                        <button type="submit" class="btn btn-danger btn-sm">Eliminar</button>
+                                    </form>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+  {% endblock %}
 </body>
 </html>
