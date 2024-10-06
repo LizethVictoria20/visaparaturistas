@@ -1153,6 +1153,11 @@ def delete_user(user_id):
     flash('Usuario eliminado exitosamente!', 'success')
     return redirect(url_for('admin_dashboard'))
 
+@login_required
+@app.route("/user-dashboard", methods=['GET', 'POST'])
+@user_permission.require(http_exception=403)
+def user_dashboard():
+  return render_template('user_dashboard.html')
 
 
 if __name__ == "__main__":
