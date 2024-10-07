@@ -1115,6 +1115,7 @@ def create_pdf(id):
 @admin_permission.require(http_exception=403)
 @app.route("/admin-dashboard", methods=['GET', 'POST'])
 def admin_dashboard():
+  form = UpdatePasswordForm()
   if request.method == 'POST':
     name = request.form['name']
     username = request.form['username']
@@ -1138,7 +1139,14 @@ def admin_dashboard():
 
   # Obtener todos los usuarios para mostrarlos en el template
   users = User.query.all()
-  return render_template('admin_dashboard.html', users=users)
+  return render_template('admin_dashboard.html', users=users, form=form)
+
+@login_required
+@user_permission.require(http_exception=403)
+@app.route("/user-dashboard", methods=['GET', 'POST'])
+def user_dashboard():
+  form = UpdatePasswordForm()
+  return render_template('user_dashboard.html', form=form)
 
 
 @login_required
@@ -1156,19 +1164,19 @@ def delete_user(user_id):
 
 
 @login_required
-@app.route("/user-dashboard", methods=['GET', 'POST'])
 @user_permission.require(http_exception=403)
-def user_dashboard():
+@app.route("/update-password/<int:user_id>", methods=['GET', 'POST'])
+def update_password(user_id):
+    user = User.query.get_or_404(user_id)
     form = UpdatePasswordForm()
     if form.validate_on_submit():
         new_password = form.new_password.data
         new_password_hash = bcrypt.generate_password_hash(new_password).decode('utf-8')
-        current_user.password_hash = new_password_hash
+        user.password_hash = new_password_hash
         db.session.commit()
         flash('Contraseña actualizada exitosamente', 'success')
-        return redirect(url_for('user_dashboard'))  
-    return render_template('user_dashboard.html', form=form)
-
+        return redirect(url_for('admin_dashboard'))  
+    return render_template('update_password.html', form=form, user=user)
 
 
 if __name__ == "__main__":
