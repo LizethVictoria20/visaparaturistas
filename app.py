@@ -27,7 +27,7 @@ import io
 import subprocess
 import pandas as pd
 from models import db, User, FormResult, Roles
-from forms import LoginForm, CuestionarioForm, UserCreationForm
+from forms import LoginForm, CuestionarioForm, UserCreationForm, UpdatePasswordForm
 
 # Cargar variables de entorno desde el archivo .env
 load_dotenv(dotenv_path='.env')
@@ -1153,11 +1153,22 @@ def delete_user(user_id):
     flash('Usuario eliminado exitosamente!', 'success')
     return redirect(url_for('admin_dashboard'))
 
+
+
 @login_required
 @app.route("/user-dashboard", methods=['GET', 'POST'])
 @user_permission.require(http_exception=403)
 def user_dashboard():
-  return render_template('user_dashboard.html')
+    form = UpdatePasswordForm()
+    if form.validate_on_submit():
+        new_password = form.new_password.data
+        new_password_hash = bcrypt.generate_password_hash(new_password).decode('utf-8')
+        current_user.password_hash = new_password_hash
+        db.session.commit()
+        flash('Contraseña actualizada exitosamente', 'success')
+        return redirect(url_for('user_dashboard'))  
+    return render_template('user_dashboard.html', form=form)
+
 
 
 if __name__ == "__main__":

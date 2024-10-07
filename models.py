@@ -26,19 +26,23 @@ class User(UserMixin, db.Model):
     name = db.Column(db.String(100), nullable=False)
     email = db.Column(db.String(100), nullable=False, unique=True)
     telefono = db.Column(db.Integer, nullable=False)
-    password_hash = db.Column(db.String(100), nullable=False)
+    password_hash = db.Column(db.String(130), nullable=False)
     roles = db.relationship("Roles", secondary="user_roles", back_populates="users")
 
     @hybrid_property
     def password(self):
-        return self.passPword_hash 
+        raise AttributeError('password is not a readable attribute')
     
     
     @password.setter
     def password(self, value):
-        self.password_hash = pwd_context.hash(value)
+      from app import db, bcrypt
+      self.password_hash = bcrypt.generate_password_hash(value).decode('utf-8')
 
-    
+    def check_password(self, password):
+      from app import db, bcrypt
+      return bcrypt.check_password_hash(self.password_hash, password)
+
     def has_role(self, role):
       return bool(
         Roles.query

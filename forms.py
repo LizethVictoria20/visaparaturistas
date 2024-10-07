@@ -47,3 +47,10 @@ class UserCreationForm(FlaskForm):
   confirm_password = PasswordField('Confirm Password', validators=[DataRequired(), EqualTo('password_hash')])
   roles = SelectField('Roles', choices=[('user', 'User'), ('admin', 'Administrator')], validators=[DataRequired()])
   submit = SubmitField('Create User')
+
+class UpdatePasswordForm(FlaskForm):
+    current_password = PasswordField('Current Password', validators=[DataRequired()])
+    new_password = PasswordField('New Password', validators=[DataRequired(), Length(min=6)])
+    confirm_password = PasswordField('Confirm New Password',
+                                     validators=[DataRequired(), EqualTo('new_password', message='Passwords must match')])
+    submit = SubmitField('Cambiar contraseña')
