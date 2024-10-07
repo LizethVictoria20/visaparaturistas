@@ -588,7 +588,28 @@
         }
 
         /* Overlay de procesamiento */
-     
+        #progress-container {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          font-size: 15px;
+          margin-bottom: 10px;
+        }
+
+        #message-overlay {
+          font-size: 15px;
+        }
+        .progress-bar {
+          width: 100%;
+          height: 20px;
+          background-color: #2e3b4e;
+          transition: width 0.5s ease-in-out
+        }
+        .progress-container {
+          width: 100%;
+          border: 1px solid #ccc;
+          margin-top: 20px;
+        }
         .processing-overlay {
             position: fixed;
             top: 0;
@@ -620,14 +641,7 @@
             margin-bottom: 20px;
             font-size: 14px;
             font-weight: bold;
-            color: #8c8c8c;
-        }
-
-        .processing-box .progress-bar {
-            width: 100%;
-            background-color: #e0e0e0;
-            border-radius: 5px;
-            overflow: hidden;
+            color: #282828;
         }
 
         .processing-box .progress {
@@ -730,12 +744,10 @@
        <!-- Overlay de procesamiento -->
        <div class="processing-overlay" id="processing-overlay">
         <div class="processing-box">
-            <div class="status-text" id="message-overlay"></div>
-            <div class="progress-bar">
-                <div class="progress" id="progress-regenerar-bar"></div>
-            </div>
-            <div class="animation">
-                <i class="fas fa-spinner fa-spin"></i>
+            <div class="status-text" id="message-overlay">Inicializando...</div>
+            <div id="progress-percentage">0%</div>
+            <div class="progress-container">
+              <div id="progress-bar" class="progress-bar"></div>
             </div>
         </div>
     </div>
@@ -1448,18 +1460,69 @@ function typeWriter(text, element, delay, callback) {
 }
 
 // Función para animar el texto
-
 function animateText() {
     const progressText = document.getElementById('message-overlay');
-    typeWriter('Re-procesando datos con IA.', progressText, 100, () => {
-        progressText.style.transition = 'opacity 0.5s';
-        progressText.style.opacity = 0;
-        setTimeout(() => {
-            progressText.style.opacity = 1;
-            animateText();
-        }, 500);
-    });
+    const progressPercentage = document.getElementById('progress-percentage');
+    const progressBar = document.getElementById('progress-bar');
+
+    // Lista de mensajes con sus respectivos porcentajes
+    const steps = [
+        { message: 'Procesando país de residencia...', progress: 5 },
+        { message: 'Procesando edad...', progress: 8 },
+        { message: 'Procesando estado civil...', progress: 10 },
+        { message: 'Procesando datos de hijos...', progress: 13 },
+        { message: 'Procesando datos de vivienda...', progress: 16 },
+        { message: 'Procesando profesión...', progress: 19 },
+        { message: 'Procesando nivel de educación...', progress: 22 },
+        { message: 'Procesando tiempo de empleo...', progress: 25 },
+        { message: 'Procesando propiedad empresarial...', progress: 28 },
+        { message: 'Procesando ingresos...', progress: 31 },
+        { message: 'Procesando pago de impuestos...', progress: 34 },
+        { message: 'Procesando propiedades...', progress: 37 },
+        { message: 'Procesando viajes...', progress: 40 },
+        { message: 'Procesando familiares en EE.UU....', progress: 43 },
+        { message: 'Procesando familiares con visa...', progress: 47 },
+        { message: 'Procesando visas negadas...', progress: 49 },
+        { message: 'Procesando antecedentes...', progress: 52 },
+        { message: 'Procesando datos sobre enfermedades...', progress: 55 },
+        { message: 'Procesando otras visas...', progress: 58 },
+        { message: 'Procesando requerimientos migratorios...', progress: 61 },
+        { message: 'Procesando nacionalidad...', progress: 64 },
+        { message: 'Procesando criterios confidenciales...', progress: 67 },
+        { message: 'Calculando probabilidad de aprobación...', progress: 70 },
+        { message: 'Procesando recomendaciones sugerencia 1...', progress: 73 },
+        { message: 'Procesando recomendaciones sugerencia 2...', progress: 76 },
+        { message: 'Procesando recomendaciones sugerencia 3...', progress: 80 },
+        { message: 'Datos guardados en la base de datos', progress: 90 },
+        { message: 'Datos regenerados correctamente!', progress: 100 }
+    ];
+
+    let currentStep = 0;
+
+    function updateProgress() {
+        if (currentStep < steps.length) {
+            const step = steps[currentStep];
+            progressText.innerText = step.message;
+            progressPercentage.innerText = step.progress + '%'; // Mostrar el porcentaje
+            progressBar.style.width = step.progress + '%'; // Actualizar barra de progreso
+
+            currentStep++;
+
+            // Simular tiempo de procesamiento antes de pasar al siguiente paso
+            setTimeout(updateProgress, 1000);  // Puedes ajustar el tiempo de espera aquí
+        } else {
+            // Proceso finalizado con éxito
+            progressText.style.color = 'green';
+            progressText.innerText = '¡Proceso completado!';
+            progressPercentage.innerText = '100%';
+        }
+    }
+
+    updateProgress();
 }
+
+// Iniciar la animación cuando la página cargue
+window.onload = animateText;
 
 // Escuchar eventos de progreso emitidos desde el servidor para regenerar
 socket.on('progressregenerar', function (data) {
