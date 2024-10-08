@@ -320,9 +320,9 @@ def emit_progress(message, progress):
     socketio.emit('progress', {'message': message, 'progress': progress})
 
 # Ruta para el formulario principal
-@app.route('/', methods=['GET', 'POST'])
 @login_required
 @admin_permission.require(http_exception=403)
+@app.route('/', methods=['GET', 'POST'])
 def form():
     form = CuestionarioForm(request.form)
     if request.method == 'POST' and form.validate():

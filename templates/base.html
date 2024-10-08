@@ -23,7 +23,6 @@
             class="logo-topbar"
           />
         </a>
-        Hola {{ current_user.username }}!
         <div class="topbar-menu menu-adjustable">
           {% if current_user.is_authenticated %}
           {% if current_user.roles[0].id == 1 %}
