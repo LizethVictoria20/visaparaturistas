@@ -40,6 +40,9 @@
             >Panel de admin</a
           >
           {% else %}
+          <a href="/" class="{% if request.path == '/' %}active{% endif %}"
+            >Formulario</a
+          >
           <a
             href="/results"
             class="{% if request.path == '/results' %}active{% endif %}"
