@@ -11,6 +11,31 @@
   </head>
   <style>
     /* Estilos independientes para la tabla de usuarios */
+    .user-info {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      flex-wrap: wrap;
+      gap: 20px;
+      font-size: 1.1rem;
+    }
+    .user-info-item {
+      flex: 1 1 calc(50% - 20px);
+      background-color: #ffffff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      display: flex;
+      align-items: center;
+      font-size: 1rem;
+    }
+    .user-info-item i {
+      margin-right: 15px;
+      font-size: 1.5rem;
+      color: #495057;
+    }
+    .user-info-item span {
+      color: #555;
+    }
     .user-table {
       width: 100%;
       border-collapse: collapse;
@@ -53,22 +78,33 @@
   <body>
     {% include 'base.html' %} {% block content %}
     <div class="container">
-      <h2 class="text-center">Panel administrador</h2>
-      <div class="user-info mb-4">
-        <div class="user-info-item">
-          <i class="fas fa-user"></i>
-          <span class="data">Nombre: </span>
-          <span id="nombre"> {{ current_user.name }}</span>
-        </div>
-        <div class="user-info-item">
-          <i class="fas fa-user"></i>
-          <span class="data">Username: </span>
-          <span id="username"> {{ current_user.username }}</span>
-        </div>
-        <div class="user-info-item">
-          <i class="fas fa-envelope"></i>
-          <span class="data">Email: </span>
-          <span id="email"> {{ current_user.email }}</span>
+      <div class="card">
+        <div class="card-body">
+          <h2 class="card-title text-center mb-4">
+            Dashboard de Administrador
+          </h2>
+          <div class="user-info mb-4">
+            <div class="user-info-item">
+              <i class="fas fa-user"></i>
+              <span class="data">Nombre: </span>
+              <span id="nombre"> {{ current_user.name }}</span>
+            </div>
+            <div class="user-info-item">
+              <i class="fas fa-user"></i>
+              <span class="data">Username: </span>
+              <span id="username"> {{ current_user.username }}</span>
+            </div>
+            <div class="user-info-item">
+              <i class="fas fa-envelope"></i>
+              <span class="data">Email: </span>
+              <span id="email"> {{ current_user.email }}</span>
+            </div>
+            <div class="user-info-item">
+              <i class="fas fa-phone"></i>
+              <span class="data">Teléfono: </span>
+              <span id="telefono"> {{ current_user.telefono }}</span>
+            </div>
+          </div>
         </div>
       </div>
       <!-- Acordeón para agregar usuario -->
@@ -249,10 +285,7 @@
         </div>
       </div>
       <!-- Modal para confirmar la eliminación -->
-      <div
-        class="dialog-overlay modal-delete_user"
-        id="delete-dialog-overlay"
-      >
+      <div class="dialog-overlay modal-delete_user" id="delete-dialog-overlay">
         <div class="dialog bg-white p-4 rounded">
           <h3 class="mb-3">Confirma la eliminación</h3>
           <label for="confirm-delete">Escribe "DELETE" para confirmar:</label>
