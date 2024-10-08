@@ -7,6 +7,45 @@ body {
     padding: 0;
 }
 
+/* Flashes */
+.flash {
+  padding: 10px;
+  margin: 10px 0;
+  border-radius: 5px;
+  color: white;
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 1s ease-out, visibility 0s 1s; 
+}
+.flash-message {
+  display: none;
+}
+.hide-flash {
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 1s ease-out, visibility 0s; /* Transición rápida */
+}
+.alert {
+  padding: 8px;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  width: 18rem;
+  margin: 1rem auto;
+}
+
+.alert-success {
+  color: #3c763d;
+  background-color: #dff0d8;
+  border-color: #d6e9c6;
+}
+
+.alert-error {
+  color: #a94442;
+  background-color: #f2dede;
+  border-color: #ebccd1;
+}
+
+
 .header {
   margin-bottom: 20px;
 }

@@ -95,6 +95,13 @@ document.addEventListener('DOMContentLoaded', function () {
         updateExportButtonsState();
     }
 
+    setTimeout(function() {
+      var flashElements = document.querySelectorAll('.alert');
+      flashElements.forEach(function(element) {
+        var alert = new bootstrap.Alert(element);
+        alert.close();
+      });
+    }, 1000);
     // Función para actualizar el estado de los botones de exportación
     function updateExportButtonsState() {
         var checkboxes = document.querySelectorAll('#results-table tbody tr:not([style*="display: none"]) .row-checkbox:checked');

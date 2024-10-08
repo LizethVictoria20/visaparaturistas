@@ -74,6 +74,12 @@
       align-items: center;
       justify-content: center;
     }
+    /* Flash */
+    .flash-container {
+      width: 29%;
+      margin: 20px;
+      
+    }
   </style>
   <body>
     {% include 'base.html' %} {% block content %}
@@ -107,6 +113,18 @@
           </div>
         </div>
       </div>
+      <!-- Aquí va el bloque para mostrar los mensajes flash -->
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+          <div id="flash-container">
+            {% for category, message in messages %}
+              <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                {{ message }}
+              </div>
+            {% endfor %}
+          </div>
+        {% endif %}
+      {% endwith %}
       <!-- Acordeón para agregar usuario -->
       <div class="">
         <div class="accordion mt-5" id="accordionAddUser">

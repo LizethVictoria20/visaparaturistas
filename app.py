@@ -311,7 +311,6 @@ def login():
 @login_required
 def logout():
     logout_user()
-    flash('You have been logged out', 'success')
     return redirect(url_for('login'))
 
 # Función para emitir el progreso
@@ -1175,7 +1174,11 @@ def update_password(user_id):
         user.password_hash = new_password_hash
         db.session.commit()
         flash('Contraseña actualizada exitosamente', 'success')
-        return redirect(url_for('admin_dashboard'))
+        if current_user.roles == 'admin': 
+          return redirect(url_for('admin_dashboard'))
+        else:
+          return redirect(url_for('user_dashboard'))
+
     if form.errors:
         flash('Hubo un error al actualizar la contraseña. Por favor revisa los campos.', 'danger')
     
