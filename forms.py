@@ -49,8 +49,11 @@ class UserCreationForm(FlaskForm):
   submit = SubmitField('Create User')
 
 class UpdatePasswordForm(FlaskForm):
-    current_password = PasswordField('Current Password', validators=[DataRequired()])
-    new_password = PasswordField('New Password', validators=[DataRequired(), Length(min=6)])
-    confirm_password = PasswordField('Confirm New Password',
-                                     validators=[DataRequired(), EqualTo('new_password', message='Passwords must match')])
-    submit = SubmitField('Cambiar contraseña')
+  new_password = PasswordField('Nueva Contraseña', validators=[DataRequired(),
+      Length(min=6, message="La contraseña debe tener al menos 6 caracteres.")
+  ])
+  confirm_password = PasswordField('Confirmar Contraseña', validators=[
+      DataRequired(),
+      EqualTo('new_password', message="Las contraseñas deben coincidir.")
+  ])
+  submit = SubmitField('Actualizar')

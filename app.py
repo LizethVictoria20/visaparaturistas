@@ -1175,7 +1175,10 @@ def update_password(user_id):
         user.password_hash = new_password_hash
         db.session.commit()
         flash('Contraseña actualizada exitosamente', 'success')
-        return redirect(url_for('admin_dashboard'))  
+        return redirect(url_for('admin_dashboard'))
+    if form.errors:
+        flash('Hubo un error al actualizar la contraseña. Por favor revisa los campos.', 'danger')
+    
     return render_template('update_password.html', form=form, user=user)
 
 
