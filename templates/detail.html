@@ -598,6 +598,11 @@
 
         #message-overlay {
           font-size: 15px;
+          margin-bottom: 10px;
+        }
+        #progress-percentage {
+            font-size: 15px;
+            margin-bottom: 10px;
         }
         .progress-bar {
           width: 100%;
@@ -1497,27 +1502,33 @@ function animateText() {
         { message: 'Datos regenerados correctamente!', progress: 100 }
     ];
 
-    let currentStep = 0;
+    let currentStep = 0;  // Para hacer un seguimiento del paso actual
 
     function updateProgress() {
         if (currentStep < steps.length) {
             const step = steps[currentStep];
+            console.log(`Step ${currentStep}: ${step.message} (${step.progress}%)`); // Depuración
             progressText.innerText = step.message;
-            progressPercentage.innerText = step.progress + '%'; // Mostrar el porcentaje
-            progressBar.style.width = step.progress + '%'; // Actualizar barra de progreso
+            progressPercentage.innerText = step.progress + '%';  // Mostrar el porcentaje
+            progressBar.style.width = step.progress + '%';  // Actualizar barra de progreso
 
             currentStep++;
 
             // Simular tiempo de procesamiento antes de pasar al siguiente paso
-            setTimeout(updateProgress, 1000);  // Puedes ajustar el tiempo de espera aquí
-        } else {
-            // Proceso finalizado con éxito
-            progressText.style.color = 'green';
-            progressText.innerText = '¡Proceso completado!';
-            progressPercentage.innerText = '100%';
+            setTimeout(() => {
+              updateProgress();
+              animationInProgress = false;  // Permitir nuevas animaciones una vez finalizado el paso
+              }, 1000);}
+        else {
+          // Proceso finalizado con éxito
+          progressText.style.color = '#2e3b4e';
+          progressText.innerText = '¡Proceso completado!';
+          progressPercentage.innerText = '100%';
+          console.log("Proceso completado con éxito");  // Para depuración
         }
     }
 
+    // Iniciar el proceso de actualización
     updateProgress();
 }
 
@@ -1526,10 +1537,8 @@ window.onload = animateText;
 
 // Escuchar eventos de progreso emitidos desde el servidor para regenerar
 socket.on('progressregenerar', function (data) {
-    const progressBar = document.getElementById('progress-regenerar-bar');
     const { progressregenerar } = data;
 
-    progressBar.style.width = progressregenerar + '%'; // Actualizar la barra de progreso
 
     // Mostrar el progreso en la consola (opcional para depuración)
     console.log(`Progreso: ${progressregenerar}%`);
@@ -1547,7 +1556,6 @@ document.querySelector('.buttons button[type="button"]').addEventListener('click
     const progressBar = document.getElementById('progress-regenerar-bar');
     
     processingOverlay.style.display = 'flex';  // Mostrar la caja flotante
-    animateText();  // Iniciar la animación del texto
 
     // Iniciar la barra de progreso
     let progress = 0;
