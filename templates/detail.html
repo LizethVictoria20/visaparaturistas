@@ -1502,37 +1502,40 @@ function animateText() {
         { message: 'Datos regenerados correctamente!', progress: 100 }
     ];
 
-    let currentStep = 0;  // Para hacer un seguimiento del paso actual
-
+    let currentStep = 0; 
+    let animationInProgress = false;
     function updateProgress() {
         if (currentStep < steps.length) {
             const step = steps[currentStep];
-            console.log(`Step ${currentStep}: ${step.message} (${step.progress}%)`); // Depuración
+            console.log(`Step ${currentStep}: ${step.message} (${step.progress}%)`); 
             progressText.innerText = step.message;
-            progressPercentage.innerText = step.progress + '%';  // Mostrar el porcentaje
-            progressBar.style.width = step.progress + '%';  // Actualizar barra de progreso
+            progressPercentage.innerText = step.progress + '%';
+            progressBar.style.width = step.progress + '%';  
+            console.log("Proceso completado con éxito");  
 
             currentStep++;
 
-            // Simular tiempo de procesamiento antes de pasar al siguiente paso
             setTimeout(() => {
               updateProgress();
-              animationInProgress = false;  // Permitir nuevas animaciones una vez finalizado el paso
-              }, 1000);}
+              animationInProgress = true; 
+              }, 1000);
+            }
         else {
           // Proceso finalizado con éxito
           progressText.style.color = '#2e3b4e';
           progressText.innerText = '¡Proceso completado!';
           progressPercentage.innerText = '100%';
           console.log("Proceso completado con éxito");  // Para depuración
+          setTimeout(() => {
+            document.getElementById('processing-overlay').style.display = 'none';
+            animationInProgress = false;  
+          }, 2000);
         }
     }
 
-    // Iniciar el proceso de actualización
     updateProgress();
 }
 
-// Iniciar la animación cuando la página cargue
 window.onload = animateText;
 
 // Escuchar eventos de progreso emitidos desde el servidor para regenerar
