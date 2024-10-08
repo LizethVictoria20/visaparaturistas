@@ -27,6 +27,28 @@
     .user-table td {
       background-color: #ffffff;
     }
+    .custom-btn {
+      background-color: #3c5171 !important;
+      color: white !important;
+    }
+    .btn-delete_user {
+      width: 42%;
+    }
+    .form-delete_user {
+      width: 42%;
+    }
+    .modal-delete_user {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
   </style>
   <body>
     {% include 'base.html' %} {% block content %}
@@ -55,7 +77,7 @@
           <div class="accordion-item">
             <h2 class="accordion-header" id="headingAddUser">
               <button
-                class="accordion-button"
+                class="accordion-button custom-btn"
                 type="button"
                 data-bs-toggle="collapse"
                 data-bs-target="#collapseAddUser"
@@ -147,7 +169,7 @@
           <div class="accordion-item">
             <h2 class="accordion-header" id="headingUserList">
               <button
-                class="accordion-button"
+                class="accordion-button custom-btn"
                 type="button"
                 data-bs-toggle="collapse"
                 data-bs-target="#collapseUserList"
@@ -186,7 +208,7 @@
                         loop.last %}, {% endif %} {% else %} Sin roles {% endfor
                         %}
                       </td>
-                      <td>
+                      <td class="text-center">
                         <!-- Botón de actualización de contraseña -->
                         <a
                           href="#"
@@ -196,14 +218,25 @@
                           >Actualizar Contraseña</a
                         >
                         {% include 'update_password.html' %}
+
+                        <!-- Botón para abrir el modal -->
+                        <button
+                          type="button"
+                          class="btn btn-danger btn-sm btn-delete_user"
+                          onclick="openDeleteDialog('{{ user.id }}')"
+                        >
+                          Eliminar
+                        </button>
+
+                        <!-- Formulario oculto para eliminación -->
                         <form
+                          id="delete-form-{{ user.id }}"
+                          class="form-delete_user form-delete_user"
                           action="/delete_user/{{ user.id }}"
                           method="POST"
-                          style="display: inline-block"
+                          style="display: none"
                         >
-                          <button type="submit" class="btn btn-danger btn-sm">
-                            Eliminar
-                          </button>
+                          <!-- Este formulario será enviado desde el modal -->
                         </form>
                       </td>
                     </tr>
@@ -215,14 +248,47 @@
           </div>
         </div>
       </div>
-
+      <!-- Modal para confirmar la eliminación -->
+      <div
+        class="dialog-overlay modal-delete_user"
+        id="delete-dialog-overlay"
+      >
+        <div class="dialog bg-white p-4 rounded">
+          <h3 class="mb-3">Confirma la eliminación</h3>
+          <label for="confirm-delete">Escribe "DELETE" para confirmar:</label>
+          <input
+            type="text"
+            id="confirm-delete"
+            class="form-control mb-3"
+            name="confirm-delete"
+            required
+          />
+          <input type="hidden" id="delete-user-id" />
+          <div class="dialog-buttons">
+            <button
+              type="button"
+              class="btn btn-secondary mb-2"
+              onclick="closeDeleteDialog()"
+            >
+              Cancelar
+            </button>
+            <button
+              type="button"
+              class="btn btn-danger"
+              onclick="confirmDeletion()"
+            >
+              Eliminar
+            </button>
+          </div>
+        </div>
+      </div>
       <!-- Acordeón para cambiar contraseña -->
       <div class="">
         <div class="accordion mt-5" id="accordionChangePassword">
           <div class="accordion-item">
             <h2 class="accordion-header" id="headingChangePassword">
               <button
-                class="accordion-button"
+                class="accordion-button custom-btn"
                 type="button"
                 data-bs-toggle="collapse"
                 data-bs-target="#collapseChangePassword"
@@ -265,6 +331,36 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+      // Función para abrir el modal de eliminación
+      function openDeleteDialog(userId) {
+        document.getElementById("delete-user-id").value = userId; // Guardar el ID del usuario
+        document.getElementById("delete-dialog-overlay").style.display = "flex"; // Mostrar el modal
+      }
+
+      // Función para cerrar el modal de eliminación
+      function closeDeleteDialog() {
+        document.getElementById("delete-dialog-overlay").style.display = "none"; // Ocultar el modal
+      }
+
+      // Función para confirmar la eliminación
+      function confirmDeletion() {
+        const confirmationInput =
+          document.getElementById("confirm-delete").value;
+        const userId = document.getElementById("delete-user-id").value;
+
+        if (confirmationInput === "DELETE") {
+          // Enviar el formulario de eliminación correspondiente
+          document.getElementById(`delete-form-${userId}`).submit();
+        } else {
+          alert('Por favor, escribe "DELETE" para confirmar.'); // Mensaje de error si no se confirma correctamente
+        }
+      }
+      // Al cargar la página, asegurarse de que el modal esté oculto
+      window.onload = function () {
+        document.getElementById("delete-dialog-overlay").style.display = "none"; // Asegurarse de que el modal esté oculto
+      };
+    </script>
     {% endblock %}
   </body>
 </html>
