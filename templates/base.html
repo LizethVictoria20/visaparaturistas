@@ -24,18 +24,33 @@
           />
         </a>
         <div class="topbar-menu menu-adjustable">
-          {% if current_user.is_authenticated %}
-          {% if current_user.roles[0].id == 1 %}
-              <a href="/" class="{% if request.path == '/' %}active{% endif %}">Formulario</a>
-              <a href="/results" class="{% if request.path == '/results' %}active{% endif %}">Resultados</a>
-              <a href="/admin-dashboard" class="{% if request.path == '/admin-dashboard' %}active{% endif %}">Panel de admin</a>
+          {% if current_user.is_authenticated %} {% if current_user.roles[0].id
+          == 1 %}
+          <a href="/" class="{% if request.path == '/' %}active{% endif %}"
+            >Formulario</a
+          >
+          <a
+            href="/results"
+            class="{% if request.path == '/results' %}active{% endif %}"
+            >Resultados</a
+          >
+          <a
+            href="/admin-dashboard"
+            class="{% if request.path == '/admin-dashboard' %}active{% endif %}"
+            >Panel de admin</a
+          >
           {% else %}
-              <a href="/results" class="{% if request.path == '/results' %}active{% endif %}">Resultados</a>
-              <a href="/user-dashboard" class="{% if request.path == '/user-dashboard' %}active{% endif %}">Panel de usuario</a>
-          {% endif %}
-          {% endif %}
-    
-          {% if current_user.is_authenticated %}
+          <a
+            href="/results"
+            class="{% if request.path == '/results' %}active{% endif %}"
+            >Resultados</a
+          >
+          <a
+            href="/user-dashboard"
+            class="{% if request.path == '/user-dashboard' %}active{% endif %}"
+            >Panel de usuario</a
+          >
+          {% endif %} {% endif %} {% if current_user.is_authenticated %}
           <a
             href="{{ url_for('logout') }}"
             class="{% if request.path == url_for('logout') %}active{% endif %}"
@@ -54,6 +69,8 @@
 
     <!-- Bloque para el contenido específico de cada vista -->
     <div>{% block content %} {% endblock %}</div>
+    <!-- Pie de página -->
+    {% block footer %}{% endblock %}
 
     <script src="{{ url_for('static', filename='scripts.js') }}"></script>
   </body>
