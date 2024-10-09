@@ -12,6 +12,7 @@
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
     />
+    <script src="https://cdn.tailwindcss.com"></script>
     <style>
       body {
         font-family: Arial, sans-serif;
@@ -379,11 +380,11 @@
               <td class="col-checkbox">
                 <input type="checkbox" class="row-checkbox" />
               </td>
-              <td class="col-fecha">{{ result.fecha }}</td>
-              <td class="col-nombre">{{ result.nombre }}</td>
-              <td class="col-apellido">{{ result.apellidos }}</td>
-              <td class="col-telefono">{{ result.telefono }}</td>
-              <td class="col-pais">{{ result.pais_residencia }}</td>
+              <td class="col-fecha truncate ...">{{ result.fecha }}</td>
+              <td class="col-nombre  truncate ...">{{ result.nombre }}</td>
+              <td class="col-apellido truncate ...">{{ result.apellidos }}</td>
+              <td class="col-telefono truncate ...">{{ result.telefono }}</td>
+              <td class="col-pais  truncate ...">{{ result.pais_residencia }}</td>
               <td class="col-probabilidad">{{ result.probabilidad }}%</td>
               <td class="col-reporte">
                 <button
