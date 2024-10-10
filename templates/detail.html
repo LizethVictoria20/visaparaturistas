@@ -716,9 +716,10 @@
         
         <div class="buttons" data-html2canvas-ignore="true">
           {% if current_user.roles[0].id == 1 %}
-            <a href="#" class="descargaPDF" id="generatePDF" data-id="{{ result.id }}">Descargar PDF</a>
-            <button type="button" onclick="document.getElementById('regenerar-form').submit();">Regenerar</button>
-            <button class="delete-button" onclick="openDeleteDialog()">Eliminar</button>
+          <a href="{{ url_for('create_pdf', id=result.id) }}">Descargar PDF</a>
+          <!-- <a href="/detail_pdf.html" class="descargaPDF" id="generatePDF">Descargar PDF</a> -->
+          <button type="button" onclick="document.getElementById('regenerar-form').submit();">Regenerar</button>
+          <button class="delete-button" onclick="openDeleteDialog()">Eliminar</button>
           {% else %}
             <a href="#" class="descargaPDF" id="generatePDF" data-id="{{ result.id }}">Descargar PDF</a>
             <button type="button" onclick="document.getElementById('regenerar-form').submit();">Regenerar</button>
@@ -1021,7 +1022,7 @@
             <canvas id="radarChart"></canvas>
         </div>
 
-        
+        <img id="generatedImage" alt="Gráfico Generado" style="width: 800px;">
 
     <footer class="footer-simple">
         <div class="footer-content">
@@ -1377,6 +1378,7 @@
             document.getElementById('score-confidential').innerText = averageConfidential;
 
             // Radar Chart
+            // Radar Chart
             const ctx = document.getElementById('radarChart').getContext('2d');
             const data = {
                 labels: ['Información demográfica y familiar', 'Educación y empleo', 'Propiedades y activos', 'Antecedentes y experiencia de viaje', 'Criterios confidenciales'],
@@ -1391,6 +1393,7 @@
                     pointHoverBorderColor: 'rgba(41, 128, 185, 1)'
                 }]
             };
+
             const config = {
                 type: 'radar',
                 data: data,
@@ -1440,7 +1443,15 @@
                 }
             };
 
-            new Chart(ctx, config);
+            // Crear el gráfico
+            const radarChart = new Chart(ctx, config);
+
+            // Esperar a que el gráfico se dibuje y convertirlo en una imagen para usarlo en otro template
+            setTimeout(() => {
+                const imageURL = document.getElementById('radarChart').toDataURL('image/png');
+                document.getElementById('generatedImage').src = imageURL;
+            }, 1000);
+
         });
 
  

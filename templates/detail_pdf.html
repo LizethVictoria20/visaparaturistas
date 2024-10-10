@@ -554,7 +554,6 @@
         </div>
     </footer>
 
-    <button id="generatePDF">Descargar PDF</button>
 
     <form id="regenerar-form" action="{{ url_for('regenerar', id=result.id) }}" method="post" style="display: none;">
         <input type="hidden" name="id" value="{{ result.id }}">
@@ -586,11 +585,11 @@
         <input type="hidden" name="nacionalidad" value="{{ result.nacionalidad }}">
         <input type="hidden" name="calificacion" value="{{ result.calificacion }}">
     </form>
+
   </div>  
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.socket.io/4.0.0/socket.io.min.js"></script>
     
 
- 
 </body>
 </html>
