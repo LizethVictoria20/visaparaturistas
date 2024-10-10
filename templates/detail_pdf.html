@@ -3,590 +3,117 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="Content-Type" content="application/javascript">
     <title>Detalle del Resultado</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
-    <!-- <link rel="stylesheet" href="{{ url_for('static', filename='css/detail_pdf.css') }}"> -->
-    <link rel="stylesheet" href="../static/css/detail_pdf.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <!-- <script type="module" src="{{ url_for('static', filename='js/radarChart.js') }}"></script> -->
-    <script type="module" src="../static/js/radarChart.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.3/html2pdf.bundle.min.js"></script>
-
-
-
-  <style>
-        /* Global styles */
-    :root {
-      --main-color: #293492;
-
-    }
-    body {
-      font-family: 'Helvetica Neue', Arial, sans-serif;
-      margin: 0;
-      padding: 0;
-      background-color: #f9f9f9;
-      color: #666666;
-      font-size: 11px;
-    }
-
-    /*General styles*/
-
-    .container {
-      max-width: 900px;
-      margin: 20px auto;
-      padding: 30px;
-      background-color: #ffffff;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-      border-radius: 8px;
-    }
-
-    .separator {
-      margin: 1rem 0;
-    }
-
-    .separator-small {
-      width: 20rem;
-      margin: 1rem 0;
-    }
-
-    h4 {
-      color: var(--main-color);
-    }
-
-    .subtitles {
-      color:var(--main-color);
-
-    }
-
-    /* Header styles */
-    .header {
-      color: var(--main-color);
-      padding-bottom: 20px;
-    }
-    .header img {
-      width: 100%;
-    }
-
-    .header h2 {
-      font-size: 26px;
-      margin-bottom: 2rem;
-      margin-top: 0;
-    }
-
-    .header h3 {
-      margin-top: 3rem;
-      margin-bottom: 0;
-    }
-
-    .header p {
-      color: #666;
-      margin-top: 5px;
-    }
-    .header-imagePDF {
-      width: 100%;
-    }
-
-    /*Personal details*/
-    .personal-details {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 8rem;
-      margin: 2rem 0 2rem 0;
-    }
-
-    /* Table styles */
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-bottom: 30px;
-    }
-
-    table th, table td {
-      padding: 12px 15px;
-      text-align: left;
-    }
-
-    table th {
-      letter-spacing: 0.03em;
-    }
-
-    .questions tr:nth-child(even) {
-      background-color: #f2f2f2;
-    }
-
-
-    /* Results */
-    .probability-result {
-      float: right;
-    }
-
-    .probability {
-      color: #E02784;
-      font-size: 14px;
-    }
-
-    /* Progress bar styles */
-    .progress-section {
-      margin-bottom: 30px;
-    }
-
-    .progress-label {
-      font-weight: bold;
-      margin-bottom: 8px;
-    }
-
-    .progress-bar-inner {
-      height: 100%;
-      background-color: #28a745;
-      border-radius: 10px 0 0 10px;
-      width: 0;
-      transition: width 1s ease;
-    }
-
-    .progress-percentage {
-      position: absolute;
-      right: 10px;
-      top: 0;
-      height: 100%;
-      display: flex;
-      align-items: center;
-      color: #fff;
-      font-weight: bold;
-    }
-
-    /* Suggestions section */
-    .suggestions {
-      margin-top: 10rem;
-    }
-
-    .suggestions-results {
-      background-color: #F3F3F3;
-      padding: 20px;
-      border-radius: .5rem;
-    }
-
-    .suggestions h2 {
-      color: #856404;
-      margin-bottom: 10px;
-    }
-
-    .suggestions p {
-      margin-bottom: 10px;
-    }
-
-    /* Analysis boxes */
-    .analysis-section {
-      display: flex;
-      justify-content: space-between;
-      margin-bottom: 30px;
-    }
-
-    .analysis-box {
-      background-color: #f8f9fa;
-      width: 18%;
-      text-align: center;
-      padding: 20px;
-      border-radius: 8px;
-      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
-    }
-
-    .analysis-box h3 {
-      margin: 0;
-      font-size: 16px;
-      margin-bottom: 10px;
-      color: #0056b3;
-    }
-
-    .analysis-box .score {
-      font-weight: bold;
-      color: #28a745;
-    }
-
-    /* Footer */
-    footer {
-      text-align: center;
-      color: #666;
-      padding-top: 20px;
-      border-top: 1px solid #ddd;
-    }
-    .probability-bar {
-          width: 630px;
-          height: 20px;
-          background-color: rgb(193, 0, 0);
-          margin: 10px auto;
-          border-radius: 2px;
-          overflow: hidden;
-          position: relative;
-      }
-
-      .probability-bar-inner {
-          height: 100%;
-          background-color: rgb(0, 182, 0);
-          width: 0;
-      }
-
-    footer a {
-      color: #0056b3;
-      text-decoration: none;
-    }
-
-    footer a:hover {
-      text-decoration: underline;
-    }
-    .footer-contact p {
-      margin: 0;
-    }
-
-    /* Estilos del círculo */
-    .circle {
-        width: 64px;
-        height: 64px;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-weight: bold;
-        color: #2e3b4e;
-        font-size: 18px;
-    }
-    .circle span {
-      position: relative;
-      left: 400px;
-      bottom: 1rem;
-    }
-    .table-analisis_body {
-      display: grid;
-      gap: 2rem;
-    }
-    .table-analisis_body tr {
-      background-color: white;
-    }
-    .contacto {
-      text-align: center;
-    }
-
-    /* Estilos para el estado */
-    .analysis-status {
-    font-weight: bold;
-    color: rgb(0, 173, 0);
-    margin-right: 20px;
-    min-width: 80px;
-    text-align: center;
-    padding: 8px;
-    border-radius: 8px;
-    background-color: #e8f5e9;
-    }
-
-    .analysis-status.neutro {
-    color: #ff9800;
-    background-color: #fff3e0;
-    }
-
-    .analysis-status.negativo {
-    color: #f44336;
-    background-color: #ffebee;
-    }
-
-    /* Contenedor del análisis */
-    .analysis-chart {
-    width: 80px;
-    height: 80px;
-    position: relative;
-    margin-right: 20px;
-    }
-    .container-circle {
-    width: 90px;
-    }
-
-  </style>
-
 </head>
-<body class="content" id="content">
-    <div class="topbar">
-    <div class="container">
-        <div class="header content-margins">
-          <!-- <img src="{{ url_for('static', filename='../static/images/navbarPDF.png') }}"" alt="Navbar visa para turistas"> -->
-          <img src="https://github.com/LizethVictoria20/visaparaturistas/blob/main/static/images/navbarPDF.png?raw=true" alt="Navbar visa para turistas">
-          <hr class="separator">
-          <h3>Resultado / Test de perfilamiento con inteligencia artificial</h3>
-          <h2>Visa de turismo de EE.UU</h2>
-          <p>A continuación, se presentan los resultados del test de perfilamiento para la solicitud de visa de turismo a EE. UU., Este test, creado con inteligencia artificial por nuestra compañía "VisaParaTurista.com" le indicará sus probabilidades de obtener la visa, considerando diferentes factores matemáticos y calificando cada criterio en una escala de 1 a 10. Nuestro objetivo es ayudarle a identificar áreas en las que puede fortalecer su proceso de solicitud. Al final, encontrará consejos útiles y un diagrama para comprender mejor sus oportunidades de mejora. Agradecemos su confianza y esperamos ser de ayuda en su solicitud de visa de turismo a EE. UU.</p>
-        </div>
-        <hr class="separator">
-        <div class="personal-details content-margins">
+<body class="content bg-gray-100 min-h-screen">
+    <div class="container max-w-4xl mx-auto bg-white shadow-lg rounded-lg p-8">
+        <div class="header flex justify-between items-center p-6 border-b">
             <div>
-                <p>Nombre del solicitante</p>
-                <strong><span id="nombre-span">{{ result.nombre }} {{ result.apellidos }}</span></strong>
+                <h1 class="text-2xl font-bold text-blue-900">Reporte de consulta</h1>
+                <p class="text-sm text-gray-500">Fecha de Consulta: April 04, 2023 - 08:11</p>
+                <p class="text-sm text-gray-500">Bogotá (UTC -5)</p>
             </div>
-            <div>
-                <p>Fecha del perfilamiento</p>
-                <strong><span id="fecha-span">{{ result.fecha }}</span></strong>
+            <div class="text-right">
+                <img src="/static/images/truora-logo.png" alt="Truora Logo" class="h-12">
+                <p class="text-sm text-gray-500">Correo electrónico: sales@truora.com</p>
+                <a href="https://www.truora.com" class="text-blue-500 text-sm">www.truora.com</a>
             </div>
         </div>
-        <hr class="separator-small">
-        <h4>1. Preguntas, respuestas y calificacion del test</h4>
-        <hr class="separator">
 
-        <table class="questions">
-            <tr>
-                <th class="subtitles">Pregunta</th>
-                <th class="subtitles">Respuesta</th>
-                <th class="subtitles">Puntaje</th>
-            </tr>
-            <tr>
-                <td>1 - Edad</td>
-                <td>{{ result.edad }}</td>
-                <td>{{ result.calificacion_edad_ChatGPT }}</td>
-            </tr>
-            <tr>
-              <td>2 - Estado Civil</td>
-              <td>{{ result.estado_civil }}</td>
-              <td>{{ result.calificacion_estado_civil_ChatGPT }}</td>
-            </tr>
-            <tr>
-                <td>3 - ¿Cuántos hijos tienes?</td>
-                <td>{{ result.hijos }}</td>
-                <td>{{ result.calificacion_hijos_ChatGPT }}</td>
-            </tr>
-            <tr>
-                <td>4 - ¿Con quién comparte su vivienda actualmente?</td>
-                <td>{{ result.vivienda }}</td>
-                <td>{{ result.calificacion_vivienda_ChatGPT }}</td>
-            </tr>
-            <tr>
-              <td>5 - Profesión u ocupación</td>
-              <td>{{ result.profesion }}</td>
-              <td>{{ result.calificacion_profesion_ChatGPT }}</td>
-          </tr>
-          <tr>
-            <td>6 - ¿Cuál es su nivel de educación?</td>
-            <td>{{ result.nivel_educacion }}</td>
-            <td>{{ result.calificacion_nivel_educacion_ChatGPT }}</td>
-          </tr>
-          <tr>
-            <td>7 - ¿Cuánto tiempo lleva trabajando en su empleo actual?</td>
-            <td>{{ result.tiempo_empleo }}</td>
-            <td>{{ result.calificacion_tiempo_empleo_ChatGPT }}</td>
-          </tr>
-          <tr>
-            <td>8 - ¿Es propietario o socio de alguna empresa?</td>
-            <td>{{ result.propietario }}</td>
-            <td>{{ result.calificacion_propietario_ChatGPT }}</td>
-          </tr>
-          <tr>
-            <td>9 - Ingresos mensuales aproximados en dólares americanos</td>
-            <td>{{ result.ingresos }}</td>
-            <td>{{ result.calificacion_ingresos_ChatGPT }}</td>
-          </tr>
-          <tr>
-            <td>10 - ¿Paga impuestos y no participa en programas de asistencia social?</td>
-            <td>{{ result.impuestos }}</td>
-            <td>{{ result.calificacion_impuestos_ChatGPT }}</td>
-          </tr>
-          <tr>
-            <td>11 - ¿Posee propiedades inmobiliarias y/o vehículos en su país de residencia?</td>
-            <td>{{ result.propiedades }}</td>
-            <td>{{ result.calificacion_propiedades_ChatGPT }}</td>
-          </tr>
-          <tr>
-            <td>12 - ¿En los últimos 5 años, a qué países ha viajado?</td>
-            <td>{{ result.viajes }}</td>
-            <td>{{ result.calificacion_viajes_ChatGPT }}</td>
-          </tr>
-          <tr>
-            <td>13 - ¿Tiene familiares que residan en los Estados Unidos?</td>
-            <td>{{ result.familiares_eeuu }}</td>
-            <td>{{ result.calificacion_familiares_eeuu_ChatGPT }}</td>
-          </tr>
-          <tr>
-            <td>14 - ¿Tiene familiares que cuenten con una visa de turismo a EE.UU.?</td>
-            <td>{{ result.familiares_visa }}</td>
-            <td>{{ result.calificacion_familiares_visa_ChatGPT }}</td>
-          </tr>
-          <tr>
-            <td>15 - ¿Le ha sido negada una visa de turismo para EE.UU. anteriormente?</td>
-            <td>{{ result.visa_negada }}</td>
-            <td>{{ result.calificacion_visa_negada_ChatGPT }}</td>
-          </tr>
-          <tr>
-            <td>16 - ¿Tiene antecedentes judiciales o ha estado en procesos de embargo?</td>
-            <td>{{ result.antecedentes }}</td>
-            <td>{{ result.calificacion_antecedentes_ChatGPT }}</td>
-          </tr>
-          <tr>
-            <td>17 - ¿Padece alguna enfermedad crónica o preexistente de base?</td>
-            <td>{{ result.enfermedades }}</td>
-            <td>{{ result.calificacion_enfermedades_ChatGPT }}</td>
-          </tr>
-          <tr>
-            <td>18 - ¿Tiene algún tipo de visa o permiso de residencia vigente para otro país?</td>
-            <td>{{ result.visa_otra }}</td>
-            <td>{{ result.calificacion_visa_otra_ChatGPT }}</td>
-          </tr>
-          <tr>
-            <td>19 - ¿Ha tenido problemas o dificultades con las autoridades migratorias?</td>
-            <td>{{ result.problemas_migratorios }}</td>
-            <td>{{ result.calificacion_problemas_migratorios_ChatGPT }}</td>
-          </tr>
-          <tr>
-            <td>20 - Criterios confidenciales del sistema</td>
-            <td>------------------</td>
-            <td>{{ result.calificacion_criterios_confidenciales_ChatGPT }}</td>
-          </tr>
-        </table>
-
-        <div class="probability-result">
-          <hr class="separator-small">
-          <strong class="subtitles"><p>Probabilidad de aprobación de visa de turismo d EE.UU</p></strong>
-          <strong class="probability">{{ result.probabilidad }}%</strong>
-          <div id="bar-container">
-            <div class="progress" id="progress-regenerar-bar"></div>
-          </div>
+        <!-- Información del Perfil -->
+        <div class="p-6">
+            <h2 class="text-xl font-semibold mb-4 text-blue-900">Información del Perfil</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                    <p class="font-bold">Nombre completo:</p>
+                    <p>JUAN DIEGO GOMEZ GOMEZ</p>
+                </div>
+                <div>
+                    <p class="font-bold">Identificación:</p>
+                    <p>71699445</p>
+                </div>
+                <div>
+                    <p class="font-bold">País:</p>
+                    <p>Colombia</p>
+                </div>
+                <div>
+                    <p class="font-bold">Género:</p>
+                    <p>Masculino</p>
+                </div>
+            </div>
         </div>
 
-
-        <div class="suggestions">
-          <hr class="separator-small">
-          <h3 class="subtitles">2. Sugerencias para mejorar su perfil</h3>
-          <div class="suggestions-results">
-              <p>{{ result.sugerencia_1_ChatGPT }}</p>
-              <p>{{ result.sugerencia_2_ChatGPT }}</p>
-              <p>{{ result.sugerencia_3_ChatGPT }}</p>
-          </div>
+        <!-- Puntaje -->
+        <div class="p-6 border-t">
+            <h2 class="text-xl font-semibold mb-4 text-blue-900">Puntaje</h2>
+            <div class="flex items-center space-x-4">
+                <div>
+                    <p class="font-bold">Puntaje global:</p>
+                    <div class="w-24 h-24 border-4 border-blue-500 rounded-full flex items-center justify-center text-3xl font-bold">
+                        6
+                    </div>
+                    <p class="text-center text-sm text-gray-500">Confianza media</p>
+                </div>
+                <div class="flex-1">
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <p class="font-bold">Puntaje por nombre:</p>
+                            <p>6</p>
+                        </div>
+                        <div>
+                            <p class="font-bold">Puntaje por ID:</p>
+                            <p>10</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
 
-
-        <div class="analysis-container">
-            <h3 class="subtitles">3. Análisis integral de su perfil</h3>
-            <p>En la siguiente sección, encontrará un diagrama que ilustra cinco categorías clave identificadas por nuestro sistema como las más relevantes para evaluar sus posibilidades de obtener una visa de turismo a los Estados Unidos. El objetivo es que conozca y comprenda cada uno de estos criterios, representados con calificaciones que varían de 1 a 10. Al analizar sus calificaciones en cada categoría, podrá identificar las áreas en las que necesita mejorar y buscar elementos que lo ayuden a fortalecer su perfil en dichas áreas. De esta manera, podrá aumentar sus probabilidades de éxito en la solicitud de la visa de turismo.</p>
+        <!-- Categorías de información -->
+        <div class="p-6 border-t">
+            <h2 class="text-xl font-semibold mb-4 text-blue-900">Categorías de información</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="bg-gray-50 p-4 rounded-lg shadow">
+                    <p class="font-bold">Identidad</p>
+                    <p>Registros encontrados: 7</p>
+                    <p>Peso sobre el puntaje global: 20%</p>
+                    <p>Puntaje: 10</p>
+                </div>
+                <div class="bg-gray-50 p-4 rounded-lg shadow">
+                    <p class="font-bold">Penal y Criminal</p>
+                    <p>Registros encontrados: 3</p>
+                    <p>Peso sobre el puntaje global: 60%</p>
+                    <p>Puntaje: 4</p>
+                </div>
+                <!-- Repite este bloque para cada categoría -->
             
-            <table style="width: 100%; border-collapse: collapse;" class="table-analisis">
-              <tbody class="table-analisis_body">
-                <tr>
-                  <td>
-                    <div class="analysis-status" id="status-info"></div>
-                  </td>
-                  <td class="container-circle">
-                    <div class="circle" id="circle-info"></div>
-                  </td>
-                  <td>
-                    <strong>Información demográfica y familiar</strong>
-                    <p style="font-size: 0.9em;">Información básica y familiar del solicitante que puede influir en la decisión de otorgar la visa.</p>
-                    <strong class="score" id="score-info"></strong>
-                  </td>
-                </tr>
-                <tr>
-                  <td>
-                    <div class="analysis-status" id="status-education"></div>
-                  </td>
-                  <td>
-                    <div class="circle" id="circle-education"></div>
-                  </td>
-                  <td>
-                    <strong>Educación y empleo</strong>
-                    <p style="font-size: 0.9em;">Datos relacionados con la educación y empleo del solicitante, que pueden indicar estabilidad laboral y capacidad para mantenerse durante el viaje.</p>
-                    <strong class="score" id="score-education"></strong>
-                  </td>
-                </tr>
-                <tr>
-                  <td>
-                    <div class="analysis-status" id="status-assets"></div>
-                  </td>
-                  <td>
-                    <div class="circle" id="circle-assets"></div>
-                  </td>
-                  <td>
-                    <strong>Propiedades y activos</strong>
-                    <p style="font-size: 0.9em;">Información sobre propiedades, vehículos e ingresos mensuales del solicitante, lo que puede reflejar solidez económica y vínculos con el país de residencia.</p>
-                    <strong class="score" id="score-assets"></strong>
-                  </td>
-                </tr>
-                <tr>
-                  <td>
-                    <div class="analysis-status" id="status-background"></div>
-                  </td>
-                  <td>
-                    <div class="circle" id="circle-background"></div>
-                  </td>
-                  <td>
-                    <strong>Antecedentes y experiencia de viaje</strong>
-                    <p style="font-size: 0.9em;">Puntos enfocados en la experiencia de viajes internacionales previos y antecedentes legales del solicitante, para evaluar el riesgo de incumplimiento de las regulaciones migratorias y posibles problemas durante su estancia en el país.</p>
-                    <strong class="score" id="score-background"></strong>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-            
-        
-        <h3 class="subtitles"><i class="fa fa-chart-pie subtitles"></i>B. Diagrama de resultados</h3>
+        <!-- Gráfico -->
         <div class="chart-container content-margins" id="miContenedor">
-          <img src="/static/images/radar_chart.png" alt="Radar Chart" style="width: 800px;">
+            <img src="/static/images/radar_chart.png" alt="Radar Chart" style="width: 800px;">
         </div>
-        <hr class="separator">
-        <div class="contacto">
-          <h3 class="subtitles">¿Le ha sido útil esta información?</h3>
-          <p><strong>Póngase en contacto con uno de nuestros agentes especializados en visas de turismo a través del WhatsApp +57 301 7488133</strong> he inicie su proceso de solicitud con nuestro acompañamiento. En VisaParaTurista.com, nuestro objetivo, en el que trabajamos cada día, es brindarle la orientación adecuada para aumentar sus posibilidades de éxito en la
-            obtención de su visa de turismo.</p>
-        </div>
-       
-        <hr class="separator">
 
-    <footer class="footer-simple">
-        <div class="footer-content">
-          <div class="footer-contact">
-            <p><strong>VisaParaTurista.com - Test de perfilamiento para solicitud de visa de turismo en EE. UU.</strong></p>
-            <p><strong>&copy; 2024 VisaParaTurista.com. Todos los derechos reservados.</strong></p>
-          </div>
-          <p>
-            WhatsApp: +57 301 7488133 / info@visaparaturista.com / Calle 7 Sur #42-145, Medellín, Colombia www.visaparaturista.com
-          </p>
-          <div>
-            <p>Este documento contiene información confidencial y es propiedad de VisaParaTurista.com. La información de este documento está protegida por las leyes de protección de datos y es para uso exclusivo de la persona que ha tomado el cuestionario de perfilamiento. Cualquier reproducción, divulgación o uso sin el consentimiento expreso de la compañía está estrictamente prohibido.</p>
-          </div>
-          <div>
-            <p>Puede consultar los términos y condiciones de nuestro tratamiento de datos en: <a href="https://www.visaparaturista.com/terminosycondicionesdeprivacidad">www.visaparaturista.com/terminosycondicionesdeprivacidad</a>
-            </p>
-          </div>
+        $1
+        <div class="p-6 border-t">
+            <h2 class="text-xl font-semibold mb-4 text-blue-900">Información Detallada</h2>
+            <div class="space-y-6">
+                <div class="bg-gray-50 p-4 rounded-lg shadow">
+                    <h3 class="font-bold">Identidad</h3>
+                    <p class="font-bold">Base: Afiliados del régimen contributivo y subsidiado</p>
+                    <p>Nombre Completo: JUAN DIEGO GOMEZ GOMEZ</p>
+                </div>
+                <!-- Repite este bloque para cada sección detallada -->
+            </div>
         </div>
+    </div>
+    <footer class="footer-simple text-center mt-8 p-4 border-t">
+        <p class="text-gray-500">&copy; 2024 VisaParaTurista.com. Todos los derechos reservados.</p>
     </footer>
-
-
-    <form id="regenerar-form" action="{{ url_for('regenerar', id=result.id) }}" method="post" style="display: none;">
-        <input type="hidden" name="id" value="{{ result.id }}">
-        <input type="hidden" name="nombre" value="{{ result.nombre }}">
-        <input type="hidden" name="apellidos" value="{{ result.apellidos }}">
-        <input type="hidden" name="email" value="{{ result.email }}">
-        <input type="hidden" name="telefono" value="{{ result.telefono }}">
-        <input type="hidden" name="pais_residencia" value="{{ result.pais_residencia }}">
-        <input type="hidden" name="fecha" value="{{ result.fecha }}">
-        <input type="hidden" name="edad" value="{{ result.edad }}">
-        <input type="hidden" name="estado_civil" value="{{ result.estado_civil }}">
-        <input type="hidden" name="hijos" value="{{ result.hijos }}">
-        <input type="hidden" name="vivienda" value="{{ result.vivienda }}">
-        <input type="hidden" name="profesion" value="{{ result.profesion }}">
-        <input type="hidden" name="nivel_educacion" value="{{ result.nivel_educacion }}">
-        <input type="hidden" name="tiempo_empleo" value="{{ result.tiempo_empleo }}">
-        <input type="hidden" name="propietario" value="{{ result.propietario }}">
-        <input type="hidden" name="ingresos" value="{{ result.ingresos }}">
-        <input type="hidden" name="impuestos" value="{{ result.impuestos }}">
-        <input type="hidden" name="propiedades" value="{{ result.propiedades }}">
-        <input type="hidden" name="viajes" value="{{ result.viajes }}">
-        <input type="hidden" name="familiares_eeuu" value="{{ result.familiares_eeuu }}">
-        <input type="hidden" name="familiares_visa" value="{{ result.familiares_visa }}">
-        <input type="hidden" name="visa_negada" value="{{ result.visa_negada }}">
-        <input type="hidden" name="antecedentes" value="{{ result.antecedentes }}">
-        <input type="hidden" name="enfermedades" value="{{ result.enfermedades }}">
-        <input type="hidden" name="visa_otra" value="{{ result.visa_otra }}">
-        <input type="hidden" name="problemas_migratorios" value="{{ result.problemas_migratorios }}">
-        <input type="hidden" name="nacionalidad" value="{{ result.nacionalidad }}">
-        <input type="hidden" name="calificacion" value="{{ result.calificacion }}">
-    </form>
-  </div>  
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.socket.io/4.0.0/socket.io.min.js"></script>
 </body>
 </html>

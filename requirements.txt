@@ -120,3 +120,4 @@ passlib
 bcrypt
 Flask-WTF
 Flask-Principal
+flask-bcrypt
