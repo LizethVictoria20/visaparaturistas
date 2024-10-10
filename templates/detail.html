@@ -1380,77 +1380,45 @@
             // Radar Chart
             // Radar Chart
             const ctx = document.getElementById('radarChart').getContext('2d');
-            const data = {
-                labels: ['Información demográfica y familiar', 'Educación y empleo', 'Propiedades y activos', 'Antecedentes y experiencia de viaje', 'Criterios confidenciales'],
-                datasets: [{
-                    data: [averageDemography, averageEducation, averageAssets, averageBackground, averageConfidential],
-                    backgroundColor: 'rgba(41, 128, 185, 0.2)',
-                    borderColor: 'rgba(41, 128, 185, 1)',
-                    borderWidth: 3,
-                    pointBackgroundColor: 'rgba(41, 128, 185, 1)',
-                    pointBorderColor: '#fff',
-                    pointHoverBackgroundColor: '#fff',
-                    pointHoverBorderColor: 'rgba(41, 128, 185, 1)'
-                }]
-            };
-
             const config = {
                 type: 'radar',
-                data: data,
+                data: {
+                    labels: ['Label1', 'Label2', 'Label3', 'Label4', 'Label5'],
+                    datasets: [{
+                        label: 'Dataset 1',
+                        data: [20, 10, 30, 40, 50],
+                        backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                        borderColor: 'rgba(255, 99, 132, 1)',
+                        borderWidth: 1
+                    }]
+                },
                 options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
                     scales: {
                         r: {
-                            min: 0,
-                            max: 10,
                             angleLines: {
-                                color: 'rgba(0, 0, 0, 0.2)',
-                                lineWidth: 2
+                                display: false
                             },
-                            grid: {
-                                color: 'rgba(0, 0, 0, 0.1)',
-                                lineWidth: 2
-                            },
-                            pointLabels: {
-                                color: '#34495e',
-                                font: {
-                                    size: 14,
-                                    weight: 'bold'
-                                }
-                            },
-                            ticks: {
-                                backdropColor: 'rgba(255, 255, 255, 0.2)',
-                                color: '#34495e',
-                                beginAtZero: true,
-                                stepSize: 2,
-                                showLabelBackdrop: false
-                            }
-                        }
-                    },
-                    plugins: {
-                        legend: {
-                            display: false
-                        },
-                        tooltip: {
-                            backgroundColor: 'rgba(0, 0, 0, 0.8)',
-                            titleColor: '#ecf0f1',
-                            bodyColor: '#ecf0f1',
-                            borderColor: 'rgba(41, 128, 185, 1)',
-                            borderWidth: 1
+                            suggestedMin: 0,
+                            suggestedMax: 60
                         }
                     }
                 }
             };
-
-            // Crear el gráfico
             const radarChart = new Chart(ctx, config);
 
-            // Esperar a que el gráfico se dibuje y convertirlo en una imagen para usarlo en otro template
-            setTimeout(() => {
-                const imageURL = document.getElementById('radarChart').toDataURL('image/png');
-                document.getElementById('generatedImage').src = imageURL;
-            }, 1000);
+          // Esperar a que el gráfico se dibuje y convertirlo en una imagen para usarlo en otro template
+          setTimeout(() => {
+                      const imageURL = document.getElementById('radarChart').toDataURL('image/png');
+                      document.getElementById('generatedImage').src = imageURL;
+
+                      // Asegurarse de que la imagen esté completamente cargada antes de generar el PDF
+                      document.getElementById('generatedImage').onload = () => {
+                          document.getElementById('downloadPdf').addEventListener('click', () => {
+                              const element = document.querySelector('.container');
+                              html2pdf().from(element).save();
+                          });
+                      };
+                  }, 1000);
 
         });
 

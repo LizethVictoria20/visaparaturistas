@@ -1188,6 +1188,29 @@ def update_password(user_id):
     return render_template('update_password.html', form=form, user=user)
 
 
+import os
+import base64
+
+
+# Ruta para guardar la imagen
+@app.route('/save-image', methods=['POST'])
+def save_image():
+    data = request.get_json()
+    image_data = data['image'].split(',')[1]
+    image_data = base64.b64decode(image_data)
+
+    # Asegúrate de que el directorio 'static/images' exista
+    image_dir = os.path.join(app.root_path, 'static', 'images')
+    if not os.path.exists(image_dir):
+        os.makedirs(image_dir)
+
+    image_path = os.path.join(image_dir, 'radar_chart.png')
+    with open(image_path, 'wb') as f:
+        f.write(image_data)
+
+    return jsonify({'imagePath': '/static/images/radar_chart.png'})
+
+
 if __name__ == "__main__":
     with app.app_context():
         db.create_all()
