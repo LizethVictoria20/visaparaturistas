@@ -1518,12 +1518,9 @@ function animateText() {
     function updateProgress() {
         if (currentStep < steps.length) {
             const step = steps[currentStep];
-            console.log(`Step ${currentStep}: ${step.message} (${step.progress}%)`); 
             progressText.innerText = step.message;
             progressPercentage.innerText = step.progress + '%';
             progressBar.style.width = step.progress + '%';  
-            console.log("Proceso completado con éxito");  
-
             currentStep++;
 
             setTimeout(() => {
@@ -1536,7 +1533,6 @@ function animateText() {
           progressText.style.color = '#2e3b4e';
           progressText.innerText = '¡Proceso completado!';
           progressPercentage.innerText = '100%';
-          console.log("Proceso completado con éxito");  // Para depuración
           setTimeout(() => {
             document.getElementById('processing-overlay').style.display = 'none';
             animationInProgress = false;  
