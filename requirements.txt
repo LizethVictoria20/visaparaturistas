@@ -119,3 +119,4 @@ XlsxWriter
 passlib
 bcrypt
 Flask-WTF
+Flask-Principal
